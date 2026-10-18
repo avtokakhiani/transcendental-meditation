@@ -18,6 +18,34 @@ packages/shared         slugify (Georgian → Latin), date/excerpt helpers, zod 
 
 ## Local development
 
+### Run everything with Docker (including Windows)
+
+Start Docker Desktop using Linux containers, then run from the repository root:
+
+```sh
+docker compose up -d --build
+```
+
+Open http://localhost:31997. The first start downloads the images, builds the app,
+applies database migrations, and seeds five Georgian blog posts, a sample book,
+and the admin account. Sign in at http://localhost:31997/admin with username
+`admin` and password `ChangeMe_12345` (the local default). Node and pnpm are
+provided by the containers; installing them on the host is optional.
+
+```sh
+docker compose ps -a            # container status; migrate should exit with code 0
+docker compose logs -f web migrate
+docker compose stop            # stop, keeping containers and data
+docker compose start           # start the existing containers again
+```
+
+Database and uploaded files persist in Docker volumes. The startup seed runs on
+`docker compose up` and can overwrite sample content; use `stop`/`start` for
+routine restarts after editing content. Extra data from another laptop needs a
+database and storage export from that laptop; Git includes only the sample seed.
+
+### Run the development server on the host
+
 Requires Node 22+, pnpm 10, Docker Desktop (with Rosetta enabled on Apple Silicon).
 
 ```bash

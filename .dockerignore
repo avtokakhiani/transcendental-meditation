@@ -4,6 +4,7 @@
 **/.env.*
 !.env.example
 **/*.tsbuildinfo
+**/*.log
 .git
 .github
 **/.DS_Store

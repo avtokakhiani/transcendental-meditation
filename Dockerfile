@@ -18,13 +18,14 @@ RUN pnpm install --frozen-lockfile
 # ---- build: also the image the migrate service runs, since it has the Prisma CLI ----
 FROM deps AS build
 COPY . .
-RUN pnpm --filter @tm/web exec prisma generate
+# Git does not preserve an empty public directory, but the runtime COPY needs it.
+RUN mkdir -p apps/web/public && pnpm --filter @tm/web exec prisma generate
 # Build-time placeholders only; real values come from docker-compose at runtime.
 RUN cd apps/web \
   && DATABASE_URL="sqlserver://placeholder;database=build;user=build;password=build" \
      AUTH_SECRET="build-time-placeholder-value-at-least-32-chars" \
      AZURE_STORAGE_ACCOUNT="placeholder" \
-     pnpm exec next build
+     pnpm exec next build --webpack
 # Next externalizes @prisma/client under .next/node_modules; keep the generated .prisma beside it.
 RUN set -e; \
   out=apps/web/.next/standalone/apps/web/.next/node_modules; \
