@@ -1,0 +1,81 @@
+# Full local stack: `pnpm docker:up` runs everything at http://localhost:31997.
+# `pnpm db:up` starts only sqlserver + azurite, for running `pnpm dev` on the host instead.
+# Production is Azure SQL Database + Azure Blob Storage + App Service.
+# SQL Server publishes no arm64 image, so Apple Silicon runs this under Rosetta.
+# Requires Docker Desktop -> Settings -> General -> "Use Rosetta for x86_64/amd64 emulation".
+# Host ports are offset (1434, 10010) so this can run beside other local SQL Server/Azurite stacks.
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    container_name: tm-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-LocalDev_Pa55w0rd!}"
+      MSSQL_PID: Developer
+    ports:
+      - "1434:1433"
+    volumes:
+      - tm-mssql-data:/var/opt/mssql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: tm-azurite
+    # The SDK negotiates a newer REST API version than the emulator knows; real Azure accepts it.
+    command: azurite-blob --blobHost 0.0.0.0 --location /data --skipApiVersionCheck
+    ports:
+      - "10010:10000"
+    volumes:
+      - tm-azurite-data:/data
+
+  # One-shot: applies migrations and seeds the admin user + sample content, then exits.
+  migrate:
+    build:
+      context: .
+      target: build
+    image: tm-web-build
+    container_name: tm-migrate
+    working_dir: /repo/apps/web
+    environment:
+      DATABASE_URL: &database_url "sqlserver://sqlserver:1433;database=transcendental_meditation;user=sa;password=${MSSQL_SA_PASSWORD:-LocalDev_Pa55w0rd!};encrypt=true;trustServerCertificate=true"
+      SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:-ChangeMe_12345}"
+    command: sh -c "pnpm exec prisma migrate deploy && pnpm exec prisma db seed"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      target: runner
+    image: tm-web
+    container_name: tm-web
+    environment:
+      DATABASE_URL: *database_url
+      # Local-only default. Never reuse this value in Azure.
+      AUTH_SECRET: "${AUTH_SECRET:-local-docker-secret-change-me-0123456789}"
+      AZURE_STORAGE_ACCOUNT: devstoreaccount1
+      AZURE_STORAGE_CONTAINER: media
+      AZURE_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+    ports:
+      - "31997:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      azurite:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  tm-mssql-data:
+  tm-azurite-data:

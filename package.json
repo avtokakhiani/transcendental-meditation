@@ -1,0 +1,32 @@
+{
+  "name": "transcendental-meditation",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.15.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @tm/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f web migrate",
+    "db:up": "docker compose up -d sqlserver azurite",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f sqlserver",
+    "db:migrate": "pnpm --filter @tm/web prisma:migrate",
+    "db:seed": "pnpm --filter @tm/web db:seed"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "eslint": "^9.36.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.44.0"
+  }
+}

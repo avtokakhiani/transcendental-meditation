@@ -1,0 +1,52 @@
+# ტრანსცენდენტული მედიტაცია
+
+Georgian-language site: landing page, blog, and books read online page by page, with an admin panel for editors.
+
+Same architecture as `realtor-crm`: pnpm monorepo, Next.js 16 (App Router) + Tailwind v4, Prisma on SQL Server
+(Azure SQL in production, Docker locally), Azure Blob Storage for uploaded images (Azurite locally).
+
+```
+apps/web                Next.js app
+  prisma/               schema, migrations, seed (sample Georgian content)
+  src/app/(site)        public pages: /, /blog, /blog/[slug], /books, /books/[slug]
+  src/app/(reader)      immersive reader: /books/[slug]/[page]
+  src/app/admin         admin panel: /admin/login, posts, books + pages, media
+  src/app/api           /api/media/[id] (public images), /api/admin/media (upload)
+  src/server            env-agnostic services (no Next imports), auth, db, blob storage
+packages/shared         slugify (Georgian → Latin), date/excerpt helpers, zod input schemas
+```
+
+## Local development
+
+Requires Node 22+, pnpm 10, Docker Desktop (with Rosetta enabled on Apple Silicon).
+
+```bash
+pnpm install
+cp .env.example apps/web/.env     # then set AUTH_SECRET: openssl rand -base64 32
+pnpm db:up                        # SQL Server on :1434, Azurite on :10010
+pnpm --filter @tm/web prisma:deploy
+pnpm db:seed                      # admin user + sample posts and a book
+pnpm dev                          # http://localhost:31997
+```
+
+Admin panel: http://localhost:31997/admin, user `admin`, password = `SEED_ADMIN_PASSWORD` from `.env`.
+
+Schema changes: edit `apps/web/prisma/schema.prisma`, then `pnpm db:migrate` (creates a migration).
+
+## Content
+
+- Posts and book pages are Markdown. Raw HTML is escaped on render, so editor content cannot inject scripts.
+- Images are uploaded from the editor (button, paste or drag-and-drop) and embedded as `/api/media/<id>`.
+- A book is a list of numbered pages; pages with a title form the table of contents. The reader remembers
+  font size, theme (light / sepia / dark) and the last page read, in the visitor's browser.
+
+## Deploying to Azure
+
+`.github/workflows/deploy-web.yml` builds a standalone bundle, runs `prisma migrate deploy`, and deploys to App Service.
+
+1. Create an Azure SQL Database, a Storage Account, and a Linux Node 22 App Service (startup command: `node apps/web/server.js`).
+2. App Service settings: `DATABASE_URL`, `AUTH_SECRET`, `AZURE_STORAGE_ACCOUNT`, `AZURE_STORAGE_CONTAINER=media`,
+   `AZURE_STORAGE_CONNECTION_STRING`.
+3. GitHub `production` environment secrets: `DATABASE_URL`, `AZURE_WEBAPP_PUBLISH_PROFILE`. Set `APP_NAME` in the workflow.
+4. Seed the first admin once against production: `DATABASE_URL=... SEED_ADMIN_PASSWORD=... pnpm db:seed`
+   (this also inserts the sample content — delete it in the admin panel afterwards).

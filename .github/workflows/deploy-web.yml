@@ -1,0 +1,121 @@
+name: Deploy web app to Azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-web
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "22.x"
+  # Azure App Service name. Create the app before enabling this workflow.
+  APP_NAME: transcendental-meditation
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @tm/shared test
+      - run: pnpm lint
+
+      - name: Generate Prisma client
+        working-directory: apps/web
+        run: pnpm exec prisma generate
+
+      - name: Build
+        working-directory: apps/web
+        # Build-time values only; the real ones come from App Service settings.
+        env:
+          DATABASE_URL: sqlserver://placeholder;database=build;user=build;password=build
+          AUTH_SECRET: build-time-placeholder-value-at-least-32-chars
+          AZURE_STORAGE_ACCOUNT: placeholder
+        run: pnpm exec next build
+
+      - name: Assemble standalone bundle
+        run: |
+          mkdir -p deploy
+          cp -r apps/web/.next/standalone/. deploy/
+          mkdir -p deploy/apps/web/.next
+          cp -r apps/web/.next/static deploy/apps/web/.next/static
+          if [ -d apps/web/public ]; then cp -r apps/web/public deploy/apps/web/public; fi
+          # Azure flattens the traced next package and breaks pnpm's sibling dependency links.
+          # Materialize the complete runtime set beside next before OneDeploy optimizes it.
+          next_dir=$(realpath apps/web/node_modules/next)
+          next_modules=$(dirname "$next_dir")
+          find "$next_modules" -mindepth 1 -maxdepth 1 ! -name next \
+            -exec cp -LR {} deploy/apps/web/node_modules/ \;
+          # Next externalizes @prisma/client under .next/node_modules. Keep its generated
+          # .prisma sibling at the location Node resolves from that wrapper.
+          prisma_client_dir=$(realpath apps/web/node_modules/@prisma/client)
+          prisma_modules=$(dirname "$(dirname "$prisma_client_dir")")
+          mkdir -p deploy/apps/web/.next/node_modules/@prisma
+          cp -LR "$prisma_client_dir" deploy/apps/web/.next/node_modules/@prisma/client
+          cp -LR "$prisma_modules/.prisma" deploy/apps/web/.next/node_modules/.prisma
+          test -f deploy/apps/web/server.js
+          test -f deploy/apps/web/.next/BUILD_ID
+          test -f deploy/apps/web/.next/node_modules/.prisma/client/default.js
+          node -e "const paths = ['$PWD/deploy/apps/web/.next/node_modules']; require.resolve('.prisma/client/default', { paths }); require.resolve('@prisma/client/runtime/library.js', { paths })"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web
+          path: deploy
+          include-hidden-files: true
+
+  migrate:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Apply database migrations
+        working-directory: apps/web
+        env:
+          DATABASE_URL: ${{ secrets['DATABASE_URL'] }}
+        run: |
+          test -n "$DATABASE_URL" || { echo "Missing DATABASE_URL secret" >&2; exit 1; }
+          pnpm exec prisma migrate deploy
+
+  deploy:
+    needs: [build, migrate]
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: web
+          path: deploy
+
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.APP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: deploy
