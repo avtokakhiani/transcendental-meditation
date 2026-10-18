@@ -48,6 +48,17 @@ database and storage export from that laptop; Git includes only the sample seed.
 
 Requires Node 22+, pnpm 10, Docker Desktop (with Rosetta enabled on Apple Silicon).
 
+On Windows, after installing dependencies and configuring `apps/web/.env`, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\start-dev.ps1
+```
+
+This starts SQL Server and Azurite in Docker, stops the Docker web server to free
+port 31997, and runs Next.js locally with automatic updates when source files change.
+Open http://localhost:31997. Keep the terminal open; press Ctrl+C to stop Next.js.
+Existing database content and media are preserved; the script does not run the seed.
+
 ```bash
 pnpm install
 cp .env.example apps/web/.env     # then set AUTH_SECRET: openssl rand -base64 32

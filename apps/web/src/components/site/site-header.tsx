@@ -150,7 +150,7 @@ export function SiteHeader() {
             href={'/#contact' as Route}
             className="hidden rounded-full bg-mist-300 px-5 py-2.5 text-sm text-plum-800 transition hover:bg-mist-400 sm:inline-flex"
           >
-            იპოვე მასწავლებელი
+            დაჯავშნე ონლაინ შეხვედრა
           </Link>
           <button
             type="button"
