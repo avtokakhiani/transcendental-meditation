@@ -4,7 +4,7 @@ import { BooksShelf } from '@/components/landing/books-shelf';
 import { ClosingCta } from '@/components/landing/closing-cta';
 import { Hero } from '@/components/landing/hero';
 import { LatestPosts } from '@/components/landing/latest-posts';
-import { QuoteCarousel } from '@/components/landing/quote-carousel';
+import { MediaCoverage } from '@/components/landing/media-coverage';
 import { prisma } from '@/server/db';
 import { listPublishedBooks } from '@/server/services/books';
 import { listPublishedPosts } from '@/server/services/posts';
@@ -21,7 +21,7 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
-      <QuoteCarousel />
+      <MediaCoverage />
       <Benefits />
       <BenefitTabs />
       <LatestPosts posts={posts.items} />
