@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   // Workspace packages ship raw TypeScript, so Next must compile them rather than expect a build step.
   transpilePackages: ['@tm/shared'],
   typedRoutes: true,
+  images: {
+    qualities: [75, 90],
+  },
 };
 
 export default nextConfig;

@@ -19,25 +19,20 @@ interface NavGroup {
 }
 
 const NAV: ReadonlyArray<NavLink | NavGroup> = [
-  {
-    label: 'TM-ის შესახებ',
-    items: [
-      { label: 'რა არის TM', href: '/blog/ra-aris-transtsendentuli-meditatsia' as Route },
-      { label: 'როგორ ვსწავლობთ', href: '/#about' as Route },
-      { label: 'სარგებელი', href: '/#benefits' as Route },
-    ],
-  },
-  { label: 'ბლოგი', href: '/blog' },
-  { label: 'წიგნები', href: '/books' },
+  { label: 'რა არის TM?', href: '/blog/ra-aris-transtsendentuli-meditatsia' as Route },
   {
     label: 'რატომ TM?',
     items: [
-      { label: 'სტრესისგან განთავისუფლება', href: '/#why' as Route },
-      { label: 'ჯანსაღი გული', href: '/#why' as Route },
-      { label: 'უკეთესი ძილი', href: '/#why' as Route },
+      { label: 'შფოთვის შემცირება', href: '/#why' as Route },
+      { label: 'ჯანმრთელობის გაუმჯობესება', href: '/#why' as Route },
+      { label: 'ტვინის ფუნქციონირების გაუმჯობესება', href: '/#why' as Route },
+      { label: 'ურთიერთობების გაძლიერება', href: '/#why' as Route },
+      { label: 'მშვიდობის ხელშეწყობა', href: '/#why' as Route },
     ],
   },
-  { label: 'კონტაქტი', href: '/#contact' as Route },
+  { label: 'როგორ ვისწავლო?', href: '/#contact' as Route },
+  { label: 'სტატიები', href: '/blog' },
+  { label: 'წიგნები', href: '/books' },
 ];
 
 function Dropdown({ group }: { group: NavGroup }) {
@@ -76,7 +71,7 @@ function Dropdown({ group }: { group: NavGroup }) {
         <ChevronDown aria-hidden="true" className={`size-4 transition ${open ? 'rotate-180' : ''}`} />
       </button>
       {open ? (
-        <div className="absolute left-1/2 top-full z-40 w-64 -translate-x-1/2 pt-2">
+        <div className="absolute left-1/2 top-full z-40 w-80 -translate-x-1/2 pt-2">
           <ul className="rounded-2xl border border-cream-300 bg-cream-50 p-2 shadow-xl shadow-plum-900/5">
             {group.items.map((item) => (
               <li key={item.label}>
@@ -117,7 +112,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-b border-transparent bg-cream-100/90 backdrop-blur supports-[backdrop-filter]:bg-cream-100/75">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
-        <Logo />
+        <Logo variant="header" />
 
         <nav aria-label="მთავარი ნავიგაცია" className="hidden items-center gap-7 lg:flex">
           {NAV.map((entry) =>
@@ -150,7 +145,7 @@ export function SiteHeader() {
             href={'/#contact' as Route}
             className="hidden rounded-full bg-mist-300 px-5 py-2.5 text-sm text-plum-800 transition hover:bg-mist-400 sm:inline-flex"
           >
-            დაჯავშნე ონლაინ შეხვედრა
+            სწავლებაზე ჩაწერა
           </Link>
           <button
             type="button"
@@ -167,7 +162,7 @@ export function SiteHeader() {
       {menuOpen ? (
         <div role="dialog" aria-modal="true" aria-label="მენიუ" className="fixed inset-0 z-50 flex flex-col bg-cream-100 lg:hidden">
           <div className="flex h-20 items-center justify-between px-4 sm:px-6">
-            <Logo />
+            <Logo variant="header" />
             <button
               type="button"
               aria-label="მენიუს დახურვა"
