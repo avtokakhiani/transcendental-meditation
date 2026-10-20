@@ -40,7 +40,7 @@ export default async function BookPage({ params }: { params: Promise<{ slug: str
           ) : null}
           <p className="mt-4 text-sm text-plum-400">{book.pageCount} გვერდი</p>
 
-          {book.pageCount > 0 ? <ContinueReading slug={book.slug} pageCount={book.pageCount} /> : null}
+          {book.pageCount > 0 ? <ContinueReading slug={book.slug} pageNumbers={book.pageNumbers} /> : null}
 
           {book.toc.length > 0 ? (
             <section className="mt-14">

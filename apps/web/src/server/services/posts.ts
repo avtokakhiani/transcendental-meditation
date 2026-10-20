@@ -26,7 +26,9 @@ export interface PostPage<T> {
   pageSize: number;
 }
 
-const PUBLISHED: Prisma.PostWhereInput = { status: 'published', publishedAt: { not: null } };
+function publishedWhere(): Prisma.PostWhereInput {
+  return { status: 'published', publishedAt: { not: null, lte: new Date() } };
+}
 const CARD_SELECT = {
   id: true,
   slug: true,
@@ -59,12 +61,13 @@ export async function listPublishedPosts(
 ): Promise<PostPage<PostCard>> {
   const page = Math.max(1, pagination.page ?? 1);
   const pageSize = Math.min(50, Math.max(1, pagination.pageSize ?? 9));
+  const where = publishedWhere();
 
   const [total, rows] = await Promise.all([
-    db.post.count({ where: PUBLISHED }),
+    db.post.count({ where }),
     db.post.findMany({
-      where: PUBLISHED,
-      orderBy: { publishedAt: 'desc' },
+      where,
+      orderBy: [{ publishedAt: 'desc' }, { id: 'desc' }],
       skip: (page - 1) * pageSize,
       take: pageSize,
       select: CARD_SELECT,
@@ -76,7 +79,7 @@ export async function listPublishedPosts(
 
 export async function getPublishedPost(db: PrismaClient, slug: string): Promise<PostDetail | null> {
   const row = await db.post.findFirst({
-    where: { ...PUBLISHED, slug },
+    where: { ...publishedWhere(), slug },
     select: {
       ...CARD_SELECT,
       updatedAt: true,

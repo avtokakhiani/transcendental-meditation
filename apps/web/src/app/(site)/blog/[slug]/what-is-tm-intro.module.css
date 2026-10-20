@@ -1,0 +1,90 @@
+.intro {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--color-cream-100);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.intro::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(248 245 234 / 0.2),
+    rgb(248 245 234 / 0.25) 45%,
+    rgb(248 245 234 / 0) 78%
+  );
+}
+
+.content {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: clamp(28rem, 40vw, 34rem);
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 4rem 2.5rem 8rem;
+}
+
+.heading {
+  max-width: 56rem;
+  color: var(--color-plum-800);
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.continuation {
+  padding: 3.75rem 1.5rem;
+  background-color: var(--color-cream-100);
+  color: var(--color-plum-700);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+.continuationCopy {
+  max-width: 48rem;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.continuation p + p {
+  margin-top: 1.25rem;
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+@media (min-width: 64rem) {
+  .continuation {
+    padding-block: 5.25rem;
+  }
+
+}
+
+@media (max-width: 39.99rem) {
+  .intro {
+    background-position: 42% center;
+  }
+
+  .content {
+    padding: 3rem 1.25rem 6rem;
+  }
+
+  .heading {
+    font-size: clamp(1.5rem, 7.4vw, 2rem);
+  }
+
+  .continuation {
+    padding: 3rem 1.25rem;
+    font-size: 1rem;
+  }
+}

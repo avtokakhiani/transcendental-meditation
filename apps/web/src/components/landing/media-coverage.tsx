@@ -1,5 +1,6 @@
 import { ExternalLink } from 'lucide-react';
 import Image from 'next/image';
+import headingStyles from './section-heading.module.css';
 
 const PUBLICATIONS = [
   {
@@ -35,12 +36,12 @@ export function MediaCoverage() {
   return (
     <section
       aria-labelledby="media-coverage-heading"
-      className="bg-cream-100 pt-6 pb-4 sm:pt-7 sm:pb-5"
+      className="bg-cream-100 pt-6 pb-8 sm:pt-7 sm:pb-10"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
         <h2
           id="media-coverage-heading"
-          className="text-center text-lg leading-relaxed font-light text-plum-800 sm:text-xl"
+          className={headingStyles.heading}
         >
           ტრანსცენდენტული მედიტაცია მედიაში
         </h2>

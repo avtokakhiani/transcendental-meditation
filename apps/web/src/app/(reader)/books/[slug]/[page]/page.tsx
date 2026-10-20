@@ -16,7 +16,7 @@ async function resolve(params: Promise<{ slug: string; page: string }>) {
   const number = Number(page);
   if (!Number.isInteger(number) || number < 1) return null;
   const data = await load(slug);
-  if (data === null || number > data.pages.length) return null;
+  if (data === null || !data.pages.some((page) => page.number === number)) return null;
   return { ...data, initialPage: number };
 }
 
@@ -36,6 +36,7 @@ export default async function ReaderPage({ params }: { params: Promise<{ slug: s
       bookTitle={data.book.title}
       initialPage={data.initialPage}
       pageCount={data.pages.length}
+      pageNumbers={data.pages.map((page) => page.number)}
       toc={data.toc}
     >
       {data.pages.map((page) => (

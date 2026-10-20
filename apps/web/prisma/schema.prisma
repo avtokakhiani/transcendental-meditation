@@ -70,6 +70,7 @@ model Book {
   updatedAt     DateTime  @updatedAt
 
   pages BookPage[]
+  featuredIn HomepageSettings[]
 
   @@index([status, publishedAt])
   @@map("books")
@@ -85,6 +86,7 @@ model BookPage {
   /// Same formats and renderer as posts.
   content       String   @db.NVarChar(Max)
   contentFormat String   @default("markdown") @db.NVarChar(10)
+  status        String   @default("published") @db.NVarChar(20)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -92,6 +94,15 @@ model BookPage {
 
   @@unique([bookId, number])
   @@map("book_pages")
+}
+
+/// Singleton homepage preferences; featured content never follows publication order.
+model HomepageSettings {
+  id             Int     @id @default(1)
+  featuredBookId String? @db.UniqueIdentifier
+  featuredBook   Book?   @relation(fields: [featuredBookId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@map("homepage_settings")
 }
 
 /// Images uploaded by editors, served publicly through /api/media/[id].

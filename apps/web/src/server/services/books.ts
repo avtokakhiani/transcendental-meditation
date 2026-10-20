@@ -19,6 +19,11 @@ export interface TocEntry {
 
 export interface BookDetail extends BookCard {
   toc: TocEntry[];
+  pageNumbers: number[];
+}
+
+export interface FeaturedBook extends BookCard {
+  chapterCount: number;
 }
 
 export interface ReaderBook {
@@ -28,6 +33,35 @@ export interface ReaderBook {
 }
 
 const PUBLISHED = { status: 'published' } as const;
+
+export async function getFeaturedBook(db: PrismaClient): Promise<FeaturedBook | null> {
+  const settings = await db.homepageSettings.findUnique({ where: { id: 1 }, select: { featuredBookId: true } });
+  if (!settings?.featuredBookId) return null;
+  const book = await db.book.findFirst({
+    where: { id: settings.featuredBookId, ...PUBLISHED },
+    select: {
+      id: true, slug: true, title: true, author: true, description: true, coverImageUrl: true,
+      pages: { where: PUBLISHED, select: { title: true } },
+    },
+  });
+  if (book === null) return null;
+  const { pages, ...metadata } = book;
+  return { ...metadata, pageCount: pages.length, chapterCount: pages.filter((page) => page.title !== null).length };
+}
+
+export async function setFeaturedBook(db: PrismaClient, bookId: string | null): Promise<boolean> {
+  // Validate and save in one transaction so an unpublished book cannot be selected.
+  return db.$transaction(async (tx) => {
+    if (bookId !== null) {
+      const book = await tx.book.findFirst({ where: { id: bookId, ...PUBLISHED }, select: { id: true } });
+      if (book === null) return false;
+    }
+    await tx.homepageSettings.upsert({
+      where: { id: 1 }, create: { id: 1, featuredBookId: bookId }, update: { featuredBookId: bookId },
+    });
+    return true;
+  });
+}
 
 export async function listPublishedBooks(db: PrismaClient, take?: number): Promise<BookCard[]> {
   const rows = await db.book.findMany({
@@ -41,7 +75,7 @@ export async function listPublishedBooks(db: PrismaClient, take?: number): Promi
       author: true,
       description: true,
       coverImageUrl: true,
-      _count: { select: { pages: true } },
+      _count: { select: { pages: { where: PUBLISHED } } },
     },
   });
 
@@ -50,7 +84,7 @@ export async function listPublishedBooks(db: PrismaClient, take?: number): Promi
 
 async function loadToc(db: PrismaClient, bookId: string): Promise<TocEntry[]> {
   const rows = await db.bookPage.findMany({
-    where: { bookId, title: { not: null } },
+    where: { bookId, ...PUBLISHED, title: { not: null } },
     orderBy: { number: 'asc' },
     select: { number: true, title: true },
   });
@@ -67,13 +101,17 @@ export async function getPublishedBook(db: PrismaClient, slug: string): Promise<
       author: true,
       description: true,
       coverImageUrl: true,
-      _count: { select: { pages: true } },
+      _count: { select: { pages: { where: PUBLISHED } } },
     },
   });
   if (row === null) return null;
 
   const { _count, ...book } = row;
-  return { ...book, pageCount: _count.pages, toc: await loadToc(db, row.id) };
+  const [toc, pages] = await Promise.all([
+    loadToc(db, row.id),
+    db.bookPage.findMany({ where: { bookId: row.id, ...PUBLISHED }, orderBy: { number: 'asc' }, select: { number: true } }),
+  ]);
+  return { ...book, pageCount: _count.pages, toc, pageNumbers: pages.map((page) => page.number) };
 }
 
 /** Whole book in one go: the reader renders every page as one continuous scroll. */
@@ -84,7 +122,7 @@ export async function getReaderBook(db: PrismaClient, slug: string): Promise<Rea
       slug: true,
       title: true,
       author: true,
-      pages: { orderBy: { number: 'asc' }, select: { number: true, title: true, content: true, contentFormat: true } },
+      pages: { where: PUBLISHED, orderBy: { number: 'asc' }, select: { number: true, title: true, content: true, contentFormat: true } },
     },
   });
   if (book === null) return null;
@@ -116,7 +154,7 @@ export async function getBookForEdit(db: PrismaClient, id: string) {
   return db.book.findUnique({
     where: { id },
     include: {
-      pages: { orderBy: { number: 'asc' }, select: { id: true, number: true, title: true, content: true, contentFormat: true } },
+      pages: { orderBy: { number: 'asc' }, select: { id: true, number: true, title: true, content: true, contentFormat: true, status: true } },
     },
   });
 }

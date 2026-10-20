@@ -34,6 +34,7 @@ interface ReaderShellProps {
   bookTitle: string;
   initialPage: number;
   pageCount: number;
+  pageNumbers: number[];
   toc: TocEntry[];
   /** Server-rendered page sheets, each a section with data-reader-page and id="page-N". */
   children: React.ReactNode;
@@ -46,12 +47,10 @@ function pageElement(number: number): HTMLElement | null {
 function TocList({
   toc,
   currentPage,
-  pageCount,
   onSelect,
 }: {
   toc: TocEntry[];
   currentPage: number;
-  pageCount: number;
   onSelect: (page: number) => void;
 }) {
   if (toc.length === 0) {
@@ -61,7 +60,7 @@ function TocList({
   return (
     <ol className="space-y-0.5">
       {toc.map((entry, index) => {
-        const nextStart = toc[index + 1]?.number ?? pageCount + 1;
+        const nextStart = toc[index + 1]?.number ?? Infinity;
         const current = currentPage >= entry.number && currentPage < nextStart;
         return (
           <li key={entry.number}>
@@ -83,7 +82,7 @@ function TocList({
   );
 }
 
-export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, children }: ReaderShellProps) {
+export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbers, toc, children }: ReaderShellProps) {
   const [prefs, setPrefs] = useState<ReaderPrefs>(DEFAULT_PREFS);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -124,7 +123,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
     const update = () => {
       frame = 0;
       const line = window.innerHeight * CURRENT_PAGE_LINE;
-      let visible = 1;
+      let visible = pageNumbers[0] ?? initialPage;
       for (const element of document.querySelectorAll<HTMLElement>('[data-reader-page]')) {
         if (element.getBoundingClientRect().top <= line) visible = Number(element.dataset.readerPage);
         else break;
@@ -144,7 +143,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, []);
+  }, [pageNumbers, initialPage]);
 
   // Keep the URL and the remembered position on the page being read, without adding history entries.
   useEffect(() => {
@@ -168,12 +167,13 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
       }
       const target = event.target as HTMLElement;
       if (event.altKey || event.ctrlKey || event.metaKey || target.closest('input, textarea, select')) return;
-      if (event.key === 'ArrowRight' && currentPage < pageCount) goTo(currentPage + 1);
-      if (event.key === 'ArrowLeft' && currentPage > 1) goTo(currentPage - 1);
+      const index = pageNumbers.indexOf(currentPage);
+      const next = pageNumbers[index + (event.key === 'ArrowRight' ? 1 : -1)];
+      if ((event.key === 'ArrowRight' || event.key === 'ArrowLeft') && next !== undefined) goTo(next);
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [currentPage, pageCount]);
+  }, [currentPage, pageNumbers]);
 
   function toggleToc() {
     if (window.matchMedia('(min-width: 1024px)').matches) setPrefs({ ...prefs, tocOpen: !prefs.tocOpen });
@@ -214,7 +214,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
             {chapterTitle !== null ? <p className="truncate text-xs text-[var(--reader-muted)]">{chapterTitle}</p> : null}
           </div>
           <span className="hidden shrink-0 px-2 text-sm text-[var(--reader-muted)] tabular-nums sm:inline" aria-live="polite">
-            {currentPage} / {pageCount}
+            {pageNumbers.indexOf(currentPage) + 1} / {pageCount}
           </span>
           <button
             type="button"
@@ -299,7 +299,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
           className="reader-toc sticky top-[66px] hidden h-[calc(100dvh-66px)] w-72 shrink-0 overflow-y-auto border-r border-[var(--reader-line)] bg-[var(--reader-bg)] px-3 py-6 lg:block"
         >
           <p className="px-4 pb-3 text-[11px] uppercase tracking-[0.22em] text-[var(--reader-muted)]">სარჩევი</p>
-          <TocList toc={toc} currentPage={currentPage} pageCount={pageCount} onSelect={goTo} />
+          <TocList toc={toc} currentPage={currentPage} onSelect={goTo} />
         </aside>
 
         <main className="min-w-0 flex-1 px-3 py-6 sm:px-6 sm:py-10">
@@ -327,7 +327,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-3">
-              <TocList toc={toc} currentPage={currentPage} pageCount={pageCount} onSelect={goTo} />
+              <TocList toc={toc} currentPage={currentPage} onSelect={goTo} />
             </div>
           </aside>
         </div>

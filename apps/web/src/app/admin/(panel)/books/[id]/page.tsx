@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { BookForm } from '@/components/admin/book-form';
 import { ConfirmButton } from '@/components/admin/confirm-button';
+import { StatusBadge } from '@/components/admin/status-badge';
 import { primaryButton } from '@/components/admin/ui';
 import { prisma } from '@/server/db';
 import { getBookForEdit } from '@/server/services/books';
@@ -69,6 +70,7 @@ export default async function EditBookPage({
                   {page.title !== null ? <p className="truncate text-[15px] text-plum-900">{page.title}</p> : null}
                   <p className="truncate text-sm text-plum-400">{excerpt(page.content, 110, page.contentFormat === 'html' ? 'html' : 'markdown') || 'ცარიელი გვერდი'}</p>
                 </Link>
+                <StatusBadge status={page.status} />
                 <form action={moveBookPageAction} className="flex shrink-0">
                   <input type="hidden" name="bookId" value={book.id} />
                   <input type="hidden" name="pageId" value={page.id} />

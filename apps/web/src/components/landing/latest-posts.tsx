@@ -7,24 +7,21 @@ export function LatestPosts({ posts }: { posts: PostCardData[] }) {
   if (posts.length === 0) return null;
 
   return (
-    <section className="bg-cream-100 py-20 lg:py-28">
+    <section aria-labelledby="latest-posts-heading" className="bg-cream-100 py-12 sm:py-14 lg:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-[11px] uppercase tracking-[0.28em] text-plum-500">ბლოგი</p>
-            <h2 className="mt-4 text-3xl font-light text-plum-800 sm:text-4xl">
-              ახალი <em className="font-serif font-normal italic">ჩანაწერები</em>
-            </h2>
-          </div>
-          <Link href="/blog" className="inline-flex items-center gap-2 text-[15px] text-plum-700 hover:text-plum-500">
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <h2 id="latest-posts-heading" className="text-2xl leading-relaxed font-light text-plum-800 sm:text-3xl">
+            ბოლო სტატიები
+          </h2>
+          <Link href="/blog" className="inline-flex min-h-11 items-center gap-2 rounded-sm text-[15px] text-plum-700 hover:text-plum-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-700">
             ყველა სტატია
             <ArrowRight aria-hidden="true" className="size-4" />
           </Link>
         </div>
 
-        <div className="mt-12 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post, index) => (
-            <PostCard key={post.id} post={post} index={index} />
+        <div className="mt-7 grid gap-x-8 gap-y-0 sm:mt-8 md:grid-cols-2 lg:grid-cols-3">
+          {posts.slice(0, 3).map((post, index) => (
+            <PostCard key={post.id} post={post} index={index} variant="latest" />
           ))}
         </div>
       </div>

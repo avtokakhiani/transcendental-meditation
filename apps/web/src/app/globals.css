@@ -64,13 +64,6 @@ button:disabled {
   background-position: center;
 }
 
-.dotted-y {
-  background-image: radial-gradient(circle, currentColor 0.75px, transparent 1px);
-  background-size: 2px 6px;
-  background-repeat: repeat-y;
-  background-position: center;
-}
-
 /* Markdown body shared by posts, book pages and the editor preview. */
 .prose-tm {
   --tw-prose-body: var(--color-plum-700);

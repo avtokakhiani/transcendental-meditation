@@ -30,7 +30,7 @@ export default async function EditBookPagePage({
       <div className="mb-8 mt-4 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-normal text-plum-900">გვერდი №{page.number}</h1>
         <div className="flex items-center gap-2">
-          {book.status === 'published' ? (
+          {book.status === 'published' && page.status === 'published' ? (
             <Link href={`/books/${book.slug}/${page.number}`} target="_blank" className="inline-flex items-center gap-2 px-3 py-2 text-sm text-plum-600 hover:text-plum-900">
               <ExternalLink aria-hidden="true" className="size-4" />
               ნახვა

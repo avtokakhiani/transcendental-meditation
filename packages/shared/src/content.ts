@@ -51,5 +51,6 @@ export const bookPageInputSchema = z.object({
   title: z.string().trim().max(300).transform((value) => (value.length === 0 ? null : value)),
   content: z.string().max(400_000),
   contentFormat: z.enum(CONTENT_FORMATS),
+  status: z.enum(CONTENT_STATUSES).default('published'),
 });
 export type BookPageInput = z.infer<typeof bookPageInputSchema>;
