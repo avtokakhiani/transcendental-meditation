@@ -95,15 +95,19 @@ function Dropdown({ group }: { group: NavGroup }) {
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const transparentOnTop = pathname === '/stress-and-anxiety';
+  const transparentOnTop = pathname === '/stress-and-anxiety'
+    || pathname === '/blog/ra-aris-transtsendentuli-meditatsia';
+  const isHomepage = pathname === '/';
   const headerRef = useRef<HTMLElement>(null);
   const [pastHeader, setPastHeader] = useState(false);
 
   useEffect(() => {
-    if (!transparentOnTop) return;
+    if (!transparentOnTop && !isHomepage) return;
     const updateBackground = () => {
       const headerHeight = headerRef.current?.getBoundingClientRect().height;
-      if (headerHeight !== undefined) setPastHeader(window.scrollY >= headerHeight);
+      if (headerHeight !== undefined) {
+        setPastHeader(transparentOnTop ? window.scrollY >= headerHeight : window.scrollY > 0);
+      }
     };
     updateBackground();
     window.addEventListener('scroll', updateBackground, { passive: true });
@@ -112,7 +116,7 @@ export function SiteHeader() {
       window.removeEventListener('scroll', updateBackground);
       window.removeEventListener('resize', updateBackground);
     };
-  }, [transparentOnTop]);
+  }, [transparentOnTop, isHomepage]);
 
   useEffect(() => setMenuOpen(false), [pathname]);
 
@@ -133,7 +137,7 @@ export function SiteHeader() {
       ref={headerRef}
       data-transparent={transparentOnTop ? !pastHeader : undefined}
       data-menu-open={transparentOnTop && menuOpen ? true : undefined}
-      className={`sticky top-0 z-30 border-b border-transparent bg-cream-100/90 backdrop-blur supports-[backdrop-filter]:bg-cream-100/75${transparentOnTop ? ` ${styles.overlay}` : ''}`}
+      className={`sticky top-0 z-30 border-b border-transparent bg-cream-100/90 backdrop-blur supports-[backdrop-filter]:bg-cream-100/75${transparentOnTop ? ` ${styles.overlay}` : ''}${isHomepage && pastHeader ? ` ${styles.opaque}` : ''}`}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
         <Logo variant="header" />

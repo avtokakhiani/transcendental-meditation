@@ -1,0 +1,19 @@
+.layout.layout {
+  align-items: center;
+}
+
+.chart {
+  display: block;
+  width: 85%;
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+@media (min-width: 64rem) {
+  .layout.layout {
+    column-gap: 64px;
+  }
+}
+

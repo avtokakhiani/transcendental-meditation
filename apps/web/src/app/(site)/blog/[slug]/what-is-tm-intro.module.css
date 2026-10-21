@@ -24,10 +24,10 @@
   display: grid;
   place-items: center;
   width: 100%;
-  min-height: clamp(28rem, 40vw, 34rem);
+  min-height: max(44rem, calc(100svh - 5rem));
   max-width: 80rem;
   margin-inline: auto;
-  padding: 4rem 2.5rem 8rem;
+  padding: 4rem 2.5rem;
 }
 
 .heading {
@@ -64,6 +64,15 @@
 }
 
 @media (min-width: 64rem) {
+  .heading {
+    transform: translateY(-40px);
+  }
+
+  .content {
+    /* Match the Stress & Anxiety Hero exactly; crop the image to fit. */
+    min-height: clamp(38rem, 49vw, 47rem);
+  }
+
   .continuation {
     padding-block: 5.25rem;
   }
@@ -76,7 +85,7 @@
   }
 
   .content {
-    padding: 3rem 1.25rem 6rem;
+    padding: 3rem 1.25rem;
   }
 
   .heading {

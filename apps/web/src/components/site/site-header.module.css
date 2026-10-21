@@ -9,7 +9,8 @@
   backdrop-filter: none;
 }
 
-.overlay[data-transparent='false'] {
+.overlay[data-transparent='false'],
+.opaque.opaque {
   background-color: var(--color-cream-100);
   backdrop-filter: none;
 }

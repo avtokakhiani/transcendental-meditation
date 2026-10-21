@@ -34,7 +34,89 @@
   text-wrap: balance;
 }
 
+.research {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 3rem 1.25rem;
+  background-color: color-mix(in srgb, var(--color-mauve-100) 50%, var(--color-cream-100));
+  color: var(--color-plum-800);
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.researchContent {
+  width: 100%;
+  min-width: 0;
+  max-width: 760px;
+  box-sizing: border-box;
+  margin-inline: auto;
+}
+
+.researchHeading {
+  max-width: 44rem;
+  margin-inline: auto;
+  color: var(--color-plum-800);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.researchDescription {
+  margin-top: 1.5rem;
+  color: var(--color-plum-700);
+  font-size: 1rem;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.researchDescription p + p {
+  margin-top: 1.25rem;
+}
+
+.researchList {
+  width: 100%;
+  max-width: 40rem;
+  box-sizing: border-box;
+  margin: 1.75rem auto 0;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+  color: var(--color-plum-700);
+  font-size: 1rem;
+  line-height: 1.7;
+  text-align: left;
+}
+
+.researchList li + li {
+  margin-top: 0.75rem;
+}
+
+.researchList li::marker {
+  color: var(--color-plum-400);
+}
+
+@media (min-width: 40rem) {
+  .research {
+    padding: 4rem 1.5rem;
+  }
+
+  .researchHeading {
+    font-size: 1.75rem;
+  }
+
+  .researchDescription,
+  .researchList {
+    font-size: 1.0625rem;
+  }
+}
+
 @media (min-width: 1024px) {
+  .research {
+    padding-block: 5.5rem;
+  }
+
   .hero {
     min-height: clamp(38rem, 49vw, 47rem);
   }
