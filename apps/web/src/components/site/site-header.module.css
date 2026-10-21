@@ -1,0 +1,26 @@
+.overlay.overlay {
+  position: fixed;
+  width: 100%;
+  transition: background-color 225ms ease;
+}
+
+.overlay[data-transparent='true'] {
+  background-color: transparent;
+  backdrop-filter: none;
+}
+
+.overlay[data-transparent='false'] {
+  background-color: var(--color-cream-100);
+  backdrop-filter: none;
+}
+
+/* Keep the fixed mobile dialog relative to the viewport in either state. */
+.overlay[data-menu-open='true'] {
+  backdrop-filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay.overlay {
+    transition: none;
+  }
+}

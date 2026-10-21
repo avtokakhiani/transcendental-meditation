@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { SITE } from '@/lib/site';
 import { Logo } from './logo';
+import styles from './site-header.module.css';
 
 interface NavLink {
   label: string;
@@ -23,7 +24,7 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
   {
     label: 'რატომ TM?',
     items: [
-      { label: 'შფოთვის შემცირება', href: '/#why' as Route },
+      { label: 'შფოთვის შემცირება', href: '/stress-and-anxiety' as Route },
       { label: 'ჯანმრთელობის გაუმჯობესება', href: '/#why' as Route },
       { label: 'ტვინის ფუნქციონირების გაუმჯობესება', href: '/#why' as Route },
       { label: 'ურთიერთობების გაძლიერება', href: '/#why' as Route },
@@ -94,6 +95,24 @@ function Dropdown({ group }: { group: NavGroup }) {
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const transparentOnTop = pathname === '/stress-and-anxiety';
+  const headerRef = useRef<HTMLElement>(null);
+  const [pastHeader, setPastHeader] = useState(false);
+
+  useEffect(() => {
+    if (!transparentOnTop) return;
+    const updateBackground = () => {
+      const headerHeight = headerRef.current?.getBoundingClientRect().height;
+      if (headerHeight !== undefined) setPastHeader(window.scrollY >= headerHeight);
+    };
+    updateBackground();
+    window.addEventListener('scroll', updateBackground, { passive: true });
+    window.addEventListener('resize', updateBackground);
+    return () => {
+      window.removeEventListener('scroll', updateBackground);
+      window.removeEventListener('resize', updateBackground);
+    };
+  }, [transparentOnTop]);
 
   useEffect(() => setMenuOpen(false), [pathname]);
 
@@ -110,7 +129,12 @@ export function SiteHeader() {
   }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-transparent bg-cream-100/90 backdrop-blur supports-[backdrop-filter]:bg-cream-100/75">
+    <header
+      ref={headerRef}
+      data-transparent={transparentOnTop ? !pastHeader : undefined}
+      data-menu-open={transparentOnTop && menuOpen ? true : undefined}
+      className={`sticky top-0 z-30 border-b border-transparent bg-cream-100/90 backdrop-blur supports-[backdrop-filter]:bg-cream-100/75${transparentOnTop ? ` ${styles.overlay}` : ''}`}
+    >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
         <Logo variant="header" />
 

@@ -1,0 +1,125 @@
+.section {
+  padding: 3rem 1.25rem;
+  background-color: var(--color-cream-100);
+  color: var(--color-plum-800);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 32px;
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+}
+
+.copy {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+.description {
+  margin-top: 1.5rem;
+  color: var(--color-plum-700);
+  font-size: 1rem;
+  line-height: 1.8;
+  overflow-wrap: break-word;
+}
+
+.description p + p {
+  margin-top: 1.25rem;
+}
+
+.figure {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.scrollHint {
+  margin-bottom: 0.75rem;
+  color: var(--color-plum-500);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.scrollHint span {
+  white-space: nowrap;
+}
+
+.chartViewport {
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-color: var(--color-plum-300) var(--color-cream-200);
+  scrollbar-width: thin;
+}
+
+.chartViewport:focus-visible {
+  outline: 2px solid var(--color-plum-500);
+  outline-offset: 4px;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 40rem) {
+  .section {
+    padding: 4rem 1.5rem;
+  }
+
+  .heading {
+    font-size: 1.75rem;
+  }
+
+  .description {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (min-width: 45rem) {
+  .scrollHint {
+    display: none;
+  }
+}
+
+@media (max-width: 44.999rem) {
+  .chart {
+    min-width: 42rem;
+    max-width: none;
+  }
+}
+
+@media (min-width: 64rem) {
+  .section {
+    padding: 5.5rem 2.5rem;
+  }
+  .layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .figure {
+    align-self: center;
+  }
+
+  .chartViewport {
+    overflow: visible;
+  }
+}
