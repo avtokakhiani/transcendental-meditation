@@ -1,3 +1,7 @@
+.hero::before {
+  opacity: 0.8;
+}
+
 .photograph.photograph {
   object-position: 43% center;
 }

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default function HealthPage() {
   return (
     <article>
-      <section aria-labelledby="health-heading" className={hero.hero}>
+      <section aria-labelledby="health-heading" className={`${hero.hero} ${styles.hero}`}>
         <Image
           src="/images/health-hero-hands-flower.jpeg"
           alt="ხელისგულებში მოთავსებული პატარა ყვითელი ყვავილი."

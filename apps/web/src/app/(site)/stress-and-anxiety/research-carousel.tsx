@@ -165,7 +165,7 @@ export function ResearchCarousel({
             <div className={styles.track} style={{ transform: `translateX(calc(${index} * -1 * (100% + var(--card-gap)) / var(--visible-cards)))` }}>
               {research.map((research, cardIndex) => (
                 <article
-                  key={research.authors}
+                  key={research.url}
                   className={styles.card}
                   aria-label={`კვლევა ${cardIndex + 1} / ${total}`}
                   aria-hidden={cardIndex < index || cardIndex >= index + visible}

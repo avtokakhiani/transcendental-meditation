@@ -1,0 +1,78 @@
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  color: var(--color-plum-800);
+}
+
+.portrait {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 2000 / 1335;
+}
+
+.photograph {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 75% center;
+}
+
+.panel {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 3rem 1.5rem;
+  background-image: url('/images/tm-tonal-orange.jpeg');
+  background-position: center;
+  background-size: auto 130%;
+}
+
+.testimonial {
+  width: 100%;
+  margin: 0;
+}
+
+.quote {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.1vw, 2rem);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  overflow-wrap: break-word;
+}
+
+.attribution {
+  margin-top: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  text-align: left;
+}
+
+@media (min-width: 48rem) {
+  .section {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: 430px;
+  }
+
+  .portrait {
+    aspect-ratio: auto;
+  }
+
+  .panel {
+    padding: 1.5rem clamp(2rem, 3.5vw, 4rem);
+  }
+
+  .photograph {
+    object-position: 75% 10%;
+  }
+}
+
+@media (min-width: 64rem) {
+  .panel {
+    background-size: 130% auto;
+  }
+}

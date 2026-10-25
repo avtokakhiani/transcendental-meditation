@@ -26,9 +26,9 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
     items: [
       { label: 'შფოთვის შემცირება', href: '/stress-and-anxiety' as Route },
       { label: 'ჯანმრთელობის გაუმჯობესება', href: '/health' as Route },
-      { label: 'ტვინის ფუნქციონირების გაუმჯობესება', href: '/#why' as Route },
-      { label: 'ურთიერთობების გაძლიერება', href: '/#why' as Route },
-      { label: 'მშვიდობის ხელშეწყობა', href: '/#why' as Route },
+      { label: 'ტვინის ფუნქციონირების გაუმჯობესება', href: '/brain-function' as Route },
+      { label: 'ურთიერთობების გაძლიერება', href: '/relationships' as Route },
+      { label: 'მშვიდობის ხელშეწყობა', href: '/peace' as Route },
     ],
   },
   { label: 'როგორ ვისწავლო?', href: '/#contact' as Route },
@@ -97,6 +97,9 @@ export function SiteHeader() {
   const pathname = usePathname();
   const transparentOnTop = pathname === '/stress-and-anxiety'
     || pathname === '/health'
+    || pathname === '/brain-function'
+    || pathname === '/relationships'
+    || pathname === '/peace'
     || pathname === '/blog/ra-aris-transtsendentuli-meditatsia';
   const isHomepage = pathname === '/';
   const headerRef = useRef<HTMLElement>(null);
