@@ -55,7 +55,27 @@ const RESEARCH = [
   },
 ];
 
-export function ResearchCarousel() {
+interface ResearchCard {
+  summary: string;
+  authors: string;
+  source: string;
+  url: string;
+}
+
+interface ResearchCarouselProps {
+  research?: readonly ResearchCard[];
+  heading?: string;
+  idPrefix?: string;
+}
+
+export function ResearchCarousel({
+  research = RESEARCH,
+  heading = 'კვლევები ტრანსცენდენტულ მედიტაციაზე: სტრესი და შფოთვა',
+  idPrefix = 'stress',
+}: ResearchCarouselProps = {}) {
+  const headingId = `${idPrefix}-research-carousel-heading`;
+  const cardsId = `${idPrefix}-research-cards`;
+  const total = research.length;
   const viewportRef = useRef<HTMLDivElement>(null);
   const [{ index, visible }, setPosition] = useState({ index: 0, visible: 1 });
 
@@ -65,7 +85,7 @@ export function ResearchCarousel() {
     const updateVisible = () => {
       const count = Number(getComputedStyle(viewport).getPropertyValue('--visible-cards'));
       setPosition((previous) => {
-        const nextIndex = Math.min(previous.index, RESEARCH.length - count);
+        const nextIndex = Math.min(previous.index, research.length - count);
         return previous.visible === count && previous.index === nextIndex
           ? previous
           : { index: nextIndex, visible: count };
@@ -75,7 +95,7 @@ export function ResearchCarousel() {
     const observer = new ResizeObserver(updateVisible);
     observer.observe(viewport);
     return () => observer.disconnect();
-  }, []);
+  }, [research.length]);
 
   useLayoutEffect(() => {
     const viewport = viewportRef.current;
@@ -101,26 +121,26 @@ export function ResearchCarousel() {
       disposed = true;
       observer.disconnect();
     };
-  }, []);
+  }, [research]);
 
   const move = (direction: number) => {
     setPosition((previous) => ({
       ...previous,
-      index: Math.max(0, Math.min(RESEARCH.length - previous.visible, previous.index + direction)),
+      index: Math.max(0, Math.min(research.length - previous.visible, previous.index + direction)),
     }));
   };
 
   return (
-    <section aria-labelledby="stress-research-carousel-heading" aria-roledescription="კარუსელი" className={styles.section}>
+    <section aria-labelledby={headingId} aria-roledescription="კარუსელი" className={styles.section}>
       <div className={styles.content}>
-        <h2 id="stress-research-carousel-heading" className={styles.heading}>კვლევები ტრანსცენდენტულ მედიტაციაზე: სტრესი და შფოთვა</h2>
+        <h2 id={headingId} className={styles.heading}>{heading}</h2>
         <div className={styles.carousel}>
           <div className={styles.controlSlot}>
             {index > 0 ? (
               <button
                 type="button"
                 aria-label="წინა კვლევა"
-                aria-controls="stress-research-cards"
+                aria-controls={cardsId}
                 onClick={() => move(-1)}
                 className={styles.control}
               >
@@ -130,7 +150,7 @@ export function ResearchCarousel() {
           </div>
           <div
             ref={viewportRef}
-            id="stress-research-cards"
+            id={cardsId}
             className={styles.viewport}
             role="group"
             aria-label="კვლევების ბარათები"
@@ -143,11 +163,11 @@ export function ResearchCarousel() {
             }}
           >
             <div className={styles.track} style={{ transform: `translateX(calc(${index} * -1 * (100% + var(--card-gap)) / var(--visible-cards)))` }}>
-              {RESEARCH.map((research, cardIndex) => (
+              {research.map((research, cardIndex) => (
                 <article
                   key={research.authors}
                   className={styles.card}
-                  aria-label={`კვლევა ${cardIndex + 1} / ${RESEARCH.length}`}
+                  aria-label={`კვლევა ${cardIndex + 1} / ${total}`}
                   aria-hidden={cardIndex < index || cardIndex >= index + visible}
                 >
                   <p className={styles.summary}>{research.summary}</p>
@@ -164,11 +184,11 @@ export function ResearchCarousel() {
             </div>
           </div>
           <div className={styles.controlSlot}>
-            {index < RESEARCH.length - visible ? (
+            {index < research.length - visible ? (
               <button
                 type="button"
                 aria-label="შემდეგი კვლევა"
-                aria-controls="stress-research-cards"
+                aria-controls={cardsId}
                 onClick={() => move(1)}
                 className={styles.control}
               >
@@ -177,7 +197,7 @@ export function ResearchCarousel() {
             ) : null}
           </div>
         </div>
-        <p className="sr-only" aria-live="polite" aria-atomic="true">კვლევები {index + 1}–{index + visible} / {RESEARCH.length}</p>
+        <p className="sr-only" aria-live="polite" aria-atomic="true">კვლევები {index + 1}–{index + visible} / {research.length}</p>
       </div>
     </section>
   );

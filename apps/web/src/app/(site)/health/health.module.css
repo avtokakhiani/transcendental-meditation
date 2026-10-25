@@ -1,0 +1,11 @@
+.photograph.photograph {
+  object-position: 43% center;
+}
+
+.researchList.researchList {
+  line-height: 1.5;
+}
+
+.researchList.researchList li + li {
+  margin-top: 8px;
+}

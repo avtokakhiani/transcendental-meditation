@@ -25,7 +25,7 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
     label: 'რატომ TM?',
     items: [
       { label: 'შფოთვის შემცირება', href: '/stress-and-anxiety' as Route },
-      { label: 'ჯანმრთელობის გაუმჯობესება', href: '/#why' as Route },
+      { label: 'ჯანმრთელობის გაუმჯობესება', href: '/health' as Route },
       { label: 'ტვინის ფუნქციონირების გაუმჯობესება', href: '/#why' as Route },
       { label: 'ურთიერთობების გაძლიერება', href: '/#why' as Route },
       { label: 'მშვიდობის ხელშეწყობა', href: '/#why' as Route },
@@ -96,6 +96,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const transparentOnTop = pathname === '/stress-and-anxiety'
+    || pathname === '/health'
     || pathname === '/blog/ra-aris-transtsendentuli-meditatsia';
   const isHomepage = pathname === '/';
   const headerRef = useRef<HTMLElement>(null);

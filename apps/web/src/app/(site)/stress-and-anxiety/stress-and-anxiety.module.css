@@ -85,12 +85,12 @@
   list-style-type: disc;
   color: var(--color-plum-700);
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.5;
   text-align: left;
 }
 
 .researchList li + li {
-  margin-top: 0.75rem;
+  margin-top: 8px;
 }
 
 .researchList li::marker {
