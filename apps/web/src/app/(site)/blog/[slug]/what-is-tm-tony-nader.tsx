@@ -5,7 +5,7 @@ import portrait from './what-is-tm-tony-nader.module.css';
 export function WhatIsTmTonyNader() {
   return (
     <section aria-labelledby="tm-tony-nader-heading" className={styles.section}>
-      <div className={styles.text}>
+      <div className={`${styles.text} ${portrait.text}`}>
         <div className={styles.copy}>
           <h2 id="tm-tony-nader-heading" className={styles.heading}>დოქტორი ტონი ნეიდერი</h2>
           <p className={styles.subtitle}>მაჰარიში მაჰეშ იოგის მიერ შერჩეული ტრანსცენდენტული მედიტაციის საერთაშორისო ორგანიზაციის ხელმძღვანელად</p>

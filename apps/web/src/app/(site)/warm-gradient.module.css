@@ -1,0 +1,3 @@
+.panel {
+  background: linear-gradient(var(--warm-gradient-angle, 135deg), #f8d675 0%, #efad43 55%, #e89535 100%);
+}

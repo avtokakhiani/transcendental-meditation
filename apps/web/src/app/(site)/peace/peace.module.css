@@ -1,3 +1,81 @@
 .photograph.photograph {
-  object-position: center;
+  object-position: center 35%;
+}
+
+.worldPeace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  color: var(--color-plum-800);
+}
+
+.gatheringPhoto {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 16 / 9;
+}
+
+.gatheringImage {
+  object-fit: cover;
+  object-position: center 65%;
+}
+
+.worldPeaceCopy {
+  composes: panel from '../warm-gradient.module.css';
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 3rem 1.25rem;
+  text-align: left;
+}
+
+@media (min-width: 40rem) {
+  .worldPeaceCopy {
+    padding: 3rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .worldPeace {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: 450px;
+  }
+
+  .gatheringPhoto {
+    aspect-ratio: auto;
+  }
+
+  .worldPeaceCopy {
+    padding: 2.5rem clamp(2rem, 3vw, 4rem);
+  }
+}
+
+.resultsList {
+  margin-top: 1.25rem;
+  padding-left: 1.5rem;
+  list-style-type: disc;
+  line-height: 1.5;
+}
+
+.resultsList li + li {
+  margin-top: 8px;
+}
+
+@media (min-width: 64rem) {
+  .replicationsCopy {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .replicationsFigure {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .photograph.photograph {
+    object-position: 30% center;
+  }
 }
