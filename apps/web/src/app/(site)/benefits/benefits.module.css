@@ -1,0 +1,264 @@
+.photograph.photograph {
+  object-position: center;
+}
+
+.nextStep {
+  padding: 3rem 1.25rem;
+  background-color: var(--color-cream-200);
+  color: var(--color-plum-800);
+  text-align: center;
+}
+
+.nextStepContent {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.nextStepHeading {
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  font-weight: 300;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.nextStepDescription {
+  max-width: 36rem;
+  margin: 2.5rem auto 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+.nextStepButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  margin-top: 2.5rem;
+  padding: 1.1rem 3rem;
+  border-radius: 999px;
+  background-color: var(--color-mist-300);
+  color: var(--color-plum-800);
+  font-size: 1rem;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: background-color 200ms ease;
+}
+
+.nextStepButton:hover {
+  background-color: var(--color-mist-400);
+}
+
+.nextStepButton:focus-visible {
+  outline: 2px solid var(--color-plum-500);
+  outline-offset: 4px;
+}
+
+.stressFeature {
+  background:
+    radial-gradient(ellipse var(--glow-width, 58%) var(--glow-height, 45%) at var(--glow-x, 48%) 106%, rgb(185 130 0 / 0.98) 0%, rgb(185 130 0 / 0.9) 39%, rgb(185 130 0 / 0.38) 69%, transparent 100%),
+    radial-gradient(ellipse var(--accent-width, 43%) var(--accent-height, 30%) at var(--accent-x, 77%) var(--accent-y, 85%), rgb(188 137 12 / 0.88) 0%, rgb(188 137 12 / 0.48) 46%, transparent 100%),
+    linear-gradient(145deg, #255866 0%, #2c5d67 42%, #50736f 100%);
+  color: #fff;
+}
+
+.featureIntro {
+  padding: 3.5rem 1.25rem;
+  text-align: center;
+}
+
+.featureIntro p {
+  max-width: 56rem;
+  margin-inline: auto;
+  font-size: clamp(1.125rem, 1.4vw, 1.25rem);
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+.featureLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.featurePhoto {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+}
+
+.featureImage {
+  object-fit: cover;
+  object-position: 40% center;
+}
+
+.featurePanel {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 3.5rem 1.5rem;
+}
+
+.featureCopy {
+  width: 100%;
+  max-width: 36rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.featureHeading {
+  font-size: clamp(1.5rem, 1.95vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.featureDescription {
+  margin-top: 1.75rem;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.featureButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  padding: 0.85rem 2rem;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.14);
+  color: #fff;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: background-color 200ms ease;
+}
+
+.featureButton:hover {
+  background: rgb(255 255 255 / 0.24);
+}
+
+.featureButton:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+.clearerMind {
+  background: linear-gradient(125deg, #2c5d6b 0%, #285b68 60%, #20545b 100%);
+  color: #fff;
+}
+
+.clearerMindImage {
+  object-position: 60% 65%;
+}
+
+.clearerMindButton {
+  background: #306574;
+  border-color: transparent;
+  box-shadow: 0 0 30px 8px rgb(185 145 39 / 0.4);
+}
+
+.betterHealth {
+  color: #fff;
+  background:
+    radial-gradient(ellipse 48% 105% at 106% 46%, #bf8c08 0%, rgb(191 140 8 / 0.95) 48%, rgb(174 122 0 / 0.55) 70%, transparent 100%),
+    #043d2a;
+}
+
+.healthImage {
+  object-position: center 58%;
+}
+
+.healthButton {
+  background: rgb(32 61 25 / 0.25);
+  border-color: transparent;
+  box-shadow: 0 0 28px 5px rgb(199 160 38 / 0.4);
+}
+
+.relationshipsFeature {
+  background:
+    radial-gradient(ellipse 50% 95% at 24% 90%, rgb(48 105 116 / 0.9) 0%, transparent 100%),
+    linear-gradient(110deg, #175c56 0%, #174f50 35%, #003b29 65%, #003b29 100%);
+}
+
+.relationshipsImage {
+  object-position: 58% center;
+}
+
+.peaceFeature {
+  color: #fff;
+  background:
+    radial-gradient(ellipse 46% 105% at 75% 45%, rgb(173 115 0 / 0.95) 0%, rgb(174 120 5 / 0.85) 50%, transparent 100%),
+    linear-gradient(140deg, #234b36 0%, #9e7009 55%, #4a756d 100%);
+}
+
+.peaceImage {
+  object-position: center 40%;
+}
+
+.peaceButton {
+  background: rgb(114 76 0 / 0.3);
+  border-color: transparent;
+  box-shadow: 0 0 28px 5px rgb(219 168 40 / 0.35);
+}
+
+@media (min-width: 40rem) {
+  .nextStep {
+    padding: 4rem 1.5rem;
+  }
+
+  .featureIntro {
+    padding: 4rem 2.5rem;
+  }
+
+  .featurePanel {
+    padding: 4rem;
+  }
+
+}
+
+@media (min-width: 64rem) {
+  .nextStep {
+    padding-block: 5.5rem;
+  }
+
+  .relationshipsFeature .featurePanel {
+    padding-block: 2.25rem;
+  }
+
+  .clearerMind.clearerMind {
+    grid-template-columns: minmax(0, 43fr) minmax(0, 57fr);
+  }
+
+  .clearerMindPhoto {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .clearerMindPanel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .stressFeature {
+    --glow-width: 25%;
+    --glow-height: 55%;
+    --glow-x: 78%;
+    --accent-width: 19%;
+    --accent-height: 36%;
+    --accent-x: 90%;
+    --accent-y: 74%;
+  }
+
+  .featureLayout {
+    grid-template-columns: minmax(0, 57fr) minmax(0, 43fr);
+    min-height: 500px;
+  }
+
+  .featurePhoto {
+    aspect-ratio: auto;
+  }
+
+  .featurePanel {
+    padding: 2.5rem clamp(2rem, 3vw, 4rem);
+  }
+}

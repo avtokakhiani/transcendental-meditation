@@ -29,6 +29,7 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
       { label: 'ტვინის ფუნქციონირების გაუმჯობესება', href: '/brain-function' as Route },
       { label: 'ურთიერთობების გაძლიერება', href: '/relationships' as Route },
       { label: 'მშვიდობის ხელშეწყობა', href: '/peace' as Route },
+      { label: 'ყველა სარგებელი', href: '/benefits' as Route },
     ],
   },
   { label: 'როგორ ვისწავლო?', href: '/#contact' as Route },
@@ -96,6 +97,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const transparentOnTop = pathname === '/stress-and-anxiety'
+    || pathname === '/benefits'
     || pathname === '/health'
     || pathname === '/brain-function'
     || pathname === '/relationships'

@@ -1,9 +1,12 @@
 'use client';
 
 import { useId, useState } from 'react';
+import type { Route } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Artwork, type ArtworkVariant } from '@/components/site/artwork';
 
-const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: ArtworkVariant }> = [
+const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: ArtworkVariant; href?: Route; image?: string; imageAlt?: string; imageWidth?: number; imageHeight?: number }> = [
   {
     label: 'სტრესისგან შვება',
     text: 'TM-ის პრაქტიკა ამცირებს კორტიზოლს — ჰორმონს, რომელიც სტრესთან ასოცირდება.',
@@ -27,12 +30,19 @@ const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: Artwo
     text: 'როცა შინაგანად მშვიდი ხარ, უფრო ყურადღებით უსმენ და ნაკლებად რეაგირებ იმპულსურად.',
     cta: 'გაიგე მეტი ურთიერთობებზე',
     art: 'circles',
+    href: '/relationships',
+    image: '/images/relationships-hero.jpeg',
   },
   {
     label: 'ნათელი გონება',
     text: 'ფოკუსი, მეხსიერება და შემოქმედებითობა იზრდება, როცა გონებას ყოველდღე ეძლევა დასვენება.',
     cta: 'გაიგე მეტი სიცხადეზე',
     art: 'horizon',
+    href: '/brain-function',
+    image: '/images/brain-function-hero-mountains.jpeg',
+    imageAlt: 'ქალი მთის მწვერვალზე ზის და მზით განათებულ პეიზაჟს გადაჰყურებს.',
+    imageWidth: 5472,
+    imageHeight: 3648,
   },
 ];
 
@@ -46,7 +56,7 @@ export function BenefitTabs() {
   }
 
   return (
-    <section id="why" className="scroll-mt-20 bg-cream-200 py-12 sm:py-14 lg:py-16">
+    <section id="why" className="scroll-mt-20 bg-cream-200 py-10 sm:py-12 lg:py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
         <div
           role="tablist"
@@ -86,7 +96,7 @@ export function BenefitTabs() {
         </div>
 
         {/* Overlapping panels reserve the tallest panel's space without animating layout. */}
-        <div className="mt-7 grid grid-rows-[auto_auto] gap-y-8 sm:mt-8 md:grid-rows-1 md:gap-y-0 lg:mt-10">
+        <div className="mt-6 grid grid-rows-[auto_auto] gap-y-8 sm:mt-7 md:grid-rows-1 md:gap-y-0 lg:mt-8">
           {TABS.map((tab, index) => (
             <div
               key={tab.label}
@@ -100,17 +110,39 @@ export function BenefitTabs() {
             >
               <div className="grid min-w-0 content-center gap-6 lg:gap-8">
                 <p className="max-w-[28rem] text-xl leading-relaxed font-light text-plum-800 sm:text-[22px] lg:text-2xl">{tab.text}</p>
-                <button
+                {tab.href ? (
+                  <Link
+                    href={tab.href}
+                    className="inline-flex min-h-14 w-full max-w-[19rem] items-center justify-center rounded-full bg-mist-300 px-6 py-4 text-sm leading-6 text-plum-800"
+                  >
+                    {tab.cta}
+                  </Link>
+                ) : (
+                  <button
                   type="button"
                   disabled
                   className="inline-flex min-h-14 w-full max-w-[19rem] items-center justify-center rounded-full bg-mist-300 px-6 py-4 text-sm leading-6 text-plum-800"
                 >
                   {tab.cta}
-                </button>
+                  </button>
+                )}
               </div>
 
-              <div className="aspect-square w-full min-w-0 overflow-hidden rounded-2xl [&>img]:size-full [&>img]:object-cover [&>img]:object-center">
-                <Artwork variant={tab.art} label={tab.label} className="size-full" />
+              <div className="aspect-[100/89] w-full min-w-0 overflow-hidden rounded-2xl [&>img]:size-full [&>img]:object-cover [&>img]:object-center">
+                {tab.image ? (
+                  <Image
+                    src={tab.image}
+                    alt={tab.imageAlt ?? 'მომღიმარი ქალი გაშლილი ხელებით ღია ცის ქვეშ.'}
+                    width={tab.imageWidth ?? 1734}
+                    height={tab.imageHeight ?? 1154}
+                    quality={90}
+                    sizes="(min-width: 768px) 45vw, 100vw"
+                    className="size-full object-cover"
+                    style={{ objectPosition: '58% center' }}
+                  />
+                ) : (
+                  <Artwork variant={tab.art} label={tab.label} className="size-full" />
+                )}
               </div>
             </div>
           ))}

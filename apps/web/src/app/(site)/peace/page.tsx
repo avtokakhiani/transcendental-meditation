@@ -5,6 +5,7 @@ import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
 import styles from './peace.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
 import chart from '../health/insomnia-section.module.css';
+import { PeaceResearchCarousel } from './peace-research-carousel';
 
 const HEADING = 'ტრანსცენდენტული მედიტაცია მსოფლიო მშვიდობის ხელშეწყობისთვის';
 
@@ -133,6 +134,7 @@ export default function PeacePage() {
           </div>
         </div>
       </section>
+      <PeaceResearchCarousel />
     </article>
   );
 }
