@@ -1,10 +1,10 @@
+import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
-import styles from './insomnia-section.module.css';
 
 export function InsomniaSection() {
   return (
-    <section aria-labelledby="insomnia-heading" className={science.section}>
-      <div className={`${science.layout} ${styles.layout}`}>
+    <section aria-labelledby="insomnia-heading" className={research.section}>
+      <div className={research.layout}>
         <div className={science.copy}>
           <h2 id="insomnia-heading" className={science.heading}>ტრანსცენდენტული მედიტაცია ხელს უწყობს უძილობის შემცირებას და ძილის ხარისხის გაუმჯობესებას</h2>
           <div className={science.description}>
@@ -13,12 +13,12 @@ export function InsomniaSection() {
             <p>ხარისხიანი ძილი მნიშვნელოვანია ორგანიზმის აღდგენისთვის, ენერგიის შენარჩუნებისა და ემოციური წონასწორობისთვის. ძილის გაუმჯობესებამ შესაძლოა ხელი შეუწყოს დაღლილობის შემცირებასა და საერთო კეთილდღეობის ამაღლებას.</p>
           </div>
         </div>
-        <figure className={science.figure}>
+        <figure className={research.figure}>
           <img
             src="/images/tm-insomnia-chart-en.svg"
             width={1367}
             height={998}
-            className={styles.chart}
+            className={research.chart}
             alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: უძილობის შემცირება ტრანსცენდენტული მედიტაციის პრაქტიკის დროს, კვლევის მითითებით."
             loading="lazy"
           />

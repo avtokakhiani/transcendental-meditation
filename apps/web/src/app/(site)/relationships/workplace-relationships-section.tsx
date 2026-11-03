@@ -1,10 +1,10 @@
+import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
-import styles from '../health/insomnia-section.module.css';
 
 export function WorkplaceRelationshipsSection() {
   return (
-    <section aria-labelledby="workplace-relationships-heading" className={science.section}>
-      <div className={`${science.layout} ${styles.layout}`}>
+    <section aria-labelledby="workplace-relationships-heading" className={research.section}>
+      <div className={research.layout}>
         <div className={science.copy}>
           <h2 id="workplace-relationships-heading" className={science.heading}>ტრანსცენდენტული მედიტაციის პრაქტიკა ხელს უწყობს სამუშაო გარემოში ურთიერთობების გაუმჯობესებას</h2>
           <div className={science.description}>
@@ -13,12 +13,12 @@ export function WorkplaceRelationshipsSection() {
             <p>ტრანსცენდენტული მედიტაციის პრაქტიკოსი თანამშრომლები ხშირად აღნიშნავენ, რომ თავს უფრო ბედნიერად და კმაყოფილად გრძნობენ. სხვადასხვა პროფესიულ ჯგუფში ჩატარებულ კვლევებში დაფიქსირდა სტრესის მიმართ მეტი გამძლეობა, შინაგანი სიმშვიდის გაძლიერება და ხელმძღვანელებსა თუ კოლეგებთან ურთიერთობების გაუმჯობესება.</p>
           </div>
         </div>
-        <figure className={science.figure}>
+        <figure className={research.figure}>
           <img
             src="/images/tm-workplace-relationships-chart-en.svg"
             width={1011}
             height={1378}
-            className={styles.chart}
+            className={research.chart}
             alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: სამუშაო გარემოში ურთიერთობების გაუმჯობესება ტრანსცენდენტული მედიტაციის პრაქტიკის დროს, კვლევის მითითებით."
             loading="lazy"
           />

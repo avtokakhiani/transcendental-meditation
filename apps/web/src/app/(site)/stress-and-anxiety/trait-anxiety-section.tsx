@@ -1,10 +1,10 @@
+import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
-import styles from './trait-anxiety-section.module.css';
 
 export function TraitAnxietySection() {
   return (
-    <section aria-labelledby="trait-anxiety-heading" className={science.section}>
-      <div className={`${science.layout} ${styles.layout}`}>
+    <section aria-labelledby="trait-anxiety-heading" className={research.section}>
+      <div className={research.layout}>
         <div className={science.copy}>
           <h2 id="trait-anxiety-heading" className={science.heading}>ტრანსცენდენტული მედიტაცია ხასიათობრივი შფოთვის შემცირებაში სხვა მედიტაციის მეთოდებზე უფრო ეფექტურია</h2>
           <div className={science.description}>
@@ -12,12 +12,12 @@ export function TraitAnxietySection() {
             <p>TM-ის ტექნიკის დამამშვიდებელი ზემოქმედება ნერვულ სისტემაზე ადამიანებს ეხმარება როგორც შფოთვის მართვაში, ისე ტრავმისგან აღდგენაში.</p>
           </div>
         </div>
-        <figure className={science.figure}>
+        <figure className={research.figure}>
           <img
             src="/images/tm-trait-anxiety-reduction-chart-no-title-en.svg"
             width={881}
             height={883}
-            className={styles.chart}
+            className={research.chart}
             alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: ხასიათობრივი შფოთვის შემცირების შედარება TM-ისა და სხვა მეთოდების შემთხვევაში, ორიგინალური კვლევის მითითებით."
             loading="lazy"
           />

@@ -1,9 +1,10 @@
+import research from '@/components/research-layout.module.css';
 import styles from './what-is-tm-different.module.css';
 
 export function WhatIsTmDifferent() {
   return (
-    <section aria-labelledby="tm-different-heading" className={styles.section}>
-      <div className={styles.layout}>
+    <section aria-labelledby="tm-different-heading" className={research.section}>
+      <div className={research.layout}>
         <div className={styles.copy}>
           <h2 id="tm-different-heading" className={styles.heading}>რით განსხვავდება ტრანსცენდენტული მედიტაცია?</h2>
           <div className={styles.description}>
@@ -11,7 +12,7 @@ export function WhatIsTmDifferent() {
             <p>ტრანსცენდენტული მედიტაციის პრაქტიკის დროს შეიძლება გამოვლინდეს ტვინის ფუნქციონირების განსხვავებული მახასიათებლები, რომლებიც სამეცნიერო კვლევებშია შესწავლილი. TM-ის ერთ-ერთი მთავარი თავისებურება ისაა, რომ ტექნიკა არ მოითხოვს ძალისხმევას, ყურადღების კონცენტრაციას ან გონების კონტროლს.</p>
           </div>
         </div>
-        <figure className={styles.figure}>
+        <figure className={research.figure}>
           <p id="tm-comparison-scroll-hint" className={styles.scrollHint}>
             სრული დიაგრამის სანახავად გადაასრიალეთ ჰორიზონტალურად <span aria-hidden="true">↔</span>
           </p>
@@ -23,7 +24,7 @@ export function WhatIsTmDifferent() {
             tabIndex={0}
           >
             <img
-              className={styles.chart}
+              className={research.chart}
               src="/images/meditation-eeg-comparison-en.svg"
               width={2423}
               height={1239}

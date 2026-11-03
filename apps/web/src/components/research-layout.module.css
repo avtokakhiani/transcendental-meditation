@@ -1,0 +1,84 @@
+/* Shared geometry for research charts; section-specific typography stays with its content. */
+.section,
+.embedded {
+  --research-section-padding: 48px;
+}
+
+.section {
+  padding-block: var(--research-section-padding);
+  background-color: var(--color-cream-100);
+  color: var(--color-plum-800);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 32px;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+.layout > * {
+  min-width: 0;
+}
+
+.layout > figure {
+  order: 1;
+}
+
+/* Article blocks share the container and use the full section gap after preceding copy. */
+.embedded {
+  composes: layout;
+  margin-top: calc(2 * var(--research-section-padding));
+}
+
+.figure {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.chart {
+  display: block;
+  width: 80%;
+  min-width: 0;
+  max-width: 480px;
+  height: auto;
+  margin-inline: auto;
+  object-fit: contain;
+}
+
+@media (min-width: 40rem) {
+  .section,
+  .embedded {
+    --research-section-padding: 64px;
+  }
+
+  .layout {
+    padding-inline: 24px;
+  }
+
+}
+
+@media (min-width: 64rem) {
+  .section,
+  .embedded {
+    --research-section-padding: 88px;
+  }
+
+  .layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px;
+    padding-inline: 48px;
+  }
+
+  .layout > figure {
+    order: 0;
+  }
+
+}

@@ -1,10 +1,10 @@
+import research from '@/components/research-layout.module.css';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
 import styles from './peace.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
-import chart from '../health/insomnia-section.module.css';
 import { PeaceResearchCarousel } from './peace-research-carousel';
 
 const HEADING = 'ტრანსცენდენტული მედიტაცია მსოფლიო მშვიდობის ხელშეწყობისთვის';
@@ -45,8 +45,8 @@ export default function PeacePage() {
           </div>
         </div>
       </section>
-      <section aria-labelledby="middle-east-peace-heading" className={science.section}>
-        <div className={`${science.layout} ${chart.layout}`}>
+      <section aria-labelledby="middle-east-peace-heading" className={research.section}>
+        <div className={research.layout}>
           <div className={science.copy}>
             <h2 id="middle-east-peace-heading" className={science.heading}>ტრანსცენდენტული მედიტაციის ტექნიკა და ომის გავლენის შემცირება ახლო აღმოსავლეთში</h2>
             <div className={science.description}>
@@ -54,20 +54,20 @@ export default function PeacePage() {
               <p>იმ დღეებში, როდესაც ჯგუფის მონაწილეთა რაოდენობა მაღალი იყო, მეზობელ ლიბანში ომის შედეგად დაღუპულთა რიცხვი 76%-ით შემცირდა. ექსპერიმენტმა აჩვენა საზოგადოებრივი ცხოვრების ხარისხის გაუმჯობესება იერუსალიმსა და ისრაელში, ასევე ომთან დაკავშირებული მდგომარეობის გაუმჯობესება ლიბანში.</p>
             </div>
           </div>
-          <figure className={science.figure}>
+          <figure className={research.figure}>
             <img
               src="/images/tm-middle-east-peace-chart-en.svg"
               width={1702}
               height={1022}
-              className={chart.chart}
+              className={research.chart}
               alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: ახლო აღმოსავლეთში ომის გავლენის შემცირება, კვლევის მითითებით."
               loading="lazy"
             />
           </figure>
         </div>
       </section>
-      <section aria-labelledby="peace-replications-heading" className={science.section}>
-        <div className={`${science.layout} ${chart.layout}`}>
+      <section aria-labelledby="peace-replications-heading" className={research.section}>
+        <div className={research.layout}>
           <div className={`${science.copy} ${styles.replicationsCopy}`}>
             <h2 id="peace-replications-heading" className={science.heading}>ახლო აღმოსავლეთში ჩატარებული კვლევის ექვსჯერ გამეორება</h2>
             <div className={science.description}>
@@ -81,20 +81,20 @@ export default function PeacePage() {
               </ul>
             </div>
           </div>
-          <figure className={`${science.figure} ${styles.replicationsFigure}`}>
+          <figure className={`${research.figure} ${styles.replicationsFigure}`}>
             <img
               src="/images/tm-lebanon-replications-chart-en.svg"
               width={1703}
               height={941}
-              className={chart.chart}
+              className={research.chart}
               alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: ლიბანში ჩატარებული კვლევის გამეორებების შედეგები, კვლევის მითითებით."
               loading="lazy"
             />
           </figure>
         </div>
       </section>
-      <section aria-labelledby="us-quality-life-heading" className={science.section}>
-        <div className={`${science.layout} ${chart.layout}`}>
+      <section aria-labelledby="us-quality-life-heading" className={research.section}>
+        <div className={research.layout}>
           <div className={science.copy}>
             <h2 id="us-quality-life-heading" className={science.heading}>ტრანსცენდენტული მედიტაცია და ცხოვრების ხარისხის გაუმჯობესება შეერთებულ შტატებში</h2>
             <div className={science.description}>
@@ -102,12 +102,12 @@ export default function PeacePage() {
               <p>მნიშვნელოვნად შემცირდა მკვლელობების, გაუპატიურების, ძალადობრივი თავდასხმების, ძარცვის, ჩვილთა სიკვდილიანობის, ნარკოტიკებთან დაკავშირებული სიკვდილიანობის, ავტოსაგზაო შემთხვევებით გამოწვეული სიკვდილიანობისა და დაზიანებების შედეგად ბავშვთა გარდაცვალების მაჩვენებლები.</p>
             </div>
           </div>
-          <figure className={science.figure}>
+          <figure className={research.figure}>
             <img
               src="/images/tm-us-quality-life-chart-en.svg"
               width={1703}
               height={1108}
-              className={chart.chart}
+              className={research.chart}
               alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: შეერთებულ შტატებში ცხოვრების ხარისხის გაუმჯობესება, კვლევის მითითებით."
               loading="lazy"
             />

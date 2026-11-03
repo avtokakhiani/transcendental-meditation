@@ -1,10 +1,10 @@
+import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
-import styles from '../health/insomnia-section.module.css';
 
 export function SelfEsteemSection() {
   return (
-    <section aria-labelledby="self-esteem-heading" className={science.section}>
-      <div className={`${science.layout} ${styles.layout}`}>
+    <section aria-labelledby="self-esteem-heading" className={research.section}>
+      <div className={research.layout}>
         <div className={science.copy}>
           <h2 id="self-esteem-heading" className={science.heading}>TM პრაქტიკა ამცირებს სტრესს და აძლიერებს თვითშეფასებას</h2>
           <div className={science.description}>
@@ -12,12 +12,12 @@ export function SelfEsteemSection() {
             <p>რვა თვის შემდეგ, მედიტაციის პრაქტიკაში ჩართული მონაწილეების 89%-მა აღნიშნა ჯანმრთელობის გაუმჯობესება, 98%-მა — სტრესისა და შფოთვის შემცირება, 98%-მა — ოჯახის წევრებთან ურთიერთობის გაუმჯობესება, ხოლო 88%-მა — მეგობრებთან და მეზობლებთან ურთიერთობის გაუმჯობესება.</p>
           </div>
         </div>
-        <figure className={science.figure}>
+        <figure className={research.figure}>
           <img
             src="/images/tm-self-esteem-uganda-chart-en.svg"
             width={2864}
             height={1166}
-            className={styles.chart}
+            className={research.chart}
             alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: უგანდაში ქალების თვითშეფასების, თვითეფექტურობისა და მადლიერების ცვლილებები, კვლევის მითითებით."
             loading="lazy"
           />

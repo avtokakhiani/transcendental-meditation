@@ -4,7 +4,7 @@ import hero from '../../stress-and-anxiety/stress-and-anxiety.module.css';
 import overlay from '../articles-hero.module.css';
 import { ArticlesHeaderBackground } from '../articles-header-background';
 import styles from './stress-article-hero.module.css';
-import science from './what-is-tm-different.module.css';
+import research from '@/components/research-layout.module.css';
 
 export function StressArticleHero({ title, image }: { title: string; image: NonNullable<Article['image']> }) {
   return (
@@ -22,8 +22,8 @@ export function StressArticleHero({ title, image }: { title: string; image: NonN
         />
         <h1 id="stress-article-heading" className={hero.heading}>{title}</h1>
       </section>
-      <div className="bg-cream-100 px-5 py-12 text-plum-800 sm:py-16">
-        <div className="mx-auto max-w-[760px] space-y-6 text-left text-base leading-[1.85] sm:text-lg">
+      <div className="bg-cream-100 py-12 text-plum-800 sm:py-16">
+        <div className="mx-auto max-w-[800px] space-y-6 px-5 text-left text-base leading-[1.85] sm:text-lg">
           <p>სტრესი დაძაბულობის განცდაა. ეს არის ფსიქოლოგიური და ფიზიოლოგიური რეაქცია აღქმულ საფრთხეებსა თუ გამოწვევებზე. მედიტაციის რეგულარული პრაქტიკა ხელს უწყობს სტრესისგან გათავისუფლებასა და ფსიქიკური კეთილდღეობის გაუმჯობესებას.</p>
           <p>მიუხედავად იმისა, რომ ხანმოკლე სტრესი შეიძლება სასარგებლო იყოს — მოქმედებისკენ გვიბიძგებდეს და ჩვენი საქმიანობის ეფექტიანობას ზრდიდეს — სათანადო მართვის გარეშე ქრონიკულმა სტრესმა შეიძლება <strong>მძიმე უარყოფითი გავლენა</strong> მოახდინოს როგორც ფიზიკურ, ისე ფსიქიკურ ჯანმრთელობაზე.</p>
           <p>სტრესის მართვის სხვადასხვა მეთოდი არსებობს. კვლევებმა აჩვენა, რომ <strong>მედიტაცია სტრესის შესამცირებლად</strong> ეფექტური საშუალებაა არა მხოლოდ სტრესის შესამცირებლად და სამართავად, არამედ მისგან გამოწვეული მრავალი ფიზიკური და ფსიქოლოგიური სიმპტომის წინასწარ დასაძლევადაც.</p>
@@ -83,7 +83,7 @@ export function StressArticleHero({ title, image }: { title: string; image: NonN
           <p>ტრანსცენდენტული მედიტაციის (TM) ტექნიკის შესახებ ჩატარებულია 650-ზე მეტი <strong>რეცენზირებული და გამოქვეყნებული სამეცნიერო კვლევა</strong>. ამ კვლევებში შესწავლილია ტექნიკის გავლენა ჯანმრთელობისა და კეთილდღეობის სხვადასხვა ასპექტზე, მათ შორის სტრესზე, შფოთვაზე, გულ-სისხლძარღვთა ჯანმრთელობასა და შემეცნებით ფუნქციებზე.</p>
           <p>TM-ის სარგებლის დამადასტურებელი კვლევების დიდი რაოდენობა მას მედიტაციის <strong>ერთ-ერთ ყველაზე ფართოდ პრაქტიკებულ ტექნიკად</strong> აქცევს.</p>
         </div>
-        <div className={`${science.layout} ${styles.researchLayout} mt-12 text-left text-base leading-[1.85] sm:mt-16 sm:text-lg lg:mt-28`}>
+        <div className={`${research.embedded} text-left text-base leading-[1.85] sm:text-lg`}>
           <div className="min-w-0 space-y-6">
             <p>მაღალი არტერიული წნევის მქონე ადამიანებში სტრესის შემცირების შესახებ გამოქვეყნებული ყველა რანდომიზებული კონტროლირებადი კვლევის ყოვლისმომცველმა ანალიზმა აჩვენა, რომ ტრანსცენდენტული მედიტაცია იყო <strong>ერთადერთი ტექნიკა</strong>, რომელმაც არტერიული წნევა მნიშვნელოვნად შეამცირა.</p>
             <p>ქვემოთ მოცემულია რამდენიმე ძირითადი შედეგი, რომლებიც სტრესის შემცირებისთვის ტრანსცენდენტული მედიტაციის ტექნიკის გამოყენების ეფექტებს ეხება:</p>
@@ -100,11 +100,11 @@ export function StressArticleHero({ title, image }: { title: string; image: NonN
               alt="Scientific research chart comparing anxiety reduction with Transcendental Meditation and other techniques"
               width={881}
               height={1253}
-              className={styles.researchChart}
+              className={research.chart}
             />
           </figure>
         </div>
-        <div className={`${science.layout} ${styles.researchLayout} mt-12 text-left text-base leading-[1.85] sm:mt-16 sm:text-lg lg:mt-28`}>
+        <div className={`${research.embedded} text-left text-base leading-[1.85] sm:text-lg`}>
           <div className="min-w-0 lg:col-start-2 lg:row-start-1">
             <ul className="list-disc space-y-2 pl-6 leading-[1.5]">
               <li><strong>სტრესის მიმართ გამძლეობის გაძლიერება:</strong> TM-ის ტექნიკა დროთა განმავლობაში ხელს უწყობს სტრესის მიმართ გამძლეობის განვითარებას. რეგულარულმა პრაქტიკამ შეიძლება ხელი შეუწყოს სტრესულ სიტუაციებზე უფრო გაწონასწორებულ და ადაპტურ რეაგირებას.⁵</li>
@@ -119,7 +119,7 @@ export function StressArticleHero({ title, image }: { title: string; image: NonN
               alt="Reduction of high blood pressure: health education −1.8, control techniques −4, TM practice −11 mm Hg. Reference: Anderson JW, Liu C, Kryscio RJ, American Journal of Hypertension 21 (3): 310–316, 2008."
               width={2123}
               height={1589}
-              className={styles.researchChart}
+              className={research.chart}
             />
           </figure>
         </div>

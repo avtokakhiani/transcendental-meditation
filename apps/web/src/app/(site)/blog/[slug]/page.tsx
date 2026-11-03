@@ -52,10 +52,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       return <StressArticleHero title="მედიტაცია სტრესის შესამცირებლად" image={article.image} />;
     }
     if (article.slug === 'gulis-janmrteloba-da-meditatsia' && article.image) {
-      return <HeartArticleHero title={article.title} image={article.image} />;
+      return <HeartArticleHero title="გულის ჯანმრთელობა და მედიტაცია" image={article.image} />;
     }
     if (article.slug === 'meditatsia-uketesi-dzilistvis' && article.image) {
-      return <SleepArticleHero title={article.title} image={article.image} />;
+      return <SleepArticleHero title="მედიტაცია უკეთესი ძილისთვის" image={article.image} />;
     }
     return (
       <article className={articleStyles.articlePage}>

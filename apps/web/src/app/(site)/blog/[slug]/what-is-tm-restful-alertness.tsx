@@ -1,10 +1,11 @@
+import research from '@/components/research-layout.module.css';
 import styles from './what-is-tm-different.module.css';
 import mirrored from './what-is-tm-restful-alertness.module.css';
 
 export function WhatIsTmRestfulAlertness() {
   return (
-    <section aria-labelledby="tm-restful-alertness-heading" className={styles.section}>
-      <div className={styles.layout}>
+    <section aria-labelledby="tm-restful-alertness-heading" className={research.section}>
+      <div className={research.layout}>
         <div className={`${styles.copy} ${mirrored.copy}`}>
           <h2 id="tm-restful-alertness-heading" className={styles.heading}>ტრანსცენდენტული მედიტაცია — ღრმა დასვენებისა და სიფხიზლის უნიკალური მდგომარეობა</h2>
           <div className={styles.description}>
@@ -13,7 +14,7 @@ export function WhatIsTmRestfulAlertness() {
             <p>მაჰარიშის მიერ აღწერილი ცნობიერების მოდელის მიხედვით, ტრანსცენდენტული ცნობიერება ცნობიერების მეოთხე ძირითადი მდგომარეობაა, რომელიც განსხვავდება ჩვეულებრივი სიფხიზლისგან, ძილისა და სიზმრისგან. მას ახასიათებენ როგორც ღრმა დასვენებისა და შინაგანი სიფხიზლის ერთდროულ გამოცდილებას.</p>
           </div>
         </div>
-        <figure className={`${styles.figure} ${mirrored.figure}`}>
+        <figure className={`${research.figure} ${mirrored.figure}`}>
           <p id="tm-restful-alertness-scroll-hint" className={styles.scrollHint}>
             სრული დიაგრამის სანახავად გადაასრიალეთ ჰორიზონტალურად <span aria-hidden="true">↔</span>
           </p>
@@ -25,7 +26,7 @@ export function WhatIsTmRestfulAlertness() {
             tabIndex={0}
           >
             <img
-              className={styles.chart}
+              className={research.chart}
               src="/images/tm-restful-alertness-science-chart-en.svg"
               width={1425}
               height={1589}

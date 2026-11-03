@@ -1,12 +1,12 @@
+import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
-import chart from '../health/insomnia-section.module.css';
 import placement from '../health/heart-health-section.module.css';
 import styles from './communication-section.module.css';
 
 export function CommunicationSection() {
   return (
-    <section aria-labelledby="communication-heading" className={science.section}>
-      <div className={`${science.layout} ${chart.layout}`}>
+    <section aria-labelledby="communication-heading" className={research.section}>
+      <div className={research.layout}>
         <div className={`${science.copy} ${placement.copy}`}>
           <h2 id="communication-heading" className={science.heading}>ტრანსცენდენტული მედიტაცია ხელს უწყობს კომუნიკაციისა და ურთიერთგაგების გაუმჯობესებას</h2>
           <div className={science.description}>
@@ -15,7 +15,7 @@ export function CommunicationSection() {
             <p>ემოციური რეაქტიულობის შემცირება და შინაგანი სიმშვიდის გაძლიერება ხელს უწყობს უფრო თბილი და ჰარმონიული ურთიერთობების ჩამოყალიბებას, განსაკუთრებით ოჯახის წევრებსა და მეგობრებთან. ამასთან, საკუთარი ემოციების უკეთ გაცნობიერება და თვითშეფასების განვითარება შეიძლება ურთიერთგაგების გაღრმავებასაც უწყობდეს ხელს.</p>
           </div>
         </div>
-        <figure className={`${science.figure} ${placement.figure}`}>
+        <figure className={`${research.figure} ${placement.figure}`}>
           <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
             <defs>
               <filter id="family-chart-background" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
@@ -41,7 +41,7 @@ export function CommunicationSection() {
             src="/images/tm-less-family-problems-chart.png"
             width={620}
             height={540}
-            className={`${chart.chart} ${styles.chart}`}
+            className={`${research.chart} ${styles.chart}`}
             alt="ინგლისურენოვანი დიაგრამა Less family problems: ოჯახური პრობლემების ცვლილება ფსიქოთერაპიისა და TM-ის პრაქტიკის დროს, სამეცნიერო წყაროს მითითებით."
             loading="lazy"
           />

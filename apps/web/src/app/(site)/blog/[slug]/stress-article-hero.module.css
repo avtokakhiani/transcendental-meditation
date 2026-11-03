@@ -11,18 +11,6 @@
   object-position: 40% center;
 }
 
-.researchLayout.researchLayout {
-  gap: 48px;
-}
-
-.researchChart {
-  display: block;
-  width: 80%;
-  max-width: 480px;
-  height: auto;
-  margin-inline: auto;
-}
-
 .firstStep {
   padding: 4rem 1.25rem;
   color: var(--color-plum-800);

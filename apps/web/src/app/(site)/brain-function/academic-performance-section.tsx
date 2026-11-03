@@ -1,16 +1,16 @@
+import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
-import styles from '../health/insomnia-section.module.css';
 
 export function AcademicPerformanceSection() {
   return (
-    <section aria-labelledby="academic-performance-heading" className={science.section}>
-      <div className={`${science.layout} ${styles.layout}`}>
-        <figure className={science.figure}>
+    <section aria-labelledby="academic-performance-heading" className={research.section}>
+      <div className={research.layout}>
+        <figure className={research.figure}>
           <img
             src="/images/tm-academic-performance-chart-en.svg"
             width={2218}
             height={3331}
-            className={styles.chart}
+            className={research.chart}
             alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: აკადემიური მოსწრების გაუმჯობესება ტრანსცენდენტული მედიტაციის პრაქტიკის დროს."
             loading="lazy"
           />

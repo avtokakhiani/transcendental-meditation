@@ -1,10 +1,10 @@
+import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
-import styles from '../health/insomnia-section.module.css';
 
 export function CoherenceSection() {
   return (
-    <section aria-labelledby="brain-coherence-heading" className={science.section}>
-      <div className={`${science.layout} ${styles.layout}`}>
+    <section aria-labelledby="brain-coherence-heading" className={research.section}>
+      <div className={research.layout}>
         <div className={science.copy}>
           <h2 id="brain-coherence-heading" className={science.heading}>ტვინის ტალღების კოჰერენტულობის ზრდა ტრანსცენდენტული მედიტაციის დროს და მის შემდეგ</h2>
           <div className={science.description}>
@@ -12,12 +12,12 @@ export function CoherenceSection() {
             <p>კვლევები ასევე მიუთითებს, რომ ტრანსცენდენტული მედიტაციის დროს ტრანსცენდირების გამოცდილება დაკავშირებულია ტვინის სხვადასხვა უბანს შორის ელექტრული აქტივობის უფრო მაღალ კოჰერენტულობასთან. ეს შეიძლება ასახავდეს ტვინის ფუნქციონირების უფრო ინტეგრირებულ და შეთანხმებულ ორგანიზებას.</p>
           </div>
         </div>
-        <figure className={science.figure}>
+        <figure className={research.figure}>
           <img
             src="/images/tm-alpha-coherence-diagram-en.svg"
             width={1759}
             height={1356}
-            className={styles.chart}
+            className={research.chart}
             alt="ინგლისურენოვანი დიაგრამა: ტვინის ტალღების კოჰერენტულობის სამი ილუსტრაცია, სამეცნიერო წყაროს მითითებით."
             loading="lazy"
           />

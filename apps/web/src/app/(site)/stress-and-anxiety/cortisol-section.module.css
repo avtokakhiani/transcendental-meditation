@@ -1,21 +1,3 @@
-.layout.layout {
-  align-items: center;
-  column-gap: 48px;
-}
-
-.chart {
-  display: block;
-  width: 80%;
-  max-width: 480px;
-  height: auto;
-  margin-inline: auto;
-}
-
-.smallerChart {
-  width: 70.4%;
-  max-width: 422.4px;
-}
-
 @media (min-width: 64rem) {
   .copy {
     grid-column: 2;
