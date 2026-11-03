@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { TeacherCta } from '@/components/teacher-cta';
 import type { Article } from '@/content/articles';
 import hero from '../../stress-and-anxiety/stress-and-anxiety.module.css';
 import overlay from '../articles-hero.module.css';
@@ -84,16 +85,10 @@ export function HeartArticleHero({ title, image }: { title: string; image: NonNu
           </figure>
         </div>
       </div>
-      <section aria-labelledby="heart-teacher-heading" className={styles.teacherSection}>
-        <div className="mx-auto w-full max-w-[760px]">
-          <h2 id="heart-teacher-heading" className="text-3xl font-normal leading-[1.45] sm:text-4xl">იპოვე TM-ის მასწავლებელი</h2>
-          <div className="mt-8 space-y-6 text-base leading-[1.7] sm:text-lg">
-            <p>ტრანსცენდენტული მედიტაციის ტექნიკა ერთ-ერთი სასარგებლო საშუალებაა, რომელიც შეგიძლია გამოიყენო გულის ჯანმრთელობის გასაუმჯობესებლად და გულის დაავადებების რისკის შესამცირებლად.</p>
-            <p>დაუკავშირდი შენს რეგიონში მოქმედ სერტიფიცირებულ TM-ის მასწავლებელს, რათა მეტი გაიგო ტრანსცენდენტული მედიტაციის ტექნიკისა და მისი მრავალი სხვა სარგებლის შესახებ.</p>
-          </div>
-          <a href="#contact" className="mt-8 inline-flex min-h-16 max-w-full items-center justify-center rounded-full bg-cream-100 px-10 py-4 text-base leading-relaxed text-plum-800 transition-colors hover:bg-cream-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-800 sm:min-w-[300px] sm:text-lg">იპოვე მასწავლებელი</a>
-        </div>
-      </section>
+      <TeacherCta headingId="heart-teacher-heading">
+        <p>ტრანსცენდენტული მედიტაციის ტექნიკა ერთ-ერთი სასარგებლო საშუალებაა, რომელიც შეგიძლია გამოიყენო გულის ჯანმრთელობის გასაუმჯობესებლად და გულის დაავადებების რისკის შესამცირებლად.</p>
+        <p>დაუკავშირდი შენს რეგიონში მოქმედ სერტიფიცირებულ TM-ის მასწავლებელს, რათა მეტი გაიგო ტრანსცენდენტული მედიტაციის ტექნიკისა და მისი მრავალი სხვა სარგებლის შესახებ.</p>
+      </TeacherCta>
     </article>
   );
 }

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { TeacherCta } from '@/components/teacher-cta';
 import type { Article } from '@/content/articles';
 import hero from '../../stress-and-anxiety/stress-and-anxiety.module.css';
 import overlay from '../articles-hero.module.css';
@@ -75,6 +76,9 @@ export function SleepArticleHero({ title, image }: { title: string; image: NonNu
           <p>კვლევები მიუთითებს, რომ ტრანსცენდენტული მედიტაციის ტექნიკა ხელს უწყობს სტრესის ხანგრძლივ აღმოფხვრას, რასაც ადამიანის ცხოვრებაზე <strong>გარდამქმნელი გავლენის</strong> მოხდენა შეუძლია. ტრანსცენდენტული მედიტაციის სარგებელი გაცილებით სცდება ძილის გაუმჯობესებას და მოიცავს ჯანმრთელობის მრავალი მდგომარეობის, აზროვნების სიცხადისა და ზოგადი კეთილდღეობის მრავალმხრივ გაუმჯობესებას.</p>
         </div>
       </div>
+      <TeacherCta headingId="sleep-teacher-heading">
+        <p>დაუკავშირდი შენთან ახლოს მყოფ სერტიფიცირებულ TM-ის მასწავლებელს, რათა მეტი გაიგო ტრანსცენდენტული მედიტაციის შესწავლის მრავალმხრივი სარგებლის შესახებ.</p>
+      </TeacherCta>
     </article>
   );
 }

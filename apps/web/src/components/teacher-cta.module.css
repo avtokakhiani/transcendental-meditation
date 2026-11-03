@@ -1,0 +1,17 @@
+.section {
+  display: grid;
+  place-items: center;
+  min-height: 450px;
+  padding: 3rem 1.25rem;
+  color: var(--color-plum-800);
+  text-align: center;
+  background-image: url('/images/tm-transitional-warm-yellow-blue.jpeg');
+  background-position: center;
+  background-size: cover;
+}
+
+@media (min-width: 40rem) {
+  .section {
+    padding: 3.5rem 3rem;
+  }
+}
