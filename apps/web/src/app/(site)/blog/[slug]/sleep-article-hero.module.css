@@ -1,0 +1,12 @@
+.hero.hero::before {
+  background: linear-gradient(
+    to bottom,
+    rgb(25 17 24 / 0.35),
+    rgb(25 17 24 / 0.4) 55%,
+    rgb(25 17 24 / 0.2)
+  );
+}
+
+.photograph.photograph {
+  object-position: 70% center;
+}

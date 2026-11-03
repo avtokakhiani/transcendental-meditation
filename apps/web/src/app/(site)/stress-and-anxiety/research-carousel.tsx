@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { externalLinkProps } from '@/lib/links';
 import styles from './research-carousel.module.css';
 
 const RESEARCH = [
@@ -174,7 +175,7 @@ export function ResearchCarousel({
                   <div className={styles.citation} lang="en">
                     <p className={styles.authors}>{research.authors}</p>
                     <p className={styles.source}>
-                      <a href={research.url} target="_blank" rel="noopener noreferrer" tabIndex={cardIndex < index || cardIndex >= index + visible ? -1 : undefined}>
+                      <a href={research.url} {...externalLinkProps(research.url)} tabIndex={cardIndex < index || cardIndex >= index + visible ? -1 : undefined}>
                         {research.source}
                       </a>
                     </p>

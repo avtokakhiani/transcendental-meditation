@@ -2,6 +2,7 @@ import { Mail, MapPin, Phone } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { SITE } from '@/lib/site';
+import { externalLinkProps } from '@/lib/links';
 import { Logo } from './logo';
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from './social-icons';
 
@@ -50,6 +51,7 @@ export function SiteFooter() {
               href !== null ? <a
                 key={label}
                 href={href}
+                {...externalLinkProps(href)}
                 aria-label={label}
                 className={socialClass}
               >

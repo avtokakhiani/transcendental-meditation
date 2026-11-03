@@ -15,6 +15,12 @@ import { WhatIsTmDifferent } from './what-is-tm-different';
 import { WhatIsTmRestfulAlertness } from './what-is-tm-restful-alertness';
 import { WhatIsTmMaharishi } from './what-is-tm-maharishi';
 import { WhatIsTmTonyNader } from './what-is-tm-tony-nader';
+import { getArticle } from '@/content/articles';
+import { ArticleImage } from '../article-image';
+import articleStyles from '../latest-articles.module.css';
+import { StressArticleHero } from './stress-article-hero';
+import { HeartArticleHero } from './heart-article-hero';
+import { SleepArticleHero } from './sleep-article-hero';
 
 const INTRO_SLUG = 'ra-aris-transtsendentuli-meditatsia';
 const INTRO_DESCRIPTION = 'რა არის ტრანსცენდენტული მედიტაცია, როგორ ისწავლება და რას აღწერს კვლევა? გაეცანი უძალისხმევო პრაქტიკას, მის ისტორიას და ცნობიერების შესახებ განმარტებებს.';
@@ -25,7 +31,10 @@ export const dynamic = 'force-dynamic';
 const loadPost = cache((slug: string) => getPublishedPost(prisma, slug));
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const post = await loadPost((await params).slug);
+  const { slug } = await params;
+  const article = getArticle(slug);
+  if (article) return { title: article.title, description: article.description };
+  const post = await loadPost(slug);
   if (post === null) return {};
   const description = post.slug === INTRO_SLUG ? INTRO_DESCRIPTION : post.excerpt;
   return {
@@ -36,7 +45,30 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const post = await loadPost((await params).slug);
+  const { slug } = await params;
+  const article = getArticle(slug);
+  if (article) {
+    if (article.slug === 'meditatsia-stresis-shesamtsireblad' && article.image) {
+      return <StressArticleHero title="მედიტაცია სტრესის შესამცირებლად" image={article.image} />;
+    }
+    if (article.slug === 'gulis-janmrteloba-da-meditatsia' && article.image) {
+      return <HeartArticleHero title={article.title} image={article.image} />;
+    }
+    if (article.slug === 'meditatsia-uketesi-dzilistvis' && article.image) {
+      return <SleepArticleHero title={article.title} image={article.image} />;
+    }
+    return (
+      <article className={articleStyles.articlePage}>
+        <div className={articleStyles.articleContainer}>
+          <h1 className={articleStyles.articleTitle}>{article.title}</h1>
+          <div className={articleStyles.articleImage}>
+            <ArticleImage image={article.image} />
+          </div>
+        </div>
+      </article>
+    );
+  }
+  const post = await loadPost(slug);
   if (post === null) notFound();
   const isIntroduction = post.slug === INTRO_SLUG;
   if (isIntroduction) preload('/images/what-is-tm-beach-original.jpeg', { as: 'image', fetchPriority: 'high' });

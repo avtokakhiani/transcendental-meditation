@@ -3,6 +3,7 @@ import Image from 'next/image';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
 import styles from './articles-hero.module.css';
 import { ArticlesHeaderBackground } from './articles-header-background';
+import { LatestArticles } from './latest-articles';
 
 export const metadata: Metadata = {
   title: 'სტატიები',
@@ -25,6 +26,7 @@ export default function BlogPage() {
         />
         <h1 id="articles-heading" className={hero.heading}>აღმოაჩინე მეტი ტრანსცენდენტული მედიტაციის შესახებ</h1>
       </section>
+      <LatestArticles />
     </>
   );
 }

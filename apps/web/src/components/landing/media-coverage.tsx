@@ -1,5 +1,6 @@
 import { ExternalLink } from 'lucide-react';
 import Image from 'next/image';
+import { externalLinkProps } from '@/lib/links';
 import headingStyles from './section-heading.module.css';
 
 const PUBLICATIONS = [
@@ -52,8 +53,7 @@ export function MediaCoverage() {
             <li key={name} className="min-w-0">
               <a
                 href={href}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...externalLinkProps(href)}
                 aria-labelledby={`media-publication-${index} media-link-${index}`}
                 className="group flex h-full flex-col rounded-xl border border-cream-300 bg-cream-50 p-5 text-plum-800 transition-colors hover:border-plum-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-700"
               >
