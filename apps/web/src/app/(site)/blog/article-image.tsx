@@ -5,7 +5,7 @@ import styles from './latest-articles.module.css';
 
 export function ArticleImage({ image }: { image: Article['image'] }) {
   if (image) {
-    return <Image src={image.src} alt={image.alt} fill sizes="(max-width: 600px) 28vw, 200px" className={styles.image} />;
+    return <Image src={image.src} alt={image.alt} fill sizes="(max-width: 600px) 28vw, (max-width: 1023px) 200px, 240px" className={styles.image} />;
   }
 
   return (

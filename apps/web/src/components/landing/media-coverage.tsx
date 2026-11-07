@@ -10,7 +10,7 @@ const PUBLICATIONS = [
     logoWidth: 140,
     logoHeight: 38,
     description:
-      'Forbes-ის სტატია ტრანსცენდენტული მედიტაციის პოპულარობის ზრდის, მისი გავრცელებისა და დევიდ ლინჩის ფონდის საქმიანობის შესახებ.',
+      'Forbes-ის სტატია ტრანსცენდენტული მედიტაციის მზარდი პოპულარობის, მისი გავრცელებისა და დევიდ ლინჩის ფონდის საქმიანობის შესახებ.',
     href: 'https://www.forbes.com/sites/alicegwalton/2015/04/27/transcendental-meditation-makes-a-comeback-with-the-aim-of-giving-back/',
   },
   {
@@ -19,7 +19,7 @@ const PUBLICATIONS = [
     logoWidth: 130,
     logoHeight: 33,
     description:
-      'Axios-ის სტატია ტრანსცენდენტული მედიტაციის, მისი შესწავლის გამოცდილებისა და სტრესთან დაკავშირებული კვლევების შესახებ.',
+      'Axios-ის სტატია ტრანსცენდენტული მედიტაციის შესწავლის გამოცდილებისა და სტრესთან დაკავშირებული კვლევების შესახებ.',
     href: 'https://www.axios.com/2022/04/21/transcendental-meditation-mental-health-wellness',
   },
   {
@@ -28,7 +28,7 @@ const PUBLICATIONS = [
     logoWidth: 190,
     logoHeight: 30,
     description:
-      'Cleveland Clinic-ის სამედიცინო მიმოხილვა ტრანსცენდენტული მედიტაციის ტექნიკის, სწავლების პროცესისა და შესაძლო სარგებლის შესახებ.',
+      'Cleveland Clinic-ის სამედიცინო მიმოხილვა ტრანსცენდენტული მედიტაციის ტექნიკის, სწავლების პროცესისა და მისი სარგებლის შესახებ.',
     href: 'https://my.clevelandclinic.org/health/treatments/22292-transcendental-meditation',
   },
 ] as const;

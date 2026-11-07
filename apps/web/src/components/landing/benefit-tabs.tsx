@@ -8,9 +8,9 @@ import { Artwork, type ArtworkVariant } from '@/components/site/artwork';
 
 const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: ArtworkVariant; href?: Route; image?: string; imageAlt?: string; imageWidth?: number; imageHeight?: number }> = [
   {
-    label: 'სტრესისგან შვება',
-    text: 'TM-ის პრაქტიკა ამცირებს კორტიზოლს — ჰორმონს, რომელიც სტრესთან ასოცირდება.',
-    cta: 'გაიგე მეტი სტრესზე',
+    label: 'ნაკლები სტრესი',
+    text: 'TM-ის რეგულარული პრაქტიკა ხელს უწყობს სტრესის შემცირებას, ღრმა დასვენებასა და ყოველდღიურ ცხოვრებაში შინაგანი სიმშვიდის შენარჩუნებას.',
+    cta: 'გაიგე მეტი',
     art: 'mountains',
     href: '/blog/meditatsia-stresis-shesamtsireblad' as Route,
     image: '/images/peace-hero-sunlit-man.jpeg',
@@ -19,9 +19,9 @@ const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: Artwo
     imageHeight: 1155,
   },
   {
-    label: 'ჯანსაღი გული',
-    text: 'რეგულარული ღრმა დასვენება ეხმარება არტერიულ წნევას და გულ-სისხლძარღვთა სისტემას.',
-    cta: 'გაიგე მეტი გულზე',
+    label: 'გულის ჯანმრთელობა',
+    text: 'კვლევების თანახმად, ტრანსცენდენტული მედიტაციის პრაქტიკა ხელს უწყობს არტერიული წნევის შემცირებას და გულ-სისხლძარღვთა ჯანმრთელობის გაუმჯობესებას.',
+    cta: 'გაიგე მეტი',
     art: 'heart',
     href: '/blog/gulis-janmrteloba-da-meditatsia' as Route,
     image: '/images/heart-article-hero-beach.jpeg',
@@ -31,8 +31,8 @@ const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: Artwo
   },
   {
     label: 'უკეთესი ძილი',
-    text: 'დღის განმავლობაში დაგროვილი დაძაბულობა ქრება — დაძინება ადვილდება, ძილი ღრმავდება.',
-    cta: 'გაიგე მეტი ძილზე',
+    text: 'TM-ის რეგულარული პრაქტიკა ხელს უწყობს სტრესის შემცირებას, ძილის ხარისხის გაუმჯობესებასა და სრულფასოვან დასვენებას.',
+    cta: 'გაიგე მეტი',
     art: 'moon',
     href: '/blog/meditatsia-uketesi-dzilistvis' as Route,
     image: '/images/peace-hero-man-mountain.jpeg',
@@ -41,17 +41,17 @@ const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: Artwo
     imageHeight: 1155,
   },
   {
-    label: 'ჰარმონიული ურთიერთობები',
-    text: 'როცა შინაგანად მშვიდი ხარ, უფრო ყურადღებით უსმენ და ნაკლებად რეაგირებ იმპულსურად.',
-    cta: 'გაიგე მეტი ურთიერთობებზე',
+    label: 'უკეთესი ურთიერთობები',
+    text: 'სტრესის შემცირება და შინაგანი სიმშვიდის განვითარება ხელს უწყობს უკეთეს კომუნიკაციას, ურთიერთგაგებასა და ჰარმონიულ ურთიერთობებს.',
+    cta: 'გაიგე მეტი',
     art: 'circles',
     href: '/relationships',
     image: '/images/relationships-hero.jpeg',
   },
   {
-    label: 'ნათელი გონება',
-    text: 'ფოკუსი, მეხსიერება და შემოქმედებითობა იზრდება, როცა გონებას ყოველდღე ეძლევა დასვენება.',
-    cta: 'გაიგე მეტი სიცხადეზე',
+    label: 'გონებრივი სიცხადე',
+    text: 'ტრანსცენდენტული მედიტაციის პრაქტიკა ხელს უწყობს ყურადღების, გონებრივი სიცხადისა და შემოქმედებითი უნარების განვითარებას.',
+    cta: 'გაიგე მეტი',
     art: 'horizon',
     href: '/brain-function',
     image: '/images/brain-function-hero-mountains.jpeg',
@@ -124,11 +124,11 @@ export function BenefitTabs() {
               className={`col-start-1 row-[1/span_2] grid min-w-0 grid-rows-subgrid items-center gap-8 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-700 md:row-[1/span_1] md:grid-cols-2 md:grid-rows-1 md:gap-10 lg:gap-16 ${index === active ? 'visible' : 'invisible'}`}
             >
               <div className="grid min-w-0 content-center gap-6 lg:gap-8">
-                <p className="max-w-[28rem] text-xl leading-relaxed font-light text-plum-800 sm:text-[22px] lg:text-2xl">{tab.text}</p>
+                <p className="max-w-[28rem] text-xl leading-[1.5] font-light text-plum-800 sm:text-[22px] lg:text-2xl lg:leading-[1.5]">{tab.text}</p>
                 {tab.href ? (
                   <Link
                     href={tab.href}
-                    className="inline-flex min-h-14 w-full max-w-[19rem] items-center justify-center rounded-full bg-mist-300 px-6 py-4 text-sm leading-6 text-plum-800"
+                    className="inline-flex min-h-14 w-full max-w-[14.25rem] items-center justify-center rounded-full bg-mist-300 px-6 py-4 text-sm leading-6 whitespace-nowrap text-plum-800"
                   >
                     {tab.cta}
                   </Link>
@@ -136,7 +136,7 @@ export function BenefitTabs() {
                   <button
                   type="button"
                   disabled
-                  className="inline-flex min-h-14 w-full max-w-[19rem] items-center justify-center rounded-full bg-mist-300 px-6 py-4 text-sm leading-6 text-plum-800"
+                  className="inline-flex min-h-14 w-full max-w-[14.25rem] items-center justify-center rounded-full bg-mist-300 px-6 py-4 text-sm leading-6 whitespace-nowrap text-plum-800"
                 >
                   {tab.cta}
                   </button>

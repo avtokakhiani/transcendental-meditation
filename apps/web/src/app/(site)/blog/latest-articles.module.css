@@ -30,7 +30,7 @@
 
 .row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 200px;
+  grid-template-columns: minmax(0, 1fr) 240px;
   align-items: center;
   gap: 56px;
   padding-block: 36px;
@@ -76,7 +76,7 @@
 .thumbnail {
   position: relative;
   display: block;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 24 / 17;
   overflow: hidden;
   border-radius: 12px;
 }
@@ -129,6 +129,12 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 16px;
+}
+
+@media (min-width: 601px) and (max-width: 1023px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) 200px;
+  }
 }
 
 @media (max-width: 600px) {

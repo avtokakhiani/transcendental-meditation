@@ -8,12 +8,12 @@ export function BooksShelf({ featuredBook }: { featuredBook: FeaturedBook | null
     <section aria-labelledby="books-heading" className="bg-cream-200 py-12 sm:py-14 lg:py-16">
       <div className={`mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:gap-16 lg:px-10 ${featuredBook !== null ? 'md:grid-cols-2' : ''}`}>
         <div>
-          <p className="text-[11px] uppercase tracking-[0.28em] text-plum-500">ქართული ბიბლიოთეკა</p>
+          <p className="text-[11px] uppercase tracking-[0.28em] text-plum-500">ბიბლიოთეკა</p>
           <h2 id="books-heading" className="mt-3 text-2xl leading-snug font-light text-plum-800 sm:text-3xl">
             წიგნები ცნობიერების შესახებ
           </h2>
           <p className="mt-5 max-w-lg text-[15px] leading-7 text-plum-500">
-            გაეცანი წიგნებს ცნობიერების, მედიტაციისა და ადამიანის შინაგანი განვითარების შესახებ. წაიკითხე ქართულად, შენთვის სასურველ დროს.
+            აღმოაჩინე წიგნები ცნობიერების, მედიტაციისა და პიროვნული განვითარების შესახებ. გაეცანი ქართულად ხელმისაწვდომ გამოცემებს.
           </p>
           <Link
             href="/books"
@@ -29,11 +29,13 @@ export function BooksShelf({ featuredBook }: { featuredBook: FeaturedBook | null
             <Link
               href={`/books/${featuredBook.slug}`}
               aria-labelledby={`featured-book-${featuredBook.id}`}
-              className="group block w-44 max-w-full rounded-sm text-center focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-plum-700 sm:w-56"
+              className="group block w-full max-w-sm rounded-sm text-center focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-plum-700"
             >
-              <BookCover title={featuredBook.title} author={featuredBook.author} coverImageUrl={featuredBook.coverImageUrl} featured />
-              <h3 id={`featured-book-${featuredBook.id}`} className="mt-4 text-lg leading-snug font-normal text-plum-800 group-hover:text-plum-500">{featuredBook.title}</h3>
-              {featuredBook.author !== null ? <p className="mt-1 text-sm text-plum-500">{featuredBook.author}</p> : null}
+              <div className="mx-auto w-44 max-w-full sm:w-56">
+                <BookCover title={featuredBook.title} author={featuredBook.author} coverImageUrl={featuredBook.coverImageUrl} featured />
+              </div>
+              <h3 id={`featured-book-${featuredBook.id}`} className="mt-3 text-lg leading-snug font-medium text-plum-800 group-hover:text-plum-500">{featuredBook.title}</h3>
+              {featuredBook.author !== null ? <p className="mt-2 text-sm text-plum-500">{featuredBook.author}</p> : null}
               <p className="mt-1 text-xs leading-relaxed text-plum-400">გამოქვეყნებული თავები: {featuredBook.chapterCount}</p>
             </Link>
           </div>

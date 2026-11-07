@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { SITE } from '@/lib/site';
+import { INTRODUCTORY_MEETING_ROUTE } from '@/lib/routes';
 import { Logo } from './logo';
 import styles from './site-header.module.css';
 
@@ -27,7 +28,7 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
       { label: 'შფოთვის შემცირება', href: '/stress-and-anxiety' as Route },
       { label: 'ჯანმრთელობის გაუმჯობესება', href: '/health' as Route },
       { label: 'ტვინის ფუნქციონირების გაუმჯობესება', href: '/brain-function' as Route },
-      { label: 'ურთიერთობების გაძლიერება', href: '/relationships' as Route },
+      { label: 'ურთიერთობების გაუმჯობესება', href: '/relationships' as Route },
       { label: 'მშვიდობის ხელშეწყობა', href: '/peace' as Route },
       { label: 'ყველა სარგებელი', href: '/benefits' as Route },
     ],
@@ -35,6 +36,13 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
   { label: 'როგორ ვისწავლო?', href: '/#contact' as Route },
   { label: 'სტატიები', href: '/blog' },
   { label: 'წიგნები', href: '/books' },
+  {
+    label: 'მეტი',
+    items: [
+      { label: 'ჩვენ შესახებ', href: '/about' as Route },
+      { label: 'ხშირად დასმული კითხვები', href: '/faq' as Route },
+    ],
+  },
 ];
 
 function Dropdown({ group }: { group: NavGroup }) {
@@ -148,7 +156,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
         <Logo variant="header" />
 
-        <nav aria-label="მთავარი ნავიგაცია" className="hidden items-center gap-7 lg:flex">
+        <nav aria-label="მთავარი ნავიგაცია" className="hidden items-center gap-7 xl:flex">
           {NAV.map((entry) =>
             'items' in entry ? (
               <Dropdown key={entry.label} group={entry} />
@@ -176,17 +184,17 @@ export function SiteHeader() {
             <Phone aria-hidden="true" className="size-5" strokeWidth={1.5} />
           </a>
           <Link
-            href={'/#contact' as Route}
+            href={INTRODUCTORY_MEETING_ROUTE}
             className="hidden rounded-full bg-mist-300 px-5 py-2.5 text-sm text-plum-800 transition hover:bg-mist-400 sm:inline-flex"
           >
-            სწავლებაზე ჩაწერა
+            გაცნობითი შეხვედრა
           </Link>
           <button
             type="button"
             aria-label="მენიუს გახსნა"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen(true)}
-            className="grid size-10 place-items-center rounded-full text-plum-800 transition hover:bg-cream-200 lg:hidden"
+            className="grid size-10 place-items-center rounded-full text-plum-800 transition hover:bg-cream-200 xl:hidden"
           >
             <Menu aria-hidden="true" className="size-6" strokeWidth={1.5} />
           </button>
@@ -194,7 +202,7 @@ export function SiteHeader() {
       </div>
 
       {menuOpen ? (
-        <div role="dialog" aria-modal="true" aria-label="მენიუ" className="fixed inset-0 z-50 flex flex-col bg-cream-100 lg:hidden">
+        <div role="dialog" aria-modal="true" aria-label="მენიუ" className="fixed inset-0 z-50 flex flex-col bg-cream-100 xl:hidden">
           <div className="flex h-20 items-center justify-between px-4 sm:px-6">
             <Logo variant="header" />
             <button
