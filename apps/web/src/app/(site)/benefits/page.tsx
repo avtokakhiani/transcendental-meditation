@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
 import styles from './benefits.module.css';
@@ -156,6 +157,7 @@ export default function BenefitsPage() {
           <Link href="/#contact" className={styles.nextStepButton}>გაეცანით TM-ის კურსს</Link>
         </div>
       </section>
+      <ClosingCta background="benefits" />
     </article>
   );
 }

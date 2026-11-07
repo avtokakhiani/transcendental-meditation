@@ -1,3 +1,8 @@
+.figure .chart {
+  width: 92%;
+  max-width: 552px;
+}
+
 @media (min-width: 64rem) {
   .copy {
     grid-column: 2;

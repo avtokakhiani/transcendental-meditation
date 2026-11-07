@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
 import styles from './relationships.module.css';
@@ -55,6 +56,7 @@ export default function RelationshipsPage() {
       <WorkplaceRelationshipsSection />
       <CommunicationSection />
       <RelationshipsResearchCarousel />
+      <ClosingCta background="benefits" />
     </article>
   );
 }

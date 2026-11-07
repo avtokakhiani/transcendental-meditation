@@ -1,6 +1,7 @@
 import research from '@/components/research-layout.module.css';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
 import styles from './peace.module.css';
@@ -135,6 +136,7 @@ export default function PeacePage() {
         </div>
       </section>
       <PeaceResearchCarousel />
+      <ClosingCta background="benefits" />
     </article>
   );
 }

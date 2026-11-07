@@ -1,0 +1,15 @@
+.withoutSymbol {
+  /* Redistribute the former 4rem symbol + 1.25rem heading gap evenly. */
+  padding-block: 2.625rem;
+}
+
+.withoutSymbol > h2 {
+  margin-top: 0;
+}
+
+.benefitsBackground {
+  background-image: url('/images/tm-transitional-warm-yellow-blue.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

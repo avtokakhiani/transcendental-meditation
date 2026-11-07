@@ -2,12 +2,13 @@ import { ArrowRight } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { LogoMark } from '@/components/site/logo';
+import styles from './closing-cta.module.css';
 
-export function ClosingCta() {
+export function ClosingCta({ background = 'cream', showSymbol = true }: { background?: 'cream' | 'benefits'; showSymbol?: boolean } = {}) {
   return (
-    <section aria-labelledby="closing-cta-heading" className="bg-cream-100 py-14 sm:py-17 lg:py-19">
-      <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-        <LogoMark className="mx-auto size-16 text-saffron-600" />
+    <section aria-labelledby="closing-cta-heading" className={`bg-cream-100 py-14 sm:py-17 lg:py-19${background === 'benefits' ? ` ${styles.benefitsBackground}` : ''}`}>
+      <div className={`mx-auto max-w-3xl px-4 text-center sm:px-6${showSymbol ? '' : ` ${styles.withoutSymbol}`}`}>
+        {showSymbol ? <LogoMark className="mx-auto size-16 text-saffron-600" /> : null}
         <h2 id="closing-cta-heading" className="mt-5 content-center text-2xl leading-[1.375] font-normal text-balance text-plum-800 max-[433px]:min-h-[4.125em] sm:text-3xl">
           გსურს ტრანსცენდენტული მედიტაციის სწავლა?
         </h2>
