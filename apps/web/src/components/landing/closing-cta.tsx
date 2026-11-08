@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { LogoMark } from '@/components/site/logo';
 import styles from './closing-cta.module.css';
 
-export function ClosingCta({ background = 'cream', showSymbol = true }: { background?: 'cream' | 'benefits'; showSymbol?: boolean } = {}) {
+export function ClosingCta({ background = 'cream', showSymbol = true, showLearnMore = true }: { background?: 'cream' | 'benefits'; showSymbol?: boolean; showLearnMore?: boolean } = {}) {
   return (
     <section aria-labelledby="closing-cta-heading" className={`bg-cream-100 py-14 sm:py-17 lg:py-19${background === 'benefits' ? ` ${styles.benefitsBackground}` : ''}`}>
-      <div className={`mx-auto max-w-3xl px-4 text-center sm:px-6${showSymbol ? '' : ` ${styles.withoutSymbol}`}`}>
+      <div className={`mx-auto max-w-3xl px-4 text-center sm:px-6${showSymbol ? '' : ` ${styles.withoutSymbol}`}${showLearnMore ? '' : ` ${styles.singleButton}`}`}>
         {showSymbol ? <LogoMark className="mx-auto size-16 text-saffron-600" /> : null}
         <h2 id="closing-cta-heading" className="mt-5 content-center text-2xl leading-[1.375] font-normal text-balance text-plum-800 max-[433px]:min-h-[4.125em] sm:text-3xl">
           გსურს ტრანსცენდენტული მედიტაციის სწავლა?
@@ -16,13 +16,13 @@ export function ClosingCta({ background = 'cream', showSymbol = true }: { backgr
           შემოგვიერთდი გაცნობით შეხვედრაზე — ონლაინ ან პირისპირ — და გაიგე მეტი ტრანსცენდენტული მედიტაციის შესახებ.
         </p>
         <div className="mx-auto mt-6 flex max-w-xs flex-col justify-center gap-3 sm:max-w-none sm:flex-row sm:gap-4">
-          <Link
+          {showLearnMore ? <Link
             href={'/blog/ra-aris-transtsendentuli-meditatsia' as Route}
             className="inline-flex min-h-14 items-center justify-center gap-2 rounded-full bg-saffron-400 px-7 py-4 text-[15px] font-medium text-plum-900 transition-colors hover:bg-saffron-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-800"
           >
             გაეცანი TM-ს
             <ArrowRight aria-hidden="true" className="size-4" />
-          </Link>
+          </Link> : null}
           <Link
             href={'/#contact' as Route}
             className="inline-flex min-h-14 items-center justify-center rounded-full bg-mist-300 px-7 py-4 text-[15px] text-plum-800 transition-colors hover:bg-mist-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-800"

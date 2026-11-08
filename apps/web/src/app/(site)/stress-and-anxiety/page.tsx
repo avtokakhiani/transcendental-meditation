@@ -56,7 +56,7 @@ export default function StressAndAnxietyPage() {
       <CortisolSection />
       <PtsdSection />
       <ResearchCarousel />
-      <ClosingCta background="benefits" />
+      <ClosingCta showLearnMore={false} />
     </article>
   );
 }

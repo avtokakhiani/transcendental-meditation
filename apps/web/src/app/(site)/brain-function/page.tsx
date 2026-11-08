@@ -57,7 +57,7 @@ export default function BrainFunctionPage() {
       <SelfEsteemSection />
       <DavidLynchTestimonial />
       <BrainResearchCarousel />
-      <ClosingCta background="benefits" />
+      <ClosingCta showLearnMore={false} />
     </article>
   );
 }

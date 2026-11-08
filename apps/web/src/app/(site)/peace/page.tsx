@@ -136,7 +136,7 @@ export default function PeacePage() {
         </div>
       </section>
       <PeaceResearchCarousel />
-      <ClosingCta background="benefits" />
+      <ClosingCta showLearnMore={false} />
     </article>
   );
 }

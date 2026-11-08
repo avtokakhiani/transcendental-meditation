@@ -157,7 +157,7 @@ export default function BenefitsPage() {
           <Link href="/#contact" className={styles.nextStepButton}>გაეცანით TM-ის კურსს</Link>
         </div>
       </section>
-      <ClosingCta background="benefits" />
+      <ClosingCta showLearnMore={false} />
     </article>
   );
 }

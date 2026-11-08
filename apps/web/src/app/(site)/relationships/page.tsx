@@ -56,7 +56,7 @@ export default function RelationshipsPage() {
       <WorkplaceRelationshipsSection />
       <CommunicationSection />
       <RelationshipsResearchCarousel />
-      <ClosingCta background="benefits" />
+      <ClosingCta showLearnMore={false} />
     </article>
   );
 }

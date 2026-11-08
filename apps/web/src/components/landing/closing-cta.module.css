@@ -1,3 +1,14 @@
+.singleButton {
+  /* Balance the group while preserving the removed mobile button and gap's height. */
+  padding-block: calc((3.5rem + 0.75rem) / 2);
+}
+
+@media (min-width: 40rem) {
+  .singleButton {
+    padding-block: 0;
+  }
+}
+
 .withoutSymbol {
   /* Redistribute the former 4rem symbol + 1.25rem heading gap evenly. */
   padding-block: 2.625rem;
