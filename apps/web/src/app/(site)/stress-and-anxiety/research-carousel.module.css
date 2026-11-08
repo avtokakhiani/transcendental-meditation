@@ -48,7 +48,7 @@
   grid-template-rows: minmax(var(--summary-height, 0px), 1fr) auto;
   row-gap: 1rem;
   min-width: 0;
-  min-height: 20rem;
+  min-height: var(--card-min-height, 20rem);
   padding: 1.5rem;
   border-radius: 1.25rem;
   background-color: var(--color-cream-50);

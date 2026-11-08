@@ -1,5 +1,6 @@
 import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
+import chartStyles from './research-chart-sizing.module.css';
 
 export function TraitAnxietySection() {
   return (
@@ -12,12 +13,12 @@ export function TraitAnxietySection() {
             <p>ტრანსცენდენტული მედიტაციის დამამშვიდებელი გავლენა ნერვულ სისტემაზე ადამიანებს ეხმარება შფოთვასთან გამკლავებასა და ტრავმის შემდეგ აღდგენაში.</p>
           </div>
         </div>
-        <figure className={research.figure}>
+        <figure className={`${research.figure} ${chartStyles.traitFigure}`}>
           <img
             src="/images/tm-trait-anxiety-reduction-chart-no-title-en.svg"
             width={881}
             height={883}
-            className={research.chart}
+            className={`${research.chart} ${chartStyles.traitChart}`}
             alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: ხასიათობრივი შფოთვის შემცირების შედარება TM-ისა და სხვა მეთოდების შემთხვევაში, ორიგინალური კვლევის მითითებით."
             loading="lazy"
           />

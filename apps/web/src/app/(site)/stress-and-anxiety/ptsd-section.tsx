@@ -1,5 +1,6 @@
 import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
+import chartStyles from './research-chart-sizing.module.css';
 
 export function PtsdSection() {
   return (
@@ -12,12 +13,12 @@ export function PtsdSection() {
             <p>ერთ-ერთმა კვლევამ აჩვენა, რომ ტრანსცენდენტული მედიტაციის პრაქტიკა ამცირებს შფოთვისა და PTSD-ის მართვისთვის ფსიქოტროპული მედიკამენტების გამოყენების საჭიროებას და ამავდროულად აუმჯობესებს ფსიქოლოგიურ კეთილდღეობას. ექვსი თვის შემდეგ ტრანსცენდენტული მედიტაციისა და საკონტროლო ჯგუფებს შორის ფსიქოლოგიური სიმპტომების სიმძიმეში 20,5%-იანი განსხვავება გამოვლინდა.</p>
           </div>
         </div>
-        <figure className={research.figure}>
+        <figure className={`${research.figure} ${chartStyles.ptsdFigure}`}>
           <img
             src="/images/tm-ptsd-depression-reduction-chart-en.svg"
             width={1425}
             height={1589}
-            className={research.chart}
+            className={`${research.chart} ${chartStyles.ptsdChart}`}
             alt="ინგლისურენოვანი სამეცნიერო დიაგრამა PTSD-ისა და დეპრესიული სიმპტომების ცვლილების შესახებ, ორიგინალური სათაურით, მონაცემებითა და კვლევის მითითებით."
             loading="lazy"
           />

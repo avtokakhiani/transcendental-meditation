@@ -67,12 +67,16 @@ interface ResearchCarouselProps {
   research?: readonly ResearchCard[];
   heading?: string;
   idPrefix?: string;
+  sourceClassName?: string;
+  cardHeightReference?: readonly string[];
 }
 
 export function ResearchCarousel({
   research = RESEARCH,
   heading = 'კვლევები ტრანსცენდენტულ მედიტაციაზე: სტრესი და შფოთვა',
   idPrefix = 'stress',
+  sourceClassName,
+  cardHeightReference,
 }: ResearchCarouselProps = {}) {
   const headingId = `${idPrefix}-research-carousel-heading`;
   const cardsId = `${idPrefix}-research-cards`;
@@ -111,6 +115,38 @@ export function ResearchCarousel({
       viewport.style.setProperty('--summary-height', `${tallest(':scope > p')}px`);
       viewport.style.setProperty('--authors-height', `${tallest(':scope > div > p:first-child')}px`);
       viewport.style.setProperty('--source-height', `${tallest(':scope > div > p:last-child')}px`);
+      const firstCard = cards[0];
+      if (cardHeightReference && firstCard) {
+        // Measure the prior copy offscreen so editing or clamping text cannot shrink the cards.
+        const measurement = document.createElement('div');
+        measurement.style.cssText = 'position:fixed;left:-100000px;top:0;visibility:hidden;pointer-events:none';
+        measurement.setAttribute('aria-hidden', 'true');
+        document.body.append(measurement);
+        try {
+          const heights = cards.map((card, index) => {
+            const clone = card.cloneNode(true) as HTMLElement;
+            clone.style.width = `${card.getBoundingClientRect().width}px`;
+            clone.style.gridTemplateRows = 'auto auto';
+            const citation = clone.querySelector(':scope > div') as HTMLElement;
+            citation.style.gridTemplateRows = 'auto auto';
+            const summary = clone.querySelector(':scope > p') as HTMLElement;
+            summary.textContent = cardHeightReference[index] ?? research[index]?.summary ?? '';
+            const source = citation.lastElementChild as HTMLElement;
+            source.style.display = 'block';
+            source.style.webkitLineClamp = 'unset';
+            measurement.append(clone);
+            return [summary, citation.firstElementChild!, source].map((element) => element.getBoundingClientRect().height);
+          });
+          const cardStyle = getComputedStyle(firstCard);
+          const citationStyle = getComputedStyle(firstCard.querySelector(':scope > div')!);
+          const rowsHeight = [0, 1, 2].reduce((sum, row) => sum + Math.ceil(Math.max(...heights.map((height) => height[row] ?? 0))), 0);
+          const spacing = [cardStyle.paddingTop, cardStyle.paddingBottom, cardStyle.rowGap, citationStyle.rowGap]
+            .reduce((sum, value) => sum + parseFloat(value), 0);
+          viewport.style.setProperty('--card-min-height', `${rowsHeight + spacing}px`);
+        } finally {
+          measurement.remove();
+        }
+      }
     };
     alignCitations();
     void document.fonts.ready.then(() => {
@@ -122,7 +158,7 @@ export function ResearchCarousel({
       disposed = true;
       observer.disconnect();
     };
-  }, [research]);
+  }, [research, cardHeightReference]);
 
   const move = (direction: number) => {
     setPosition((previous) => ({
@@ -174,7 +210,7 @@ export function ResearchCarousel({
                   <p className={styles.summary}>{research.summary}</p>
                   <div className={styles.citation} lang="en">
                     <p className={styles.authors}>{research.authors}</p>
-                    <p className={styles.source}>
+                    <p className={sourceClassName ? `${styles.source} ${sourceClassName}` : styles.source}>
                       <a href={research.url} {...externalLinkProps(research.url)} tabIndex={cardIndex < index || cardIndex >= index + visible ? -1 : undefined}>
                         {research.source}
                       </a>

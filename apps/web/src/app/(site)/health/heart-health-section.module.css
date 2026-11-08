@@ -1,3 +1,8 @@
+.chart.chart {
+  width: 72%;
+  max-width: 432px;
+}
+
 @media (min-width: 64rem) {
   .copy {
     grid-column: 2;
@@ -7,5 +12,7 @@
   .figure {
     grid-column: 1;
     grid-row: 1;
+    /* Balance the SVG's uneven blank margins around its heading, chart and reference. */
+    transform: translateY(2.5772%);
   }
 }

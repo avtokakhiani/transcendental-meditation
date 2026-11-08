@@ -1,6 +1,7 @@
 import research from '@/components/research-layout.module.css';
 import science from '../blog/[slug]/what-is-tm-different.module.css';
 import styles from './cortisol-section.module.css';
+import chartStyles from './research-chart-sizing.module.css';
 
 export function CortisolSection() {
   return (
@@ -13,12 +14,12 @@ export function CortisolSection() {
             <p>ტრანსცენდენტული მედიტაციის რეგულარული პრაქტიკა ხელს უწყობს კორტიზოლის დონის შემცირებასა და ორგანიზმში ჰორმონალური ბალანსის შენარჩუნებას.</p>
           </div>
         </div>
-        <figure className={`${research.figure} ${styles.figure}`}>
+        <figure className={`${research.figure} ${styles.figure} ${chartStyles.cortisolFigure}`}>
           <img
             src="/images/tm-cortisol-reduction-chart-en.svg"
             width={993}
             height={1130}
-            className={research.chart}
+            className={`${research.chart} ${chartStyles.cortisolChart}`}
             alt="ინგლისურენოვანი სამეცნიერო დიაგრამა: პლაზმის კორტიზოლის ცვლილება საკონტროლო და TM ჯგუფებში, ორიგინალური მონაცემებითა და სამეცნიერო მითითებით."
             loading="lazy"
           />
