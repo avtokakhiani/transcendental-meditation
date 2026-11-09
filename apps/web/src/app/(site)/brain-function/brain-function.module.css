@@ -1,3 +1,17 @@
 .photograph.photograph {
   object-position: 65% center;
 }
+
+.coherenceChart.coherenceChart {
+  width: 90%;
+  max-width: 540px;
+}
+
+.selfEsteemChart.selfEsteemChart {
+  width: 103.4%;
+  max-width: 620.4px;
+  position: relative;
+  left: 50%;
+  margin-inline: 0;
+  transform: translateX(-50%);
+}

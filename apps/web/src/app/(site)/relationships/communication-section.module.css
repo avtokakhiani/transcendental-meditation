@@ -1,3 +1,9 @@
-.chart {
+.figure.figure {
+  transform: none;
+}
+
+.chart.chart {
+  width: 88%;
+  max-width: 528px;
   filter: url('#family-chart-background');
 }

@@ -16,9 +16,9 @@ export function DavidLynchTestimonial() {
       <div className={styles.panel}>
         <figure className={styles.testimonial}>
           <blockquote className={styles.quote}>
-            <p>„ტრანსცენდენტული მედიტაციის პრაქტიკა 1973 წელს დავიწყე... მან საშუალება მომცა, ძალისხმევის გარეშე მივწვდე ჩემში ღრმად არსებულ ენერგიის, შემოქმედებითობისა და ბედნიერების ამოუწურავ მარაგს.“</p>
+            <p>„ტრანსცენდენტული მედიტაციის პრაქტიკა 1973 წელს დავიწყე... მან საშუალება მომცა, ძალისხმევის გარეშე მივწვდომოდი ჩემში ღრმად არსებულ ენერგიის, შემოქმედებითობისა და ბედნიერების ამოუწურავ წყაროს.“</p>
           </blockquote>
-          <figcaption className={styles.attribution}>დევიდ ლინჩი, კინორეჟისორი და ხელოვანი</figcaption>
+          <figcaption className={styles.attribution}>დევიდ ლინჩი — კინორეჟისორი და ხელოვანი</figcaption>
         </figure>
       </div>
     </section>

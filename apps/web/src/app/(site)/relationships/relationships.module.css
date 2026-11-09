@@ -1,3 +1,15 @@
 .photograph.photograph {
   object-position: 55% 55%;
 }
+
+.workplaceChart.workplaceChart {
+  width: 68%;
+  max-width: 408px;
+}
+
+@media (min-width: 64rem) {
+  .workplaceChart.workplaceChart {
+    /* Balance the SVG's extra whitespace below its heading, graph, and reference. */
+    transform: translateY(2.36%);
+  }
+}
