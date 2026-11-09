@@ -2,6 +2,21 @@
   object-position: center 35%;
 }
 
+.middleEastChart.middleEastChart {
+  width: 92%;
+  max-width: 552px;
+}
+
+.replicationsChart.replicationsChart {
+  width: 92%;
+  max-width: 552px;
+}
+
+.usQualityLifeChart.usQualityLifeChart {
+  width: 91.2%;
+  max-width: 547.2px;
+}
+
 .worldPeace {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
