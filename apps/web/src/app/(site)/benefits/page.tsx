@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import benefitHero from '@/components/site/benefit-hero.module.css';
 import Link from 'next/link';
 import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 export default function BenefitsPage() {
   return (
     <article>
-      <section aria-labelledby="benefits-heading" className={hero.hero}>
+      <section aria-labelledby="benefits-heading" className={`${hero.hero} ${benefitHero.hero} ${benefitHero.benefits}`}>
         <Image
           src="/images/benefits-hero-desert.jpeg"
           alt="უდაბნოს პეიზაჟი იოშუას ხეებით და თბილი მზის შუქით."

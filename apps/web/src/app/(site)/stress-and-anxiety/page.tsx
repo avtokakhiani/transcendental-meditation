@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import benefitHero from '@/components/site/benefit-hero.module.css';
 import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import styles from './stress-and-anxiety.module.css';
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 export default function StressAndAnxietyPage() {
   return (
     <article>
-      <section aria-labelledby="stress-anxiety-heading" className={styles.hero}>
+      <section aria-labelledby="stress-anxiety-heading" className={`${styles.hero} ${benefitHero.hero} ${benefitHero.stress}`}>
         <Image
           src="/images/stress-anxiety-hero-seaside.jpeg"
           alt="ქალი ზღვის სანაპიროზე მზის თბილ შუქში."

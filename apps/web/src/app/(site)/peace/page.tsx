@@ -1,6 +1,7 @@
 import research from '@/components/research-layout.module.css';
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import benefitHero from '@/components/site/benefit-hero.module.css';
 import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 export default function PeacePage() {
   return (
     <article>
-      <section aria-labelledby="peace-heading" className={hero.hero}>
+      <section aria-labelledby="peace-heading" className={`${hero.hero} ${benefitHero.hero} ${benefitHero.peace}`}>
         <Image
           src="/images/peace-hero-sunset-man.jpeg"
           alt="მომღიმარი ხანდაზმული კაცი მზის ჩასვლისას."

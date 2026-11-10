@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import benefitHero from '@/components/site/benefit-hero.module.css';
 import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 export default function HealthPage() {
   return (
     <article>
-      <section aria-labelledby="health-heading" className={`${hero.hero} ${styles.hero}`}>
+      <section aria-labelledby="health-heading" className={`${hero.hero} ${styles.hero} ${benefitHero.hero} ${benefitHero.health}`}>
         <Image
           src="/images/health-hero-hands-flower.jpeg"
           alt="ხელისგულებში მოთავსებული პატარა ყვითელი ყვავილი."

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import benefitHero from '@/components/site/benefit-hero.module.css';
 import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 export default function BrainFunctionPage() {
   return (
     <article>
-      <section aria-labelledby="brain-function-heading" className={hero.hero}>
+      <section aria-labelledby="brain-function-heading" className={`${hero.hero} ${benefitHero.hero} ${benefitHero.brain}`}>
         <Image
           src="/images/brain-function-hero-mountains.jpeg"
           alt="ქალი კლდეზე ზის და მზით განათებულ მთებს გადაჰყურებს."

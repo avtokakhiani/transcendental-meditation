@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { BookCover } from '@/components/book-cover';
+import benefitHero from '@/components/site/benefit-hero.module.css';
 import { prisma } from '@/server/db';
 import { listPublishedBooks } from '@/server/services/books';
-import { ArticlesHeaderBackground } from '../blog/articles-header-background';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
 import styles from './books.module.css';
 
@@ -19,8 +19,7 @@ export default async function BooksPage() {
 
   return (
     <div className="bg-cream-100">
-      <ArticlesHeaderBackground />
-      <section aria-labelledby="books-heading" className={`${hero.hero} ${styles.hero}`}>
+      <section aria-labelledby="books-heading" className={`${hero.hero} ${styles.hero} ${benefitHero.hero} ${benefitHero.books}`}>
         <h1 id="books-heading" className={hero.heading}>აღმოაჩინე წიგნები ცნობიერების, მედიტაციისა და პიროვნული განვითარების შესახებ</h1>
       </section>
 

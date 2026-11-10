@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import benefitHero from '@/components/site/benefit-hero.module.css';
 import { ClosingCta } from '@/components/landing/closing-cta';
 import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
 import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 export default function RelationshipsPage() {
   return (
     <article>
-      <section aria-labelledby="relationships-heading" className={hero.hero}>
+      <section aria-labelledby="relationships-heading" className={`${hero.hero} ${benefitHero.hero} ${benefitHero.relationships}`}>
         <Image
           src="/images/relationships-hero.jpeg"
           alt="მომღიმარი ქალი გაშლილი ხელებით ღია ცის ქვეშ."

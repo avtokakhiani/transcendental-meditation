@@ -1,11 +1,13 @@
 ﻿import styles from './what-is-tm-intro.module.css';
 
+import benefitHero from '@/components/site/benefit-hero.module.css';
+
 export function WhatIsTmIntro({ imageUrl }: { imageUrl: string }) {
   return (
     <>
       <section
         aria-labelledby="tm-intro-heading"
-        className={styles.intro}
+        className={`${styles.intro} ${benefitHero.hero} ${benefitHero.introduction}`}
         style={{ backgroundImage: `url("${imageUrl}")` }}
       >
         <div className={styles.content}>
