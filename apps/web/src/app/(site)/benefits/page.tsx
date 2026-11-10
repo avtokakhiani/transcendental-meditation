@@ -87,8 +87,8 @@ export default function BenefitsPage() {
         </div>
         <div className={`${styles.featurePanel} ${styles.clearerMindPanel}`}>
           <div className={styles.featureCopy}>
-            <h2 id="benefits-clearer-mind-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია გონების მეტი სიცხადისთვის</h2>
-            <p className={styles.featureDescription}>ტრანსცენდენტული მედიტაციის რეგულარული პრაქტიკა ცნობიერების გაფართოებას უწყობს ხელს და ყოველდღიურ ცხოვრებას ამდიდრებს. შედეგად, აზროვნება უფრო ნათელი ხდება, შემოქმედებითი და ინტელექტუალური შესაძლებლობები ვითარდება და გამოწვევების გადალახვის უნარი იზრდება.</p>
+            <h2 id="benefits-clearer-mind-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია გონებრივი სიცხადისთვის</h2>
+            <p className={styles.featureDescription}>ტრანსცენდენტული მედიტაციის რეგულარული პრაქტიკის შედეგად ცნობიერება ფართოვდება, რაც ამდიდრებს ყოველდღიურ ცხოვრებას, ხელს უწყობს უფრო ნათელ აზროვნებას, შემოქმედებითი და ინტელექტუალური შესაძლებლობების განვითარებასა და პრობლემების უფრო ეფექტურად გადაჭრას.</p>
             <Link href="/brain-function" className={`${styles.featureButton} ${styles.clearerMindButton}`}>გაიგე მეტი</Link>
           </div>
         </div>
@@ -107,7 +107,7 @@ export default function BenefitsPage() {
         <div className={styles.featurePanel}>
           <div className={styles.featureCopy}>
             <h2 id="benefits-health-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია ჯანმრთელობის გასაუმჯობესებლად</h2>
-            <p className={styles.featureDescription}>სტრესის შემცირება დადებითად მოქმედებს მთელ ორგანიზმზე. კვლევებმა აჩვენა, რომ ტრანსცენდენტული მედიტაციის ტექნიკა ხელს უწყობს გულის ფუნქციონირების გაუმჯობესებას, მაღალი არტერიული წნევის შემცირებას, სამედიცინო მომსახურების საჭიროების კლებასა და იმუნიტეტის გაძლიერებას.</p>
+            <p className={styles.featureDescription}>სტრესის შემცირება დადებითად მოქმედებს მთელი ორგანიზმის ფუნქციონირებაზე. კვლევები ადასტურებს, რომ ტრანსცენდენტული მედიტაციის ტექნიკა აუმჯობესებს გულ-სისხლძარღვთა სისტემის ფუნქციონირებას, ამცირებს მაღალ არტერიულ წნევასა და სამედიცინო მომსახურების საჭიროებას და აძლიერებს იმუნურ სისტემას.</p>
             <Link href="/health" className={`${styles.featureButton} ${styles.healthButton}`}>გაიგე მეტი</Link>
           </div>
         </div>
@@ -126,7 +126,7 @@ export default function BenefitsPage() {
         <div className={`${styles.featurePanel} ${styles.clearerMindPanel}`}>
           <div className={styles.featureCopy}>
             <h2 id="benefits-relationships-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია ურთიერთობების გასაუმჯობესებლად</h2>
-            <p className={styles.featureDescription}>როდესაც უფრო მშვიდად და გაწონასწორებულად ვგრძნობთ თავს, ნაკლებად იმპულსურად ვრეაგირებთ და მეტ შემწყნარებლობასა და გულისხმიერებას ვიჩენთ. სტუდენტებში, დასაქმებულებში, მოქმედ სამხედროებსა და ვეტერანებში, ასევე პატიმრებში ჩატარებული კვლევები აჩვენებს, რომ ტრანსცენდენტული მედიტაციის პრაქტიკა ურთიერთობების გაუმჯობესებას უწყობს ხელს.</p>
+            <p className={styles.featureDescription}>როდესაც უფრო მშვიდად და გაწონასწორებულად ვგრძნობთ თავს, ნაკლებად იმპულსურად ვრეაგირებთ და მეტ შემწყნარებლობასა და გულისხმიერებას ვიჩენთ. სტუდენტებს, დასაქმებულებს, სამხედრო მოსამსახურეებს, ვეტერანებსა და პატიმრებს შორის ჩატარებული კვლევები აჩვენებს, რომ ტრანსცენდენტული მედიტაციის პრაქტიკა ხელს უწყობს ურთიერთობების გაუმჯობესებას.</p>
             <Link href="/relationships" className={`${styles.featureButton} ${styles.clearerMindButton}`}>გაიგე მეტი</Link>
           </div>
         </div>
@@ -145,16 +145,9 @@ export default function BenefitsPage() {
         <div className={styles.featurePanel}>
           <div className={styles.featureCopy}>
             <h2 id="benefits-peace-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია საზოგადოებრივი და მსოფლიო მშვიდობისთვის</h2>
-            <p className={styles.featureDescription}>ადამიანების შინაგან სიმშვიდეს შეუძლია საზოგადოების და მთელი მსოფლიოს კოლექტიური ცნობიერების ამაღლება. კვლევები აჩვენებს, რომ ტრანსცენდენტული მედიტაციისა და მოწინავე TM-Sidhi პროგრამის დიდი ჯგუფების მიერ პრაქტიკა საზოგადოებაში დადებით ცვლილებებსა და ომის გავლენის შემცირებასთან არის დაკავშირებული.</p>
+            <p className={styles.featureDescription}>ადამიანების შინაგან სიმშვიდეს შეუძლია აამაღლოს საზოგადოებისა და მთელი მსოფლიოს კოლექტიური ცნობიერება. კვლევები აჩვენებს, რომ ტრანსცენდენტული მედიტაციისა და მოწინავე TM-Sidhi პროგრამის დიდ ჯგუფებში ერთობლივი პრაქტიკა დაკავშირებულია საზოგადოებაში დადებით ცვლილებებთან და ომის გავლენის შემცირებასთან.</p>
             <Link href="/peace" className={`${styles.featureButton} ${styles.peaceButton}`}>გაიგე მეტი</Link>
           </div>
-        </div>
-      </section>
-      <section aria-labelledby="benefits-next-step-heading" className={styles.nextStep}>
-        <div className={styles.nextStepContent}>
-          <h2 id="benefits-next-step-heading" className={styles.nextStepHeading}>შემდეგი ნაბიჯი: როგორ ვისწავლოთ ტრანსცენდენტული მედიტაციის ტექნიკა</h2>
-          <p className={styles.nextStepDescription}>გაიგეთ მეტი ტრანსცენდენტული მედიტაციის კურსის შესახებ — როგორია მისი სტრუქტურა, რა ღირს და რას მოიცავს.</p>
-          <Link href="/#contact" className={styles.nextStepButton}>გაეცანით TM-ის კურსს</Link>
         </div>
       </section>
       <ClosingCta showLearnMore={false} />

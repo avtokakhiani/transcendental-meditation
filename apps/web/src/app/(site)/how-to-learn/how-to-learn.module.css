@@ -1,0 +1,28 @@
+﻿.hero.hero::before {
+  background: linear-gradient(90deg, rgb(38 30 29 / 0.42), rgb(38 30 29 / 0.28) 50%, rgb(38 30 29 / 0.16));
+}
+
+.photograph.photograph {
+  object-position: center;
+}
+
+.hero.hero {
+  padding-block: 3.5rem;
+}
+
+.heading {
+  color: #fff;
+  position: absolute;
+  top: calc(50% - 2.5rem);
+  left: 50%;
+  width: calc(100% - 2.5rem);
+  transform: translate(-50%, -50%);
+}
+
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(a),
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(nav) > :global(a),
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(nav) > :global(div) > :global(button),
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(div) > :global(a[href^='tel:']),
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(div) > :global(button) {
+  color: #fff;
+}

@@ -63,15 +63,17 @@
 }
 
 .featureIntro {
-  padding: 3.5rem 1.25rem;
+  padding: 4.125rem 1.25rem;
   text-align: center;
 }
 
 .featureIntro p {
-  max-width: 56rem;
+  max-width: 760px;
+  min-height: 112px;
+  align-content: center;
   margin-inline: auto;
-  font-size: clamp(1.125rem, 1.4vw, 1.25rem);
-  line-height: 1.6;
+  font-size: 18px;
+  line-height: 1.4;
   text-wrap: balance;
 }
 
@@ -114,8 +116,8 @@
 
 .featureDescription {
   margin-top: 1.75rem;
-  font-size: 1rem;
-  line-height: 1.75;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .featureButton {
@@ -140,6 +142,10 @@
 .featureButton:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 4px;
+}
+
+.stressFeature .featureButton {
+  box-shadow: 0 0 36px 8px rgb(243 207 120 / 0.45);
 }
 
 .clearerMind {
@@ -207,7 +213,12 @@
   }
 
   .featureIntro {
-    padding: 4rem 2.5rem;
+    padding: 5.075rem 2.5rem;
+  }
+
+  .featureIntro p {
+    min-height: 61.6px;
+    font-size: 19px;
   }
 
   .featurePanel {
@@ -217,6 +228,15 @@
 }
 
 @media (min-width: 64rem) {
+  .featureIntro {
+    padding-block: 6.075rem;
+  }
+
+  .featureIntro p {
+    min-height: 67.2px;
+    font-size: 20px;
+  }
+
   .nextStep {
     padding-block: 5.5rem;
   }

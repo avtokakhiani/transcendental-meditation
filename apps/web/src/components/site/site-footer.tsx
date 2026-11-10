@@ -21,7 +21,7 @@ const COLUMNS: ReadonlyArray<{ id: string; title: string; links: ReadonlyArray<{
     id: 'footer-learning-heading',
     title: 'სწავლება',
     links: [
-      { label: 'როგორ ვისწავლოთ?', href: '/#contact' as Route },
+      { label: 'როგორ ვისწავლოთ?', href: '/how-to-learn' as Route },
       { label: 'გაეცანი TM-ს', href: '/blog/ra-aris-transtsendentuli-meditatsia' as Route },
       { label: 'სწავლებაზე ჩაწერა', href: '/#contact' as Route },
     ],

@@ -33,7 +33,7 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
       { label: 'ყველა სარგებელი', href: '/benefits' as Route },
     ],
   },
-  { label: 'როგორ ვისწავლო?', href: '/#contact' as Route },
+  { label: 'როგორ ვისწავლო?', href: '/how-to-learn' as Route },
   { label: 'სტატიები', href: '/blog' },
   { label: 'წიგნები', href: '/books' },
   {
@@ -105,6 +105,7 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const transparentOnTop = pathname === '/stress-and-anxiety'
+    || pathname === '/how-to-learn'
     || pathname === '/benefits'
     || pathname === '/health'
     || pathname === '/brain-function'
