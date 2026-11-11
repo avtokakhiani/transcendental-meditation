@@ -71,12 +71,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await loadPost(slug);
   if (post === null) notFound();
   const isIntroduction = post.slug === INTRO_SLUG;
-  if (isIntroduction) preload('/images/what-is-tm-beach-original.jpeg', { as: 'image', fetchPriority: 'high' });
+  if (isIntroduction) preload('/images/what-is-tm-water-waves.jpeg', { as: 'image', fetchPriority: 'high' });
 
   if (isIntroduction) {
     return (
       <article className={styles.page}>
-        <WhatIsTmIntro imageUrl="/images/what-is-tm-beach-original.jpeg" />
+        <WhatIsTmIntro imageUrl="/images/what-is-tm-water-waves.jpeg" />
         <WhatIsTmNot />
         <WhatIsTmDifferent />
         <WhatIsTmRestfulAlertness />
