@@ -219,7 +219,7 @@
 .courseGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 2.25rem;
+  margin-top: 4.55rem;
 }
 
 .courseBlock {
@@ -382,6 +382,16 @@
 .faq summary {
   padding-block: 1.25rem;
   font-size: 1rem;
+}
+
+.faq details > div {
+  padding-bottom: 1.25rem;
+}
+
+@media (min-width: 40rem) {
+  .faq details > div {
+    padding-bottom: 1.5rem;
+  }
 }
 
 @supports (interpolate-size: allow-keywords) {
