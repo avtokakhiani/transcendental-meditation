@@ -1,0 +1,160 @@
+.carousel {
+  padding: 3rem 1rem 2.5rem;
+  background: var(--color-cream-100);
+  color: var(--color-plum-800);
+}
+
+.container {
+  max-width: 60rem;
+  margin-inline: auto;
+}
+
+.slide {
+  display: grid;
+  align-items: center;
+  gap: 2rem;
+  animation: reveal 220ms ease-out;
+}
+
+.cover {
+  width: 10rem;
+  margin-inline: auto;
+}
+
+.copy {
+  min-width: 0;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.title {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 400;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.author {
+  margin-top: 0.625rem;
+  color: var(--color-plum-500);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+.description {
+  max-width: 35rem;
+  margin: 1.25rem auto 0;
+  color: var(--color-plum-700);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-top: 1.5rem;
+  padding-block: 0.25rem;
+  font-size: 0.9375rem;
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+  text-decoration-color: var(--color-plum-300);
+  transition: color 180ms ease;
+}
+
+.link:hover {
+  color: var(--color-plum-500);
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--color-plum-300);
+  border-radius: 50%;
+  color: var(--color-plum-800);
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+
+.arrow:hover:not(:disabled) {
+  border-color: var(--color-plum-700);
+}
+
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.position {
+  min-width: 3rem;
+  color: var(--color-plum-500);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.carousel:focus-visible,
+.link:focus-visible,
+.arrow:focus-visible {
+  outline: 2px solid var(--color-plum-700);
+  outline-offset: 5px;
+}
+
+@media (min-width: 40rem) {
+  .carousel {
+    padding: 4rem 1.5rem 3rem;
+  }
+
+  .slide {
+    grid-template-columns: 10.625rem minmax(0, 1fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    min-height: 17rem;
+  }
+
+  .cover {
+    width: 10.625rem;
+  }
+
+  .copy {
+    text-align: left;
+  }
+
+  .description {
+    margin-inline: 0;
+  }
+}
+
+@media (min-width: 64rem) {
+  .carousel {
+    padding: 5rem 2.5rem 3.5rem;
+  }
+
+  .slide {
+    grid-template-columns: 11.25rem minmax(0, 1fr);
+  }
+
+  .cover {
+    width: 11.25rem;
+  }
+}
+
+@keyframes reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide { animation: none; }
+  .link,
+  .arrow { transition: none; }
+}

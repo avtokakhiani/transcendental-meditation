@@ -3,3 +3,46 @@
   background-size: cover;
   background-position: center center;
 }
+
+.grid {
+  container-type: inline-size;
+}
+
+.card {
+  width: 100%;
+  max-width: 18.75rem;
+}
+
+.coverFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  background: var(--color-cream-200);
+}
+
+.coverFrame > .catalogCover {
+  width: auto;
+  height: auto;
+  max-width: 64%;
+  max-height: 78%;
+  object-fit: contain;
+  overflow-wrap: anywhere;
+}
+
+/* Generated covers keep the same portrait proportions as the existing design. */
+.coverFrame > div.catalogCover {
+  height: 78%;
+  aspect-ratio: 2 / 3;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 3.3vw, 3.3rem);
+}
+
+@media (max-width: 39.99rem) {
+  .hero h1 {
+    font-size: clamp(1.65rem, 8.14vw, 2.2rem);
+  }
+}
