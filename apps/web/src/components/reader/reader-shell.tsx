@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, MoveHorizontal, PanelLeftClose, PanelLeftOpen, Type, X } from 'lucide-react';
+import { ArrowLeft, PanelLeftClose, PanelLeftOpen, Type, X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { TocEntry } from '@/server/services/books';
@@ -90,6 +90,8 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
   const [progress, setProgress] = useState(0);
   const prefsLoaded = useRef(false);
   const userScrolled = useRef(false);
+  const settingsButton = useRef<HTMLButtonElement>(null);
+  const settingsPanel = useRef<HTMLDivElement>(null);
 
   const chapterTitle = toc.filter((entry) => entry.number <= currentPage).at(-1)?.title ?? null;
 
@@ -101,6 +103,36 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
   useEffect(() => {
     if (prefsLoaded.current) savePrefs(prefs);
   }, [prefs]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
+
+    const closeSettings = () => {
+      // Return focus before unmounting a focused control. An outside pointer's
+      // default action can still move focus to whichever control was clicked.
+      if (settingsPanel.current?.contains(document.activeElement)) {
+        settingsButton.current?.focus({ preventScroll: true });
+      }
+      setSettingsOpen(false);
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!(event.target instanceof Node)) return;
+      if (settingsPanel.current?.contains(event.target) || settingsButton.current?.contains(event.target)) return;
+      closeSettings();
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeSettings();
+      }
+    };
+    document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [settingsOpen]);
 
   // Open at the page in the URL. Re-applied once web fonts load, since they change page heights,
   // unless the reader has already started scrolling.
@@ -161,7 +193,6 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setSettingsOpen(false);
         setDrawerOpen(false);
         return;
       }
@@ -220,6 +251,8 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
             type="button"
             aria-label="კითხვის პარამეტრები"
             aria-expanded={settingsOpen}
+            aria-controls="reader-settings"
+            ref={settingsButton}
             onClick={() => setSettingsOpen((open) => !open)}
             className={iconButton}
           >
@@ -231,7 +264,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
         </div>
 
         {settingsOpen ? (
-          <div className="absolute right-3 top-full mt-2 w-72 rounded-2xl border border-[var(--reader-line)] bg-[var(--reader-bg)] p-5 shadow-2xl sm:right-4">
+          <div id="reader-settings" ref={settingsPanel} className="absolute right-3 top-full mt-2 w-72 rounded-2xl border border-[var(--reader-line)] bg-[var(--reader-bg)] p-5 shadow-2xl sm:right-4">
             <p className="text-xs text-[var(--reader-muted)]">შრიფტის ზომა</p>
             <div className="mt-3 flex items-center justify-between gap-3">
               <button
@@ -258,7 +291,15 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
             <div className="hidden sm:block">
               <p className="mt-5 text-xs text-[var(--reader-muted)]">გვერდის სიგანე</p>
               <div className="mt-3 flex items-center gap-3">
-                <MoveHorizontal aria-hidden="true" className="size-4 shrink-0 text-[var(--reader-muted)]" strokeWidth={1.5} />
+                <button
+                  type="button"
+                  disabled={prefs.width <= MIN_WIDTH}
+                  onClick={() => setPrefs((current) => ({ ...current, width: Math.max(MIN_WIDTH, current.width - 1) }))}
+                  aria-label="გვერდის სიგანის შემცირება"
+                  className="grid size-8 shrink-0 place-items-center rounded-full border border-[var(--reader-line)] text-lg disabled:opacity-40"
+                >
+                  −
+                </button>
                 <input
                   type="range"
                   min={MIN_WIDTH}
@@ -268,8 +309,17 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
                   onChange={(event) => setPrefs({ ...prefs, width: Number(event.target.value) })}
                   aria-label="გვერდის სიგანე"
                   aria-valuetext={prefs.width === MAX_WIDTH ? 'სრული სიგანე' : `${prefs.width + 1} / ${MAX_WIDTH + 1}`}
-                  className="h-1.5 flex-1 cursor-pointer accent-saffron-500"
+                  className="h-1.5 min-w-0 w-0 flex-1 cursor-pointer accent-saffron-500"
                 />
+                <button
+                  type="button"
+                  disabled={prefs.width >= MAX_WIDTH}
+                  onClick={() => setPrefs((current) => ({ ...current, width: Math.min(MAX_WIDTH, current.width + 1) }))}
+                  aria-label="გვერდის სიგანის გაზრდა"
+                  className="grid size-8 shrink-0 place-items-center rounded-full border border-[var(--reader-line)] text-lg disabled:opacity-40"
+                >
+                  +
+                </button>
                 <span className="w-12 text-center text-sm tabular-nums">{prefs.width === MAX_WIDTH ? 'სრული' : prefs.width + 1}</span>
               </div>
             </div>

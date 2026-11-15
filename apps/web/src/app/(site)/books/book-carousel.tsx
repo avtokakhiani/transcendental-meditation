@@ -6,6 +6,7 @@ import { useState, type KeyboardEvent } from 'react';
 import { BookCover } from '@/components/book-cover';
 import type { BookCard } from '@/server/services/books';
 import { getBookHref, isPreviewBook } from './book-link';
+import { BookContentLink } from './book-content-link';
 import styles from './book-carousel.module.css';
 
 export function BookCarousel({ books }: { books: BookCard[] }) {
@@ -49,16 +50,16 @@ export function BookCarousel({ books }: { books: BookCard[] }) {
           aria-label={`${currentIndex + 1} / ${books.length}`}
           className={styles.slide}
         >
-          <div className={styles.cover}>
+          <BookContentLink book={book} kind="cover" className={styles.cover}>
             <BookCover
               title={book.title}
               author={book.author}
               coverImageUrl={book.coverImageUrl}
               className="block w-full"
             />
-          </div>
+          </BookContentLink>
           <div className={styles.copy}>
-            <h2 className={styles.title}>{book.title}</h2>
+            <h2 className={styles.title}><BookContentLink book={book} kind="title">{book.title}</BookContentLink></h2>
             {book.author !== null && <p className={styles.author}>{book.author}</p>}
             <p className={styles.description}>{shortDescription}</p>
             <Link href={getBookHref(book)} className={styles.link}>

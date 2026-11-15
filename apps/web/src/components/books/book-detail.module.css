@@ -1,0 +1,31 @@
+.coverFrame {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+/* Scope natural image sizing to detail pages, preserving shelf and catalog covers. */
+.coverFrame > img.cover {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 21rem;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+.coverFrame > div.cover {
+  width: min(100%, 14rem);
+  aspect-ratio: 2 / 3;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 48rem) {
+  .coverFrame > img.cover {
+    max-height: 23.75rem;
+  }
+
+  .coverFrame > div.cover {
+    width: min(100%, 15.833333rem);
+  }
+}

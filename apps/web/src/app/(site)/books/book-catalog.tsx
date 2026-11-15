@@ -1,11 +1,10 @@
 'use client';
 
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import Link from 'next/link';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { BookCover } from '@/components/book-cover';
 import type { BookCard } from '@/server/services/books';
-import { getBookHref } from './book-link';
+import { BookContentLink } from './book-content-link';
 import styles from './books.module.css';
 
 const INITIAL_BOOK_COUNT = 4;
@@ -85,22 +84,24 @@ export function BookCatalog({ books }: { books: BookCard[] }) {
             <ul id="book-catalog-grid" className={`${styles.grid} mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4`}>
               {books.map((book, index) => (
                 <li key={book.id} id={book.id} className="min-w-0" hidden={!expanded && index >= INITIAL_BOOK_COUNT}>
-                  <Link href={getBookHref(book)} className={`${styles.card} group mx-auto block rounded-sm focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-plum-700`}>
+                  <div className={`${styles.card} mx-auto block rounded-sm`}>
                     <div className={styles.coverFrame}>
-                      <BookCover
-                        title={book.title}
-                        author={book.author}
-                        coverImageUrl={book.coverImageUrl}
-                        featured
-                        className={`${styles.catalogCover} block transition duration-500 group-hover:-translate-y-1.5 motion-reduce:transition-none`}
-                      />
+                      <BookContentLink book={book} kind="cover" className={styles.catalogCover}>
+                        <BookCover
+                          title={book.title}
+                          author={book.author}
+                          coverImageUrl={book.coverImageUrl}
+                          featured
+                          className="block"
+                        />
+                      </BookContentLink>
                     </div>
-                    <h3 className="mt-5 text-base leading-snug text-plum-800 group-hover:text-plum-500 sm:text-lg">{book.title}</h3>
+                    <h3 className="mt-5 text-base leading-snug text-plum-800 sm:text-lg"><BookContentLink book={book} kind="title">{book.title}</BookContentLink></h3>
                     <p className="mt-1 text-sm text-plum-400">
                       {book.author !== null ? `${book.author} · ` : ''}
                       {book.pageCount} გვერდი
                     </p>
-                  </Link>
+                  </div>
                 </li>
               ))}
             </ul>
