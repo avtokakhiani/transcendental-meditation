@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { UserRound } from 'lucide-react';
-import { InternalPageHero } from '@/components/site/internal-page-hero';
+import benefitHero from '@/components/site/benefit-hero.module.css';
+import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
+import styles from './about.module.css';
 
 export const metadata: Metadata = { title: 'ჩვენ შესახებ' };
 
@@ -10,7 +13,17 @@ const teacherSlots = ['01', '02'] as const;
 export default function AboutPage() {
   return (
     <div className="bg-cream-100">
-      <InternalPageHero title="ჩვენ შესახებ" headingId="about-heading" />
+      <section aria-labelledby="about-heading" className={`${hero.hero} ${benefitHero.hero} ${styles.hero}`}>
+        <Image
+          src="/images/about-hero-mountain-sunset.jpeg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className={`${hero.photograph} ${styles.photograph}`}
+        />
+        <h1 id="about-heading" className={hero.heading}>ჩვენ შესახებ</h1>
+      </section>
 
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
         <div className="grid gap-14 border-b border-cream-300 pb-16 sm:gap-16 sm:pb-20 lg:grid-cols-2 lg:gap-24">

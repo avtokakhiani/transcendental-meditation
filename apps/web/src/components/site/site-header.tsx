@@ -105,6 +105,8 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const transparentOnTop = pathname === '/stress-and-anxiety'
+    || pathname === '/about'
+    || pathname === '/faq'
     || pathname === '/books'
     || pathname === '/how-to-learn'
     || pathname === '/benefits'
