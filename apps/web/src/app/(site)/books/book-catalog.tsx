@@ -74,7 +74,7 @@ export function BookCatalog({ books }: { books: BookCard[] }) {
   }
 
   return (
-    <section aria-labelledby="catalog-heading" className="mt-4 bg-cream-100 pb-12 sm:mt-6 sm:pb-14 lg:mt-8 lg:pb-16">
+    <section aria-labelledby="catalog-heading" className="mt-4 bg-cream-100 pb-12 sm:mt-6 sm:pb-16 lg:mt-8 lg:pb-[5.5rem]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
         <h2 id="catalog-heading" className="mb-10 text-center text-2xl font-normal leading-normal text-plum-800 sm:mb-12 sm:text-3xl">ყველა წიგნი</h2>
         <div ref={contentRef}>

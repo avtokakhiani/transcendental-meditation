@@ -22,7 +22,7 @@ export default function FaqPage() {
         />
         <h1 id="faq-heading" className={hero.heading}>ხშირად დასმული კითხვები</h1>
       </section>
-      <section aria-labelledby="questions-heading" className="mx-auto max-w-4xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10 lg:py-28">
+      <section aria-labelledby="questions-heading" className="mx-auto max-w-4xl px-5 py-12 sm:px-6 sm:py-16 lg:px-10 lg:py-[5.5rem]">
         <h2 id="questions-heading" className="text-2xl font-normal leading-snug sm:text-3xl">კითხვები და პასუხები</h2>
         <p className="mb-10 mt-5 text-base leading-8 text-plum-500">[შესავსები სექცია — კითხვები და პასუხები მოგვიანებით დაემატება.]</p>
         <FaqAccordion items={faqItems} />

@@ -33,7 +33,7 @@
 }
 
 .section {
-  padding: clamp(3.5rem, 6vw, 5.5rem) 1.25rem;
+  padding: 3rem 1.25rem;
 }
 
 .container {
@@ -389,8 +389,18 @@
 }
 
 @media (min-width: 40rem) {
+  .section {
+    padding-block: 4rem;
+  }
+
   .faq details > div {
     padding-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .section {
+    padding-block: 5.5rem;
   }
 }
 
