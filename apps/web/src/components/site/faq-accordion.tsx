@@ -13,7 +13,17 @@ export function FaqAccordion({ items }: { items: readonly FaqItem[] }) {
             <Plus aria-hidden="true" className="size-5 shrink-0 transition-transform group-open:rotate-45 motion-reduce:transition-none" strokeWidth={1.5} />
           </summary>
           <div className="max-w-3xl whitespace-pre-line pb-7 pr-10 text-base leading-8 text-plum-500 sm:pb-8">
-            {item.answer}
+            {typeof item.answer === 'string' ? item.answer : (
+              <div className="space-y-5 whitespace-normal">
+                {item.answer.map((block, index) => block.type === 'paragraph' ? (
+                  <p key={index}>{block.text}</p>
+                ) : (
+                  <ul key={index} className="list-disc space-y-3 pl-6">
+                    {block.items.map((text) => <li key={text}>{text}</li>)}
+                  </ul>
+                ))}
+              </div>
+            )}
           </div>
         </details>
       ))}
