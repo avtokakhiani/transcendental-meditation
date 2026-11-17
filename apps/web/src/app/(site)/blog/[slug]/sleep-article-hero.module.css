@@ -10,3 +10,72 @@
 .photograph.photograph {
   object-position: 70% center;
 }
+
+/* Match Stress & Anxiety's opening continuation and final research section. */
+.articleSpacing {
+  --sleep-section-gap: 4.375rem;
+  padding-top: 3.75rem;
+  padding-bottom: 3rem;
+}
+
+/* Match the reference page's rendered CTA padding without changing this design. */
+.ctaSpacing.ctaSpacing {
+  padding-block: 5.09375rem;
+}
+
+@media (min-width: 40rem) {
+  .articleSpacing {
+    --sleep-section-gap: 5.8125rem;
+    padding-bottom: 4rem;
+  }
+
+  .ctaSpacing.ctaSpacing {
+    padding-block: 5.60546875rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .articleSpacing {
+    --sleep-section-gap: 8rem;
+    padding-top: 5.25rem;
+    padding-bottom: 5.5rem;
+  }
+
+}
+
+@media (max-width: 39.99rem) {
+  .articleSpacing {
+    padding-top: 3rem;
+  }
+}
+
+.insomniaLayout.insomniaLayout,
+.comparisonSpacing {
+  margin-top: var(--sleep-section-gap);
+}
+
+.insomniaFigure.insomniaFigure {
+  position: relative;
+  justify-self: center;
+  max-width: 380px;
+  aspect-ratio: 1000 / 1440;
+  overflow: hidden;
+}
+
+.insomniaChart.insomniaChart {
+  /* Frame only the SVG's blank margins. All plotted content, title and reference
+     fit within x=615..1615, y=75..1515 of the unchanged 2339×1539 image. */
+  position: absolute;
+  top: -5.208333%;
+  left: -61.5%;
+  width: 233.9%;
+  max-width: none;
+  margin: 0;
+}
+
+@media (min-width: 64rem) {
+  .insomniaLayout.insomniaLayout {
+    max-width: 1320px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
