@@ -3,6 +3,9 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  experimental: {
+    agentUpgrade: 'security',
+  },
   // Emits a self-contained server.js; without it App Service would need the whole pnpm
   // node_modules tree, whose symlinks do not survive the deploy.
   output: 'standalone',
