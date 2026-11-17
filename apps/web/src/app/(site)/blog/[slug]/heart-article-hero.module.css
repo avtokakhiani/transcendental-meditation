@@ -11,4 +11,85 @@
   object-position: 50% center;
 }
 
+/* Keep the reference's 76% / 456px scale, enlarge the artwork by 22%,
+   and frame only blank SVG margins. Source images stay unchanged. */
+.chartFigure.chartFigure {
+  position: relative;
+  justify-self: center;
+  overflow: hidden;
+  width: calc(76% * 1.22 * var(--chart-size-factor, 1) * var(--chart-frame-width) / var(--chart-source-width));
+  max-width: calc(456px * 1.22 * var(--chart-size-factor, 1) * var(--chart-frame-width) / var(--chart-source-width));
+  aspect-ratio: var(--chart-frame-width) / var(--chart-frame-height);
+}
+
+.bloodPressureFigure {
+  --chart-source-width: 2123;
+  --chart-frame-width: 1760;
+  --chart-frame-height: 1540;
+  --chart-frame-left: 65;
+}
+
+.heartRiskFigure {
+  --chart-size-factor: 0.88;
+  --chart-source-width: 1007;
+  --chart-frame-width: 950;
+  --chart-frame-height: 1216;
+  --chart-frame-left: 0;
+}
+
+.articleChart.articleChart {
+  position: absolute;
+  top: 0;
+  left: calc(-100% * var(--chart-frame-left) / var(--chart-frame-width));
+  width: calc(100% * var(--chart-source-width) / var(--chart-frame-width));
+  max-width: none;
+  height: auto;
+  margin: 0;
+}
+
+@media (min-width: 64rem) {
+  .chartFigure.chartFigure {
+    justify-self: end;
+  }
+
+  .bloodPressureFigure.bloodPressureFigure,
+  .heartRiskFigure.heartRiskFigure {
+    justify-self: center;
+  }
+}
+
+/* Use the sleep article's top padding at both content boundaries. */
+.articleSpacing {
+  padding-block: 3.75rem;
+}
+
+@media (max-width: 39.99rem) {
+  .articleSpacing {
+    padding-block: 3rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .articleSpacing {
+    padding-block: 5.25rem;
+  }
+}
+
+/* Match the sleep article's final gaps above and below its chart section. */
+.bloodPressureSpacing.bloodPressureSpacing {
+  margin-top: 4.375rem;
+}
+
+@media (min-width: 40rem) {
+  .bloodPressureSpacing.bloodPressureSpacing {
+    margin-top: 5.8125rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .bloodPressureSpacing.bloodPressureSpacing {
+    margin-top: 8rem;
+  }
+}
+
 

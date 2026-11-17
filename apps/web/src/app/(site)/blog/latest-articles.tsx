@@ -7,11 +7,11 @@ import styles from './latest-articles.module.css';
 const LISTING_COPY: Record<string, { title: string; description: string }> = {
   'meditatsia-uketesi-dzilistvis': {
     title: 'მედიტაცია უკეთესი ძილისთვის',
-    description: 'გაიგე, როგორ შეიძლება მედიტაცია დაგეხმაროს სტრესის შემცირებაში, უფრო მარტივად ჩაძინებასა და ძილის ხარისხის გაუმჯობესებაში.',
+    description: 'გაიგე, როგორ ეხმარება მედიტაცია სტრესის შემცირებას, ჩაძინების გამარტივებასა და ძილის ხარისხის გაუმჯობესებას.',
   },
   'gulis-janmrteloba-da-meditatsia': {
     title: 'გულის ჯანმრთელობა და მედიტაცია',
-    description: 'აღმოაჩინე, რას აჩვენებს სამეცნიერო კვლევები ტრანსცენდენტული მედიტაციის გავლენაზე არტერიულ წნევასა და გულის ჯანმრთელობაზე.',
+    description: 'სამეცნიერო კვლევები აჩვენებს, როგორ მოქმედებს ტრანსცენდენტული მედიტაცია გულის ჯანმრთელობაზე, არტერიულ წნევასა და გულ-სისხლძარღვთა დაავადებების რისკფაქტორებზე.',
   },
   'meditatsia-stresis-shesamtsireblad': {
     title: 'მედიტაცია სტრესის შესამცირებლად',
@@ -28,17 +28,19 @@ export function LatestArticles() {
         <ul className={styles.list}>
           {articles.map((article) => (
             <li key={article.slug} className={styles.item}>
-              <article className={styles.row}>
-                <div className={styles.copy}>
-                  <h3 className={styles.title}>
-                    <Link href={`/blog/${article.slug}`}>{article.title}</Link>
-                  </h3>
-                  <p className={styles.description}>{article.description}</p>
-                  <p className={styles.author}>{article.author}</p>
-                  <p className={styles.meta}>{article.readingMinutes} წუთი · {article.category}</p>
-                </div>
-                <Link href={`/blog/${article.slug}`} className={styles.thumbnail} aria-label={article.title}>
-                  <ArticleImage image={article.image} />
+              <article>
+                <Link href={`/blog/${article.slug}`} className={styles.row} aria-labelledby={`article-title-${article.slug}`}>
+                  <div className={styles.copy}>
+                    <h3 id={`article-title-${article.slug}`} className={styles.title}>
+                      {article.title}
+                    </h3>
+                    <p className={styles.description}>{article.description}</p>
+                    <p className={styles.author}>{article.author}</p>
+                    <p className={styles.meta}>{article.readingMinutes} წუთი · {article.category}</p>
+                  </div>
+                  <div className={styles.thumbnail}>
+                    <ArticleImage image={article.image} />
+                  </div>
                 </Link>
               </article>
             </li>
