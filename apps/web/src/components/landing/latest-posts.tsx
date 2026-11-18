@@ -1,23 +1,8 @@
+import { getArticleCardCopy } from '@/content/article-card-copy';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { PostCard } from '@/components/post-card';
 import type { PostCard as PostCardData } from '@/server/services/posts';
-
-// Homepage card copy only; full titles and descriptions remain on article pages.
-const HOMEPAGE_ARTICLE_COPY: Record<string, { title: string; excerpt: string }> = {
-  'meditatsia-uketesi-dzilistvis': {
-    title: 'მედიტაცია უკეთესი ძილისთვის',
-    excerpt: 'გაიგე, როგორ ეხმარება მედიტაცია სტრესის შემცირებას, ჩაძინების გამარტივებასა და ძილის ხარისხის გაუმჯობესებას.',
-  },
-  'gulis-janmrteloba-da-meditatsia': {
-    title: 'გულის ჯანმრთელობა და მედიტაცია',
-    excerpt: 'სამეცნიერო კვლევები აჩვენებს, როგორ მოქმედებს ტრანსცენდენტული მედიტაცია გულის ჯანმრთელობაზე, არტერიულ წნევასა და გულ-სისხლძარღვთა დაავადებების რისკფაქტორებზე.',
-  },
-  'meditatsia-stresis-shesamtsireblad': {
-    title: 'მედიტაცია სტრესის შესამცირებლად',
-    excerpt: 'გაიგე, როგორ მოქმედებს სტრესი სხეულსა და გონებაზე და როგორ უწყობს ხელს ტრანსცენდენტული მედიტაცია მის შემცირებასა და შინაგან სიმშვიდეს.',
-  },
-};
 
 export function LatestPosts({ posts }: { posts: PostCardData[] }) {
   if (posts.length === 0) return null;
@@ -37,7 +22,7 @@ export function LatestPosts({ posts }: { posts: PostCardData[] }) {
 
         <div className="mt-7 grid gap-x-8 gap-y-0 sm:mt-8 md:grid-cols-2 lg:grid-cols-3">
           {posts.slice(0, 3).map((post, index) => (
-            <PostCard key={post.id} post={{ ...post, ...HOMEPAGE_ARTICLE_COPY[post.slug] }} index={index} variant="latest" />
+            <PostCard key={post.id} post={{ ...post, ...getArticleCardCopy(post.slug) }} index={index} variant="latest" />
           ))}
         </div>
       </div>

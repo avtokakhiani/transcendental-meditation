@@ -1,3 +1,5 @@
+import type { ArticleSection } from './article-sections';
+
 export interface Article {
   slug: string;
   publishedAt: string;
@@ -7,6 +9,7 @@ export interface Article {
   readingMinutes: number;
   category: string;
   image: { src: string; alt: string } | null;
+  sections?: readonly ArticleSection[];
 }
 
 // Add articles here; the listing and article pages share this data.
@@ -58,10 +61,13 @@ export const articles: readonly Article[] = [
   },
 ];
 
-export function getLatestArticles(): Article[] {
-  return [...articles].sort(
-    (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt) || a.slug.localeCompare(b.slug),
-  );
+export function getLatestArticles(now = new Date()): Article[] {
+  return articles
+    .filter((article) => Date.parse(article.publishedAt) <= now.getTime())
+    .sort(
+      (a, b) =>
+        Date.parse(b.publishedAt) - Date.parse(a.publishedAt) || a.slug.localeCompare(b.slug),
+    );
 }
 
 export function getArticle(slug: string): Article | undefined {

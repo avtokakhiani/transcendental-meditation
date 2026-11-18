@@ -1,0 +1,95 @@
+/* Match the homepage LatestPosts card grid, including its md / lg column breakpoints. */
+.viewport {
+  --visible-cards: 1;
+  --card-gap: 2rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc(
+    (100% - (var(--visible-cards) - 1) * var(--card-gap)) / var(--visible-cards)
+  );
+  grid-template-rows: repeat(5, auto);
+  column-gap: var(--card-gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 6px;
+  /* Allow the shared card's focus outline to remain visible inside the viewport. */
+  padding: 6px;
+  margin: calc(1.75rem - 6px) -6px -6px;
+  scrollbar-width: none;
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+.viewport > article {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* A single visible card keeps the homepage's natural title-to-excerpt spacing. */
+@media (max-width: 47.99rem) {
+  .viewport {
+    grid-template-rows: auto;
+    align-items: start;
+  }
+
+  .viewport > article {
+    grid-row: 1;
+    grid-template-rows: repeat(5, auto);
+  }
+}
+
+.viewport:focus-visible {
+  outline: 2px solid var(--color-plum-700);
+  outline-offset: 4px;
+  border-radius: 1rem;
+}
+
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1px solid color-mix(in srgb, var(--color-plum-300) 55%, transparent);
+  border-radius: 50%;
+  color: var(--color-plum-500);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.arrow:hover:not(:disabled) {
+  background: var(--color-cream-200);
+  color: var(--color-plum-800);
+}
+.arrow:disabled {
+  opacity: 0.35;
+}
+.arrow:focus-visible {
+  outline: 2px solid var(--color-plum-700);
+  outline-offset: 4px;
+}
+
+@media (min-width: 40rem) {
+  .viewport {
+    margin-top: calc(2rem - 6px);
+  }
+}
+@media (min-width: 48rem) {
+  .viewport {
+    --visible-cards: 2;
+  }
+}
+@media (min-width: 64rem) {
+  .viewport {
+    --visible-cards: 3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    transition: none;
+  }
+}

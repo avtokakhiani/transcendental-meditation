@@ -11,20 +11,15 @@
   object-position: 40% center;
 }
 
-.firstStep {
-  padding: 4rem 1.25rem;
-  color: var(--color-plum-800);
-  text-align: center;
-  background-color: #ffbc00;
-  background-image: url('/images/tm-transitional-warm-yellow-blue.jpeg');
-  background-position: center;
-  background-size: cover;
+.bloodPressureChart.bloodPressureChart {
+  width: 84%;
+  max-width: 504px;
 }
 
-@media (min-width: 40rem) {
-  .firstStep {
-    padding: 4rem 1.5rem;
-  }
+.traitAnxietyChart {
+  /* Preserve the layout footprint and center while reducing the visible chart. */
+  transform: scale(0.9);
+  transform-origin: center;
 }
 
 @media (max-width: 39.99rem) {

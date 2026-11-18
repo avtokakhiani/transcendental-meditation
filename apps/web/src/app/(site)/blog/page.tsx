@@ -5,6 +5,9 @@ import styles from './articles-hero.module.css';
 import { ArticlesHeaderBackground } from './articles-header-background';
 import { LatestArticles } from './latest-articles';
 
+// Keep publication-date eligibility synchronized with the article carousel.
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'სტატიები',
   description: 'სტატიები მედიტაციის, სტრესის, ძილისა და შინაგანი სიმშვიდის შესახებ.',

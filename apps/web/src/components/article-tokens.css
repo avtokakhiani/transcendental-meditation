@@ -1,0 +1,52 @@
+/* Finalized article geometry. Breakpoints match Tailwind sm / lg.
+   Research sections also use these tokens; chart artwork keeps its own scale. */
+:root {
+  --article-reading-width: 800px;
+  --article-reading-gutter: 20px;
+  --article-content-padding: 3rem;
+  --article-sleep-bottom-padding: 3rem;
+  --article-section-gap: 4.375rem;
+  --article-paragraph-gap: 1.5rem;
+  --article-list-gap: 0.5rem;
+  --article-list-indent: 1.5rem;
+  --article-font-size: 1rem;
+  --article-line-height: 1.85;
+  --article-heading-size: 1.5rem;
+  --article-heading-line-height: 1.45;
+  --article-cta-padding: 5.09375rem;
+  --article-cta-width: 760px;
+  --research-content-width: 1320px;
+  --research-content-gutter: 20px;
+  --research-column-gap: 32px;
+  --research-block-padding: 48px;
+  --research-chart-width: 80%;
+  --research-chart-max-width: 480px;
+  --research-copy-font-size: 1rem;
+  --research-copy-line-height: 1.8;
+  --research-copy-paragraph-gap: 1.25rem;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --article-content-padding: 3.75rem;
+    --article-sleep-bottom-padding: 4rem;
+    --article-section-gap: 5.8125rem;
+    --article-font-size: 1.125rem;
+    --article-heading-size: 1.75rem;
+    --article-cta-padding: 5.60546875rem;
+    --research-content-gutter: 24px;
+    --research-block-padding: 64px;
+    --research-copy-font-size: 1.0625rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --article-content-padding: 5.25rem;
+    --article-sleep-bottom-padding: 5.5rem;
+    --article-section-gap: 8rem;
+    --research-content-gutter: 48px;
+    --research-column-gap: 48px;
+    --research-block-padding: 88px;
+  }
+}

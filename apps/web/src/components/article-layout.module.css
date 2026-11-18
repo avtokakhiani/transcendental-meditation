@@ -1,0 +1,176 @@
+.content {
+  padding-block: var(--article-content-padding);
+  background-color: var(--color-cream-100);
+  color: var(--color-plum-800);
+}
+
+/* Keep the finalized sleep article's intentionally different closing boundary. */
+.sleep {
+  padding-bottom: var(--article-sleep-bottom-padding);
+}
+
+.text {
+  width: 100%;
+  max-width: var(--article-reading-width);
+  margin-inline: auto;
+  padding-inline: var(--article-reading-gutter);
+}
+
+.copy,
+.research {
+  min-width: 0;
+  font-size: var(--article-font-size);
+  line-height: var(--article-line-height);
+  text-align: left;
+}
+
+/* Same rhythm as the finalized space-y-6 / space-y-2 article content. */
+.copy > :not(:last-child) {
+  margin-block: 0 var(--article-paragraph-gap);
+}
+
+.copy > h2 {
+  padding-top: var(--article-paragraph-gap);
+  font-size: var(--article-heading-size);
+  font-weight: 400;
+  line-height: var(--article-heading-line-height);
+}
+
+.copy > h2:first-child {
+  padding-top: 0;
+}
+
+.copy :where(ul, ol) {
+  padding-left: var(--article-list-indent);
+  line-height: 1.5;
+}
+
+.copy ul {
+  list-style-type: disc;
+}
+.copy ol {
+  list-style-type: decimal;
+}
+
+.copy li:not(:last-child) {
+  margin-block: 0 var(--article-list-gap);
+}
+
+/* Only the following block owns a section gap. No vertical padding on grids. */
+.sectionGap.sectionGap {
+  margin-top: var(--article-section-gap);
+}
+
+.content > .sectionGap:first-child {
+  margin-top: 0;
+}
+
+.framed.framed {
+  position: relative;
+  justify-self: center;
+  overflow: hidden;
+  width: var(--research-chart-width);
+  max-width: var(--research-chart-max-width);
+  aspect-ratio: var(--chart-frame-width) / var(--chart-frame-height);
+}
+
+.framedImage.framedImage {
+  position: absolute;
+  top: calc(-100% * var(--chart-frame-top) / var(--chart-frame-height));
+  left: calc(-100% * var(--chart-frame-left) / var(--chart-frame-width));
+  width: calc(100% * var(--chart-source-width) / var(--chart-frame-width));
+  max-width: none;
+  margin: 0;
+}
+
+.cta.cta {
+  padding-block: var(--article-cta-padding);
+}
+
+@media (min-width: 64rem) {
+  .chartOnLeft > :first-child {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .chartOnLeft > figure {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+/* Scoped to CMS article bodies; book pages and editor previews keep their styles. */
+.prose.prose {
+  color: var(--color-plum-800);
+  font-size: var(--article-font-size);
+  line-height: var(--article-line-height);
+  --tw-prose-body: var(--color-plum-800);
+  --tw-prose-headings: var(--color-plum-800);
+  --tw-prose-bold: var(--color-plum-800);
+  --tw-prose-bullets: var(--color-plum-800);
+  --tw-prose-counters: var(--color-plum-800);
+}
+
+.prose.prose :where(strong, b) {
+  font-weight: 700;
+}
+
+.prose.prose > :where(p, h2, h3, ul, ol) {
+  margin-block: 0 var(--article-paragraph-gap);
+}
+
+.prose.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose.prose :where(h2) {
+  padding-top: var(--article-paragraph-gap);
+  font-size: var(--article-heading-size);
+  font-weight: 400;
+  line-height: var(--article-heading-line-height);
+}
+
+.prose.prose > h2:first-child {
+  padding-top: 0;
+}
+
+.prose.prose :where(ul, ol) {
+  padding-left: var(--article-list-indent);
+  line-height: 1.5;
+}
+
+.prose.prose :where(li) {
+  margin-block: 0 var(--article-list-gap);
+  padding-left: 0;
+}
+
+.prose.prose li:last-child {
+  margin-bottom: 0;
+}
+.prose.prose li > p {
+  margin-block: 0;
+}
+
+/* Existing CMS posts retain their published reading layout. New posts use defaults. */
+.legacyPost {
+  padding-top: 2.5rem;
+  padding-bottom: 6rem;
+}
+
+.legacyReading {
+  max-width: 48rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .legacyReading {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .legacyPost {
+    padding-top: 4rem;
+  }
+}

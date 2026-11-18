@@ -1,7 +1,7 @@
 /* Shared geometry for research charts; section-specific typography stays with its content. */
 .section,
 .embedded {
-  --research-section-padding: 48px;
+  --research-section-padding: var(--research-block-padding);
 }
 
 .section {
@@ -14,12 +14,12 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  gap: 32px;
+  gap: var(--research-column-gap);
   box-sizing: border-box;
   width: 100%;
-  max-width: 1320px;
+  max-width: var(--research-content-width);
   margin-inline: auto;
-  padding-inline: 20px;
+  padding-inline: var(--research-content-gutter);
 }
 
 .layout > * {
@@ -45,36 +45,17 @@
 
 .chart {
   display: block;
-  width: 80%;
+  width: var(--research-chart-width);
   min-width: 0;
-  max-width: 480px;
+  max-width: var(--research-chart-max-width);
   height: auto;
   margin-inline: auto;
   object-fit: contain;
 }
 
-@media (min-width: 40rem) {
-  .section,
-  .embedded {
-    --research-section-padding: 64px;
-  }
-
-  .layout {
-    padding-inline: 24px;
-  }
-
-}
-
 @media (min-width: 64rem) {
-  .section,
-  .embedded {
-    --research-section-padding: 88px;
-  }
-
   .layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 48px;
-    padding-inline: 48px;
   }
 
   .layout > figure {

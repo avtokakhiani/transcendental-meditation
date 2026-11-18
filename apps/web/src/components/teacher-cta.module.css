@@ -1,3 +1,9 @@
+.content {
+  width: 100%;
+  max-width: var(--article-cta-width);
+  margin-inline: auto;
+}
+
 .section {
   display: grid;
   place-items: center;

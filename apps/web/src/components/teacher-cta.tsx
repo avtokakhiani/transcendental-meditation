@@ -11,7 +11,7 @@ export function TeacherCta({ headingId, children, heading = 'იპოვე TM-
 }) {
   return (
     <section aria-labelledby={headingId} className={`${styles.section} ${className}`}>
-      <div className="mx-auto w-full max-w-[760px]">
+      <div className={styles.content}>
         <h2 id={headingId} className="text-3xl font-normal leading-[1.45] sm:text-4xl">{heading}</h2>
         <div className="mt-8 space-y-6 text-base leading-[1.7] sm:text-lg">
           {children}
