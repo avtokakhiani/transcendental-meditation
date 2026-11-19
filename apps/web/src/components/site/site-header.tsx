@@ -39,6 +39,7 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
   {
     label: 'მეტი',
     items: [
+      { label: 'ორგანიზაციებისთვის', href: '/organizaciebitvis' as Route },
       { label: 'ჩვენ შესახებ', href: '/about' as Route },
       { label: 'ხშირად დასმული კითხვები', href: '/faq' as Route },
     ],
