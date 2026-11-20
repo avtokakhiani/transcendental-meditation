@@ -3,7 +3,7 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { LoaderCircle } from 'lucide-react';
 import { corporate } from '@/content/corporate';
-import { corporateContactMethods, corporateDeliveryError, corporatePrograms } from '@/lib/corporate-inquiry';
+import { corporateContactMethods, corporateDeliveryError } from '@/lib/corporate-inquiry';
 import styles from './corporate.module.css';
 
 export function CorporateForm() {
@@ -62,10 +62,6 @@ export function CorporateForm() {
         <label className={styles.field} htmlFor="corporate-phone">
           <span>ტელეფონის ნომერი {contactMethod === 'ტელეფონით' && <span aria-hidden="true">*</span>}</span>
           <input id="corporate-phone" name="phone" type="tel" autoComplete="tel" required={contactMethod === 'ტელეფონით'} pattern={'[+0-9\\s.\\(\\)\\-]{5,40}'} maxLength={40} />
-        </label>
-        <label className={`${styles.field} ${styles.wide}`} htmlFor="corporate-program">
-          <span>რომელი პროგრამა გაინტერესებთ?</span>
-          <select id="corporate-program" name="program" defaultValue={corporatePrograms[3]}>{corporatePrograms.map(value => <option key={value}>{value}</option>)}</select>
         </label>
         <label className={`${styles.field} ${styles.wide}`} htmlFor="corporate-method">
           <span>დაკავშირების სასურველი ფორმა</span>

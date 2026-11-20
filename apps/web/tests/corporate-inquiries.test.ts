@@ -5,7 +5,7 @@ import { POST } from '../src/app/api/corporate-inquiries/route';
 test('corporate endpoint validates, handles delivery failures, and sends all details', async () => {
   const originalFetch = globalThis.fetch;
   const saved = { key: process.env.RESEND_API_KEY, from: process.env.CORPORATE_FROM_EMAIL, to: process.env.ADMIN_EMAIL };
-  const inquiry = { name: 'QA Person', organization: 'QA Organization', email: 'route-qa@example.invalid', phone: '+995 511 123456', program: 'ორივე პროგრამა', contactMethod: 'ტელეფონით', message: 'Corporate QA', website: '', startedAt: Date.now() - 5000 };
+  const inquiry = { name: 'QA Person', organization: 'QA Organization', email: 'route-qa@example.invalid', phone: '+995 511 123456', contactMethod: 'ტელეფონით', message: 'Corporate QA', website: '', startedAt: Date.now() - 5000 };
   const request = (body = inquiry, origin = 'http://localhost:31997') => new Request('http://localhost:31997/api/corporate-inquiries', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   try {
     assert.equal((await POST(request(inquiry, 'https://other.invalid'))).status, 403);
@@ -29,7 +29,8 @@ test('corporate endpoint validates, handles delivery failures, and sends all det
       assert.equal(body.from, 'sender@example.invalid');
       assert.deepEqual(body.to, ['admin@example.invalid']);
       assert.equal(body.reply_to, inquiry.email);
-      for (const field of ['name', 'organization', 'email', 'phone', 'program', 'contactMethod', 'message'] as const) assert.ok(body.text.includes(inquiry[field]));
+      for (const field of ['name', 'organization', 'email', 'phone', 'contactMethod', 'message'] as const) assert.ok(body.text.includes(inquiry[field]));
+      assert.ok(!body.text.includes('რომელი პროგრამა გაინტერესებთ?'));
       keys.push(new Headers(options?.headers).get('Idempotency-Key')!);
       return Response.json({ id: 'mock-email-id' });
     };

@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaqAccordion } from '@/components/site/faq-accordion';
 import { corporate as copy } from '@/content/corporate';
 import { CorporateForm } from './corporate-form';
 import styles from './corporate.module.css';
@@ -32,8 +31,8 @@ export default function CorporatePage() {
         <div className={styles.body}>
           {copy.wellbeing.paragraphs.map(text => <p key={text}>{text}</p>)}
           <div className={styles.links}>
-            <Link href="/blog/ra-aris-transtsendentuli-meditatsia">{copy.wellbeing.links[0]}<ArrowUpRight aria-hidden="true" size={15} strokeWidth={1.5} /></Link>
-            <Link href="/benefits">{copy.wellbeing.links[1]}<ArrowUpRight aria-hidden="true" size={15} strokeWidth={1.5} /></Link>
+            <Link href="/blog/ra-aris-transtsendentuli-meditatsia">{copy.wellbeing.links[0]}<ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} /></Link>
+            <Link href="/benefits">{copy.wellbeing.links[1]}<ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.5} /></Link>
           </div>
         </div>
       </section>
@@ -55,7 +54,6 @@ export default function CorporatePage() {
               <div className={styles.body}>{copy.programs.b.paragraphs.map(text => <p key={text}>{text}</p>)}</div>
             </article>
           </div>
-          <p className={styles.closing}>{copy.programs.closing}</p>
         </section>
       </div>
 
@@ -67,11 +65,6 @@ export default function CorporatePage() {
             <div><h3>{step.heading}</h3><p>{step.body}</p></div>
           </li>)}
         </ol>
-      </section>
-
-      <section aria-labelledby="corporate-faq-heading" className={`${styles.section} ${styles.faq}`}>
-        <h2 id="corporate-faq-heading" className={styles.centerHeading}>{copy.faq.heading}</h2>
-        <FaqAccordion items={copy.faq.items} />
       </section>
 
       <div className={styles.contactBackground}>

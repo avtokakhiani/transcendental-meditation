@@ -57,7 +57,6 @@ export async function POST(request: Request) {
   const details = [
     ['სახელი და გვარი', inquiry.name], ['ორგანიზაცია', inquiry.organization],
     ['ელფოსტა', inquiry.email], ['ტელეფონის ნომერი', inquiry.phone],
-    ['რომელი პროგრამა გაინტერესებთ?', inquiry.program],
     ['დაკავშირების სასურველი ფორმა', inquiry.contactMethod],
     ['დამატებითი ინფორმაცია', inquiry.message],
   ];

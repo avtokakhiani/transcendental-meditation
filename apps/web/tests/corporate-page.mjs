@@ -10,8 +10,12 @@ try {
   assert.equal((await page.goto(`${base}/organizaciebitvis`)).status(), 200);
   await page.evaluate(() => document.fonts.ready);
   assert.equal(await page.locator('h1').count(), 1);
-  assert.equal(await page.locator('details').count(), 6);
+  assert.equal(await page.locator('section[aria-labelledby="corporate-faq-heading"]').count(), 0);
+  assert.equal(await page.locator('section[aria-labelledby="process-heading"] + div > #corporate-contact').count(), 1);
   assert.equal(await page.locator('ol > li').count(), 5);
+  assert.equal(await page.locator('section[aria-labelledby="international-organizations-heading"]').count(), 0);
+  assert.equal(await page.locator('section[aria-labelledby="programs-heading"]').evaluate(el => el.parentElement.nextElementSibling.getAttribute('aria-labelledby')), 'process-heading');
+  assert.equal(await page.locator('#corporate-program, [name="program"]').count(), 0);
   assert.ok(await page.locator('meta[name="description"]').getAttribute('content'));
   assert.equal(await page.locator('a[href="#corporate-contact"]').count(), 1);
   assert.equal(await page.locator('a[href="/benefits"]').count() > 0, true);
@@ -42,9 +46,6 @@ try {
   }
   await page.locator('a[href="#corporate-contact"]').click();
   await page.waitForFunction(() => Math.abs(document.querySelector('#corporate-contact').getBoundingClientRect().top - 96) < 3);
-  await page.locator('summary').first().focus();
-  await page.keyboard.press('Enter');
-  assert.equal(await page.locator('details').first().getAttribute('open'), '');
   await page.locator('#corporate-name').fill('Test Person');
   await page.locator('#corporate-organization').fill('Test Organization');
   await page.locator('#corporate-email').fill('invalid');
@@ -59,13 +60,13 @@ try {
 
   // The unconfigured local endpoint must report failure, never false success.
   const response = await page.evaluate(async () => {
-    const body = { name: 'Test', organization: 'Test', email: 'qa@example.invalid', phone: '', program: 'ორივე პროგრამა', contactMethod: 'ელფოსტით', message: '', website: '', startedAt: Date.now() - 5000 };
+    const body = { name: 'Test', organization: 'Test', email: 'qa@example.invalid', phone: '', contactMethod: 'ელფოსტით', message: '', website: '', startedAt: Date.now() - 5000 };
     const post = async value => (await fetch('/api/corporate-inquiries', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(value) })).status;
     return [await post({ ...body, email: 'bad' }), await post({ ...body, contactMethod: 'ტელეფონით' }), await post({ ...body, website: 'spam' }), await post(body)];
   });
   assert.deepEqual(response, [400, 400, 400, 503]);
   await page.waitForTimeout(2100);
-  await page.getByRole('button', { name: 'გაგზავნე მოთხოვნა' }).click();
+  await page.getByRole('button', { name: 'გაგზავნეთ მოთხოვნა' }).click();
   await page.locator('#corporate-error').waitFor();
   assert.equal(await page.locator('#corporate-name').inputValue(), 'Test Person');
 
@@ -76,8 +77,8 @@ try {
     await new Promise(resolve => setTimeout(resolve, 200));
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true }) });
   });
-  await page.getByRole('button', { name: 'გაგზავნე მოთხოვნა' }).click();
-  assert.equal(await page.getByRole('button', { name: 'გაგზავნე მოთხოვნა' }).isDisabled(), true);
+  await page.getByRole('button', { name: 'გაგზავნეთ მოთხოვნა' }).click();
+  assert.equal(await page.getByRole('button', { name: 'გაგზავნეთ მოთხოვნა' }).isDisabled(), true);
   await page.getByRole('status').waitFor();
   assert.equal(requests, 1);
   assert.equal(await page.locator('form[aria-label="მოითხოვე გაცნობითი შეხვედრა"]').count(), 0);
@@ -87,5 +88,5 @@ try {
   await page.screenshot({ path: '.next/corporate-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: '.next/corporate-mobile.png', fullPage: true });
-  console.log('Corporate page: responsive layout, navigation, CTA, FAQ, validation, unconfigured delivery, loading and success checks passed.');
+  console.log('Corporate page: responsive layout, navigation, CTA, direct process-to-contact flow, validation, unconfigured delivery, loading and success checks passed.');
 } finally { await browser.close(); }
