@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ArrowUpRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaqAccordion } from '@/components/site/faq-accordion';
@@ -31,8 +32,8 @@ export default function CorporatePage() {
         <div className={styles.body}>
           {copy.wellbeing.paragraphs.map(text => <p key={text}>{text}</p>)}
           <div className={styles.links}>
-            <Link href="/blog/ra-aris-transtsendentuli-meditatsia">{copy.wellbeing.links[0]}</Link>
-            <Link href="/benefits">{copy.wellbeing.links[1]}</Link>
+            <Link href="/blog/ra-aris-transtsendentuli-meditatsia">{copy.wellbeing.links[0]}<ArrowUpRight aria-hidden="true" size={15} strokeWidth={1.5} /></Link>
+            <Link href="/benefits">{copy.wellbeing.links[1]}<ArrowUpRight aria-hidden="true" size={15} strokeWidth={1.5} /></Link>
           </div>
         </div>
       </section>

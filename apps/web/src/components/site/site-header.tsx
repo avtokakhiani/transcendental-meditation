@@ -4,7 +4,7 @@ import { ChevronDown, Menu, Phone, X } from 'lucide-react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { SITE } from '@/lib/site';
 import { INTRODUCTORY_MEETING_ROUTE } from '@/lib/routes';
 import { Logo } from './logo';
@@ -34,12 +34,12 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
     ],
   },
   { label: 'როგორ ვისწავლო?', href: '/how-to-learn' as Route },
-  { label: 'სტატიები', href: '/blog' },
-  { label: 'წიგნები', href: '/books' },
+  { label: 'ორგანიზაციებისთვის', href: '/organizaciebitvis' as Route },
   {
     label: 'მეტი',
     items: [
-      { label: 'ორგანიზაციებისთვის', href: '/organizaciebitvis' as Route },
+      { label: 'სტატიები', href: '/blog' },
+      { label: 'წიგნები', href: '/books' },
       { label: 'ჩვენ შესახებ', href: '/about' as Route },
       { label: 'ხშირად დასმული კითხვები', href: '/faq' as Route },
     ],
@@ -49,12 +49,17 @@ const NAV: ReadonlyArray<NavLink | NavGroup> = [
 function Dropdown({ group }: { group: NavGroup }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelId = useId();
 
   useEffect(() => {
     if (!open) return;
     const close = (event: MouseEvent | KeyboardEvent) => {
       if (event instanceof KeyboardEvent ? event.key === 'Escape' : !ref.current?.contains(event.target as Node)) {
         setOpen(false);
+        if (event instanceof KeyboardEvent && ref.current?.contains(document.activeElement)) {
+          triggerRef.current?.focus();
+        }
       }
     };
     document.addEventListener('mousedown', close);
@@ -71,10 +76,15 @@ function Dropdown({ group }: { group: NavGroup }) {
       className="relative"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+      }}
     >
       <button
+        ref={triggerRef}
         type="button"
         aria-expanded={open}
+        aria-controls={open ? panelId : undefined}
         onClick={() => setOpen((value) => !value)}
         className="flex items-center gap-1.5 rounded-md px-1 py-2 text-[15px] text-plum-800 transition hover:text-plum-500"
       >
@@ -82,7 +92,7 @@ function Dropdown({ group }: { group: NavGroup }) {
         <ChevronDown aria-hidden="true" className={`size-4 transition ${open ? 'rotate-180' : ''}`} />
       </button>
       {open ? (
-        <div className="absolute left-1/2 top-full z-40 w-80 -translate-x-1/2 pt-2">
+        <div id={panelId} className="absolute left-1/2 top-full z-40 w-80 -translate-x-1/2 pt-2">
           <ul className="rounded-2xl border border-cream-300 bg-cream-50 p-2 shadow-xl shadow-plum-900/5">
             {group.items.map((item) => (
               <li key={item.label}>
@@ -111,6 +121,7 @@ export function SiteHeader() {
     || pathname === '/books'
     || pathname === '/how-to-learn'
     || pathname === '/benefits'
+    || pathname === '/organizaciebitvis'
     || pathname === '/health'
     || pathname === '/brain-function'
     || pathname === '/relationships'
@@ -118,6 +129,7 @@ export function SiteHeader() {
     || pathname === '/blog/ra-aris-transtsendentuli-meditatsia';
   const isHomepage = pathname === '/';
   const headerRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [pastHeader, setPastHeader] = useState(false);
 
   useEffect(() => {
@@ -143,17 +155,39 @@ export function SiteHeader() {
     if (!menuOpen) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const close = (event: KeyboardEvent) => event.key === 'Escape' && setMenuOpen(false);
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const focusable = () => Array.from(menuRef.current?.querySelectorAll<HTMLElement>('a[href], button') ?? []);
+    focusable()[0]?.focus();
+    const close = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false);
+      if (event.key !== 'Tab') return;
+      const items = focusable();
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+    const desktop = window.matchMedia('(min-width: 1280px)');
+    const closeOnDesktop = () => { if (desktop.matches) setMenuOpen(false); };
+    desktop.addEventListener('change', closeOnDesktop);
     document.addEventListener('keydown', close);
     return () => {
       document.body.style.overflow = previous;
       document.removeEventListener('keydown', close);
+      desktop.removeEventListener('change', closeOnDesktop);
+      previousFocus?.focus();
     };
   }, [menuOpen]);
 
   return (
     <header
       ref={headerRef}
+      style={menuOpen ? { backdropFilter: 'none' } : undefined}
       data-transparent={transparentOnTop ? !pastHeader : undefined}
       data-menu-open={transparentOnTop && menuOpen ? true : undefined}
       className={`sticky top-0 z-30 border-b border-transparent bg-cream-100/90 backdrop-blur supports-[backdrop-filter]:bg-cream-100/75${transparentOnTop ? ` ${styles.overlay}` : ''}${isHomepage && pastHeader ? ` ${styles.opaque}` : ''}`}
@@ -198,6 +232,7 @@ export function SiteHeader() {
             type="button"
             aria-label="მენიუს გახსნა"
             aria-expanded={menuOpen}
+            aria-controls={menuOpen ? 'site-mobile-menu' : undefined}
             onClick={() => setMenuOpen(true)}
             className="grid size-10 place-items-center rounded-full text-plum-800 transition hover:bg-cream-200 xl:hidden"
           >
@@ -207,7 +242,7 @@ export function SiteHeader() {
       </div>
 
       {menuOpen ? (
-        <div role="dialog" aria-modal="true" aria-label="მენიუ" className="fixed inset-0 z-50 flex flex-col bg-cream-100 xl:hidden">
+        <div ref={menuRef} id="site-mobile-menu" role="dialog" aria-modal="true" aria-label="მენიუ" className="fixed inset-0 z-50 flex flex-col bg-cream-100 xl:hidden">
           <div className="flex h-20 items-center justify-between px-4 sm:px-6">
             <Logo variant="header" />
             <button

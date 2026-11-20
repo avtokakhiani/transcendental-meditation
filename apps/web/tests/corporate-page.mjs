@@ -23,7 +23,12 @@ try {
     assert.ok(await image.evaluate(img => img.naturalWidth > 0));
     if (width === 1440) {
       const box = await page.locator('section').first().boundingBox();
-      assert.ok(box.height >= 400 && box.height <= 500, `hero height ${box.height}`);
+      const reference = await browser.newPage({ viewport: { width, height: 1000 } });
+      try {
+        await reference.goto(`${base}/benefits`);
+        const referenceHero = await reference.locator('section').first().boundingBox();
+        assert.equal(box.height, referenceHero.height, 'hero matches internal-page sizing');
+      } finally { await reference.close(); }
       await page.getByRole('button', { name: 'მეტი', exact: true }).focus();
       await page.keyboard.press('Enter');
       await page.getByRole('link', { name: 'ორგანიზაციებისთვის', exact: true }).waitFor();
