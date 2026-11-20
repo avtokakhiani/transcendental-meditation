@@ -7,6 +7,13 @@
   max-width: 540px;
 }
 
+@media (min-width: 64rem) {
+  .coherenceChart.coherenceChart {
+    width: 81%;
+    max-width: 486px;
+  }
+}
+
 .selfEsteemChart.selfEsteemChart {
   width: 103.4%;
   max-width: 620.4px;
