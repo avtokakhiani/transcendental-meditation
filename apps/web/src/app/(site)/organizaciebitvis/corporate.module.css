@@ -38,7 +38,7 @@
 .stepNumber { width: 2.5rem; height: 2.5rem; display: grid; place-items: center; border-radius: 50%; background: var(--color-mist-200); font-size: 1.1rem; }
 .steps h3 { font-size: 1.125rem; font-weight: 500; line-height: 1.7; }
 .steps p { margin-top: .65rem; color: var(--color-plum-700); line-height: 1.95; }
-.contactBackground { background: var(--color-mauve-100); }
+.contactBackground { background: var(--color-cream-200); }
 .contact { display: grid; grid-template-columns: .85fr 1.15fr; align-items: start; gap: 4rem; scroll-margin-top: 6rem; }
 .contact h2 { margin-bottom: 1.5rem; }
 .form { min-width: 0; }
