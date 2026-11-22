@@ -1,10 +1,12 @@
 'use client';
 
-import { BookOpen, ExternalLink, Image as ImageIcon, Newspaper } from 'lucide-react';
+import { BookOpen, CalendarDays, ExternalLink, Image as ImageIcon, Newspaper } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const ITEMS = [
+  { label: 'მონაცემთა დაცვა', href: '/admin/privacy', Icon: CalendarDays },
+  { label: 'შეხვედრები', href: '/admin/meetings', Icon: CalendarDays },
   { label: 'პოსტები', href: '/admin/posts', Icon: Newspaper },
   { label: 'წიგნები', href: '/admin/books', Icon: BookOpen },
   { label: 'მედია', href: '/admin/media', Icon: ImageIcon },

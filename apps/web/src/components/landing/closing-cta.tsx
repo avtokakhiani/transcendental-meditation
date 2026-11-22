@@ -3,6 +3,7 @@ import type { Route } from 'next';
 import Link from 'next/link';
 import { LogoMark } from '@/components/site/logo';
 import styles from './closing-cta.module.css';
+import { INTRODUCTORY_MEETING_ROUTE } from '@/lib/routes';
 
 export function ClosingCta({ background = 'cream', showSymbol = true, showLearnMore = true }: { background?: 'cream' | 'benefits'; showSymbol?: boolean; showLearnMore?: boolean } = {}) {
   return (
@@ -24,7 +25,7 @@ export function ClosingCta({ background = 'cream', showSymbol = true, showLearnM
             <ArrowRight aria-hidden="true" className="size-4" />
           </Link> : null}
           <Link
-            href={'/#contact' as Route}
+            href={INTRODUCTORY_MEETING_ROUTE}
             className="inline-flex min-h-14 items-center justify-center rounded-full bg-mist-300 px-7 py-4 text-[15px] text-plum-800 transition-colors hover:bg-mist-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-800"
           >
             ჩაეწერე გაცნობით შეხვედრაზე

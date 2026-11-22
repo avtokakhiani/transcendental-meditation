@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "privacy:maintain": "tsx scripts/privacy-maintenance.ts",
+    "test:privacy": "tsx tests/privacy-storage.ts && node tests/privacy-browser.mjs",
+    "test:meetings": "tsx tests/meeting-storage.ts && node tests/meeting-panel.mjs",
     "dev": "next dev -p 31997",
     "build": "prisma generate && next build",
     "start": "next start -p 31997",

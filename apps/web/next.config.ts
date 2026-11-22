@@ -2,6 +2,17 @@ import path from 'node:path';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [{ source: '/:path*', headers: [
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+      { key: 'Content-Security-Policy', value: "base-uri 'self'; object-src 'none'; frame-ancestors 'none'; frame-src 'self' https://www.google.com" },
+      ...(process.env.PRIVACY_LAUNCH_APPROVED !== 'true' ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] : []),
+      ...(process.env.NODE_ENV === 'production' ? [{ key: 'Strict-Transport-Security', value: 'max-age=31536000' }] : []),
+    ] }];
+  },
   reactStrictMode: true,
   experimental: {
     agentUpgrade: 'security',

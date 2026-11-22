@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { TocEntry } from '@/server/services/books';
 import { saveLastPage } from './reading-progress';
+import { useBookContentProtection } from './use-book-content-protection';
 import {
   DEFAULT_PREFS,
   MAX_SIZE,
@@ -92,6 +93,8 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
   const userScrolled = useRef(false);
   const settingsButton = useRef<HTMLButtonElement>(null);
   const settingsPanel = useRef<HTMLDivElement>(null);
+  const bookContent = useRef<HTMLDivElement>(null);
+  useBookContentProtection(bookContent);
 
   const chapterTitle = toc.filter((entry) => entry.number <= currentPage).at(-1)?.title ?? null;
 
@@ -353,7 +356,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbe
         </aside>
 
         <main className="min-w-0 flex-1 px-3 py-6 sm:px-6 sm:py-10">
-          <div className="reader-column space-y-6 sm:space-y-8">{children}</div>
+          <div ref={bookContent} className="reader-column space-y-6 sm:space-y-8">{children}</div>
           <div className="reader-column mt-12 pb-16 text-center">
             <p className="font-serif text-lg text-[var(--reader-muted)]">დასასრული ✦</p>
             <Link

@@ -116,7 +116,7 @@ export default function AboutPage() {
               title="თბილისი, სოფიკო ჭიაურელის ქ. 16 — Google Maps"
               src="https://www.google.com/maps?q=41.7101393,44.7803032&z=17&output=embed"
               className={styles.locationMap}
-              loading="lazy"
+              loading="eager"
               allowFullScreen
               referrerPolicy="no-referrer-when-downgrade"
             />

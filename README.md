@@ -79,7 +79,37 @@ Schema changes: edit `apps/web/prisma/schema.prisma`, then `pnpm db:migrate` (cr
 - A book is a list of numbered pages; pages with a title form the table of contents. The reader remembers
   font size, theme (light / sepia / dark) and the last page read, in the visitor's browser.
 
+## Introductory meetings
+
+Manage real meeting schedules and private registrations at `/admin/meetings` after signing in.
+Enter dates in Tbilisi time; the database stores UTC instants. Meetings start as private drafts.
+Set a format, an in-person location when applicable, an optional capacity and registration deadline,
+then choose the open status to publish. Close registration without deleting participant records.
+No meeting dates are seeded. An empty schedule displays a Georgian empty state.
+
+Public introductory-meeting links open one shared panel. On `/organizaciebitvis`, existing links
+and the corporate inquiry form retain their behavior. `/introductory-meeting` remains a working
+standalone version of the same registration interface, including without link interception.
+
+Registration is stored in SQL Server before email delivery. Configure `RESEND_API_KEY`,
+`MEETINGS_FROM_EMAIL` (or the existing `CORPORATE_FROM_EMAIL`) and `ADMIN_EMAIL` in local ignored
+environment settings or hosting configuration. Use a sender verified with Resend. Never commit
+credentials. With email unavailable, registrations still succeed; staff can see pending delivery
+and retry unsent messages from the meeting's participant list. Delivery markers and Resend
+idempotency keys protect retries; Resend's idempotency window applies. Participant instructions
+and online joining links are private and included only in confirmation email.
+
+Apply migrations with `pnpm --filter @tm/web prisma:deploy` and regenerate Prisma before restarting
+the host development server after a schema change. No database seed is required.
+Run `pnpm --filter @tm/web test:meetings` with the local website running. Storage tests create and
+remove a separate temporary SQL database (requiring local database-creation privileges); browser
+tests use intercepted fixtures and do not publish schedules, save registrations, or send email.
+
 ## Deploying to Azure
+
+Before any public launch, complete [the privacy implementation and launch checklist](docs/privacy-prelaunch.md).
+The local policy is pre-launch content; production form submissions are blocked until privacy
+practices and required settings are explicitly verified. Verification flags do not configure providers.
 
 `.github/workflows/deploy-web.yml` builds a standalone bundle, runs `prisma migrate deploy`, and deploys to App Service.
 

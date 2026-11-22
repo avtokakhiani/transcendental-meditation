@@ -1,0 +1,84 @@
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
+import ReactMarkdown from 'react-markdown';
+import { chromium } from 'playwright';
+
+const base = process.env.MEETING_TEST_URL || 'http://localhost:31997';
+const readMarkdown = file => {
+  const source = readFileSync(new URL(file, import.meta.url), 'utf8');
+  return JSON.parse(source.slice(source.indexOf('=') + 1).trim().replace(/;$/, ''));
+};
+const markdown = readMarkdown('../src/content/terms-of-use.ts');
+const approved = markdown.replace(/\[([^\]]+)\]\((?:\/privacy-policy|mailto:info@learntm.ge|tel:\+995511308939)\)/g, '$1');
+assert.equal(createHash('sha256').update(approved).digest('hex'), 'f4085820b3caf629890e07b6841fddd59349218b50d199ac1597d2431e9a7e66', 'Terms must match the supplied nine sections exactly apart from requested link markup.');
+assert.equal(createHash('sha256').update(readMarkdown('../src/content/privacy-policy.ts')).digest('hex'), 'be1de85955075f51ad5347db10d0c058f8eb40541d3506d71c4cdd811851838a', 'Privacy Policy text must remain unchanged.');
+const normalize = text => text.replace(/\s+/g, ' ').trim();
+const expectedHtml = renderToStaticMarkup(createElement(ReactMarkdown, null, approved));
+const browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome' });
+try {
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.route('**/*', route => new URL(route.request().url()).origin === base ? route.continue() : route.abort());
+  await page.goto(`${base}/organizaciebitvis`); await page.waitForLoadState('networkidle');
+  const expectedText = normalize(await page.evaluate(html => { const el = document.createElement('div'); el.innerHTML = html; return el.textContent; }, expectedHtml));
+  const footerLink = page.locator('footer a[href="/terms-of-use"]');
+  const terms = page.locator('dialog[data-legal-document="terms"]');
+  const privacy = page.locator('dialog[data-legal-document="privacy"]');
+  const closeTerms = terms.getByRole('button', { name: 'გამოყენების პირობების დახურვა', exact: true });
+  await footerLink.focus(); await page.keyboard.press('Enter'); await terms.locator('article').waitFor();
+  const currentUrl = page.url();
+  assert.equal(new URL(currentUrl).pathname, '/organizaciebitvis');
+  assert.equal(await terms.locator('article h2').count(), 9);
+  assert.equal(normalize(await terms.locator('article').textContent()), expectedText);
+  assert.ok(await closeTerms.evaluate(el => el === document.activeElement));
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  for (const width of [360, 390, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await terms.evaluate(el => Promise.all(el.getAnimations().map(animation => animation.finished)));
+    const box = await terms.boundingBox();
+    assert.ok(Math.abs(box.x + box.width / 2 - width / 2) < 1);
+    assert.ok(Math.abs(box.y + box.height / 2 - 450) < 1);
+    assert.ok(box.width <= width && box.height <= 900);
+    assert.equal(await terms.evaluate(el => getComputedStyle(el).borderRadius), '16px');
+    assert.ok(await terms.evaluate(el => el.scrollWidth <= el.clientWidth));
+    await closeTerms.focus(); await page.keyboard.press('Shift+Tab');
+    assert.ok(await terms.evaluate(el => el.contains(document.activeElement)));
+    await page.keyboard.press('Tab');
+    assert.ok(await closeTerms.evaluate(el => el === document.activeElement));
+  }
+  assert.equal(await terms.locator('a[href="mailto:info@learntm.ge"]').count(), 1);
+  assert.equal(await terms.locator('a[href="tel:+995511308939"]').count(), 1);
+  const privacyLink = terms.locator('a[href="/privacy-policy"]');
+  assert.equal(await privacyLink.textContent(), '„კონფიდენციალურობის პოლიტიკაში“');
+  await privacyLink.focus(); await page.keyboard.press('Enter'); await privacy.locator('article').waitFor();
+  assert.equal(page.url(), currentUrl);
+  assert.equal(await page.locator('dialog[open]').count(), 2);
+  assert.equal(await privacy.locator('article h2').count(), 14);
+  assert.equal(await terms.getAttribute('class'), await privacy.getAttribute('class'), 'Both legal documents must use the same modal design.');
+  await page.keyboard.press('Escape'); await privacy.waitFor({ state: 'hidden' });
+  assert.equal(await page.locator('dialog[open]').count(), 1);
+  assert.ok(await privacyLink.evaluate(el => el === document.activeElement));
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  await closeTerms.click(); await terms.waitFor({ state: 'hidden' });
+  assert.ok(await footerLink.evaluate(el => el === document.activeElement));
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  await footerLink.click(); await terms.locator('article').waitFor();
+  await page.mouse.click(5, 5); await terms.waitFor({ state: 'hidden' });
+  assert.equal(page.url(), currentUrl);
+  // Direct URL presents the same document and its Privacy link uses the same modal.
+  const response = await page.goto(`${base}/terms-of-use`); assert.equal(response.status(), 200);
+  await page.waitForLoadState('networkidle');
+  assert.equal(normalize(await page.locator('main article').textContent()), expectedText);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  assert.equal(await page.locator('main article a[href="mailto:info@learntm.ge"]').count(), 1);
+  assert.equal(await page.locator('main article a[href="tel:+995511308939"]').count(), 1);
+  await page.locator('main article a[href="/privacy-policy"]').click(); await privacy.locator('article').waitFor();
+  assert.equal(new URL(page.url()).pathname, '/terms-of-use');
+  await page.keyboard.press('Escape'); await privacy.waitFor({ state: 'hidden' });
+  assert.deepEqual(errors, []);
+  console.log('Passed: exact nine-section Terms, unchanged Privacy text, shared centered responsive modal, footer keyboard opening without navigation, focus/scroll/Escape/backdrop/close, nested Privacy and focus restoration, direct URL and contact links.');
+} finally { await browser.close(); }

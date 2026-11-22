@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { RichContent } from '@/components/rich-content';
 import { ReaderShell } from '@/components/reader/reader-shell';
+import styles from '@/components/reader/book-content.module.css';
 import { prisma } from '@/server/db';
 import { getReaderBook } from '@/server/services/books';
 
@@ -44,8 +45,9 @@ export default async function ReaderPage({ params }: { params: Promise<{ slug: s
           key={page.number}
           id={`page-${page.number}`}
           data-reader-page={page.number}
+          data-book-content
           aria-label={`გვერდი ${page.number}`}
-          className="scroll-mt-24 rounded-sm bg-[var(--reader-bg)] px-6 pb-8 pt-12 font-serif shadow-[0_1px_2px_rgba(0,0,0,0.06),0_14px_32px_-16px_rgba(0,0,0,0.25)] sm:px-14 sm:pt-16"
+          className={`${styles.chapter} scroll-mt-24 rounded-sm bg-[var(--reader-bg)] px-6 pb-8 pt-12 font-serif shadow-[0_1px_2px_rgba(0,0,0,0.06),0_14px_32px_-16px_rgba(0,0,0,0.25)] sm:px-14 sm:pt-16`}
         >
           {page.title !== null ? (
             <h2 className="mb-10 text-center font-sans text-3xl leading-snug font-light sm:text-[2.2rem]">{page.title}</h2>

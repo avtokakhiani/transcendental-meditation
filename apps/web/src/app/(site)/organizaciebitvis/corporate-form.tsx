@@ -73,6 +73,7 @@ export function CorporateForm() {
         </label>
       </fieldset>
       <p className={styles.privacy}>{corporate.form.privacy}</p>
+      <p className={styles.privacy}><a href="/privacy-policy" className="underline underline-offset-4">კონფიდენციალურობის პოლიტიკა</a></p>
       {status === 'error' && <p role="alert" id="corporate-error" className={styles.error}>{error}</p>}
       <button className={styles.button} type="submit" disabled={status === 'pending'} aria-describedby={status === 'error' ? 'corporate-error' : undefined}>
         {status === 'pending' && <LoaderCircle aria-hidden="true" className="mr-2 size-5 animate-spin motion-reduce:animate-none" />}

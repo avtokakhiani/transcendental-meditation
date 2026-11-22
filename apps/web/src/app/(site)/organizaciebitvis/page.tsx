@@ -21,7 +21,7 @@ export default function CorporatePage() {
         <div className={styles.heroContent}>
           <h1 id="corporate-heading">{copy.hero.heading}</h1>
           <p className={styles.subtitle}>{copy.hero.subtitle}</p>
-          <p className={styles.heroDescription}>{copy.hero.description}</p>
+          <p className={styles.heroDescription}>გთავაზობთ თანამშრომლებისთვის TM-ის სწავლებას მოქნილი განრიგითა და შემდგომი მხარდაჭერის შესაძლებლობით.</p>
           <a className={styles.button} href="#corporate-contact">{copy.hero.cta}</a>
         </div>
       </section>

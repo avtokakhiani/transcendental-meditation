@@ -20,6 +20,33 @@
   backdrop-filter: none;
 }
 
+.phoneTooltip {
+  position: absolute;
+  top: calc(100% + .5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  padding: .5rem .75rem;
+  border: 1px solid var(--color-cream-300);
+  border-radius: .625rem;
+  background: var(--color-cream-50);
+  color: var(--color-plum-800);
+  font-size: .875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgb(32 23 36 / .1);
+  visibility: hidden;
+}
+
+/* Bridge the visual gap so the tooltip remains available under the pointer. */
+.phoneTooltip::before { content: ''; position: absolute; inset: -.5rem 0 100%; }
+.phoneLink:focus-visible .phoneTooltip { visibility: visible; }
+@media (hover: hover) and (pointer: fine) {
+  .phoneLink:hover .phoneTooltip { visibility: visible; }
+}
+.phoneLink .phoneTooltip.tooltipDismissed { visibility: hidden; }
+
 @media (prefers-reduced-motion: reduce) {
   .overlay.overlay {
     transition: none;

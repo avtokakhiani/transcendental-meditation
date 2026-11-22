@@ -1,5 +1,11 @@
 import { createHash } from 'node:crypto';
+import { after } from 'next/server';
 import { corporateDeliveryError, corporateInquirySchema } from '@/lib/corporate-inquiry';
+import { productionPrivacyBlocked } from '@/lib/privacy-retention';
+import { prisma } from '@/server/db';
+import { env } from '@/env';
+import { storeCorporateInquiry } from '@/server/services/corporate-inquiries';
+import { notifyCorporateInquiry } from '@/server/corporate-notifications';
 
 export const runtime = 'nodejs';
 
@@ -10,6 +16,7 @@ const WINDOW = 10 * 60 * 1000;
 const fail = (status: number, error = corporateDeliveryError) => Response.json({ error }, { status });
 
 export async function POST(request: Request) {
+  if (productionPrivacyBlocked()) return fail(503);
   const origin = request.headers.get('origin');
   if (!origin || origin !== new URL(request.url).origin) return fail(403);
   if (!request.headers.get('content-type')?.startsWith('application/json')) return fail(415);
@@ -49,29 +56,9 @@ export async function POST(request: Request) {
   if (!previous && attempts.size >= 10_000) return fail(429);
   attempts.set(key, { count: (previous?.count ?? 0) + 1, expires: previous?.expires ?? now + WINDOW });
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.CORPORATE_FROM_EMAIL;
-  const to = process.env.ADMIN_EMAIL;
-  if (!apiKey || !from || !to) return fail(503);
-
-  const details = [
-    ['სახელი და გვარი', inquiry.name], ['ორგანიზაცია', inquiry.organization],
-    ['ელფოსტა', inquiry.email], ['ტელეფონის ნომერი', inquiry.phone],
-    ['დაკავშირების სასურველი ფორმა', inquiry.contactMethod],
-    ['დამატებითი ინფორმაცია', inquiry.message],
-  ];
-  const text = details.map(([label, value]) => `${label}: ${value}`).join('\n\n');
-  const idempotency = createHash('sha256').update(`${Math.floor(now / WINDOW)}:${text}`).digest('hex');
   try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json', 'Idempotency-Key': `corporate-${idempotency}` },
-      body: JSON.stringify({ from, to: [to], reply_to: inquiry.email, subject: 'learnTM.ge — მოთხოვნა ორგანიზაციისგან', text }),
-      signal: AbortSignal.timeout(15_000),
-    });
-    if (!response.ok) return fail(502);
-    const result = await response.json();
-    if (typeof result.id !== 'string' || !result.id) return fail(502);
+    const saved = await storeCorporateInquiry(prisma, inquiry, env.AUTH_SECRET);
+    after(async () => { try { await notifyCorporateInquiry(saved.id); } catch { console.error('Corporate notification pending.'); } });
     return Response.json({ ok: true });
-  } catch { return fail(502); }
+  } catch { return fail(503); }
 }

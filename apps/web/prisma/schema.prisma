@@ -14,6 +14,94 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// All instants are UTC; editors enter dates in Asia/Tbilisi. Drafts are private.
+model IntroductoryMeeting {
+  id                   String   @id @default(uuid()) @db.UniqueIdentifier
+  startsAt             DateTime @db.DateTime2
+  format               String   @db.NVarChar(20)
+  location             String?  @db.NVarChar(500)
+  joiningInstructions  String?  @db.NVarChar(2000)
+  status               String   @default("draft") @db.NVarChar(20)
+  capacity             Int?
+  registrationClosesAt DateTime? @db.DateTime2
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  registrations        MeetingRegistration[]
+
+  @@index([status, startsAt])
+  @@map("introductory_meetings")
+}
+
+/// Never included in public meeting responses. Notification timestamps form a retryable outbox.
+model MeetingRegistration {
+  id                     String   @id @default(uuid()) @db.UniqueIdentifier
+  meetingId              String   @db.UniqueIdentifier
+  firstName              String   @db.NVarChar(100)
+  lastName               String   @db.NVarChar(100)
+  email                  String   @db.NVarChar(254)
+  phone                  String   @db.NVarChar(40)
+  createdAt              DateTime @default(now())
+  adminNotifiedAt        DateTime?
+  participantNotifiedAt  DateTime?
+  adminEmailId           String?  @db.NVarChar(100)
+  participantEmailId     String?  @db.NVarChar(100)
+  retentionExpiresAt     DateTime @default(dbgenerated("DATEADD(month, 12, SYSUTCDATETIME())")) @db.DateTime2
+  processingRestrictedAt DateTime?
+  holdUntil              DateTime?
+  holdReason             String?  @db.NVarChar(40)
+  meeting                IntroductoryMeeting @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([meetingId, email])
+  @@index([retentionExpiresAt])
+  @@map("meeting_registrations")
+}
+
+/// Corporate correspondence is stored privately; email notifications contain no enquiry content.
+model CorporateInquiry {
+  id                     String   @id @default(uuid()) @db.UniqueIdentifier
+  deduplicationKey       String   @unique @db.VarChar(64)
+  name                   String   @db.NVarChar(150)
+  organization           String   @db.NVarChar(200)
+  email                  String   @db.NVarChar(254)
+  phone                  String   @db.NVarChar(40)
+  contactMethod          String   @db.NVarChar(40)
+  message                String   @db.NVarChar(Max)
+  createdAt              DateTime @default(now())
+  lastBusinessContactAt  DateTime @db.DateTime2
+  retentionExpiresAt     DateTime @db.DateTime2
+  processingRestrictedAt DateTime?
+  holdUntil              DateTime?
+  holdReason             String?  @db.NVarChar(40)
+  adminNotifiedAt        DateTime?
+  adminEmailId           String?  @db.NVarChar(100)
+  @@index([retentionExpiresAt])
+  @@map("corporate_inquiries")
+}
+
+/// No enquiry text, names, addresses, or IPs. Purged after 90 days.
+model PrivacyAudit {
+  id        String   @id @default(uuid()) @db.UniqueIdentifier
+  actorId   String?  @db.UniqueIdentifier
+  scope     String   @db.NVarChar(30)
+  targetId  String?  @db.UniqueIdentifier
+  action    String   @db.NVarChar(40)
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+  @@map("privacy_audit")
+}
+
+/// Minimal deletion ledger for restoring backups without resurrecting erased records.
+model PrivacyErasure {
+  id              String   @id @default(uuid()) @db.UniqueIdentifier
+  scope           String   @db.NVarChar(30)
+  targetId        String   @db.UniqueIdentifier
+  externalEmailIds String?  @db.NVarChar(500)
+  externalDoneAt  DateTime?
+  createdAt       DateTime @default(now())
+  @@index([createdAt])
+  @@map("privacy_erasures")
+}
+
 /// Staff who manage content. Readers never sign in.
 model User {
   id           String    @id @default(uuid()) @db.UniqueIdentifier

@@ -8,7 +8,8 @@ const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: env.NODE_ENV === 'development' ? ['warn', 'error'] : ['error'],
+    // Do not persist SQL errors containing submitted values in uncontrolled stdout logs.
+    log: [],
   });
 
 if (env.NODE_ENV !== 'production') {

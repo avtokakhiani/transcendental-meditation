@@ -5,10 +5,15 @@ import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useId, useRef, useState } from 'react';
-import { SITE } from '@/lib/site';
 import { INTRODUCTORY_MEETING_ROUTE } from '@/lib/routes';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { Logo } from './logo';
 import styles from './site-header.module.css';
+
+const HEADER_CONTACT = {
+  phone: '+995 511 30 89 39',
+  phoneHref: 'tel:+995511308939',
+} as const;
 
 interface NavLink {
   label: string;
@@ -114,6 +119,8 @@ function Dropdown({ group }: { group: NavGroup }) {
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [phoneTooltipDismissed, setPhoneTooltipDismissed] = useState(false);
+  const phoneTooltipId = useId();
   const pathname = usePathname();
   const transparentOnTop = pathname === '/stress-and-anxiety'
     || pathname === '/about'
@@ -153,8 +160,7 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (!menuOpen) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const unlockScroll = lockBodyScroll();
     const previousFocus = document.activeElement as HTMLElement | null;
     const focusable = () => Array.from(menuRef.current?.querySelectorAll<HTMLElement>('a[href], button') ?? []);
     focusable()[0]?.focus();
@@ -177,7 +183,7 @@ export function SiteHeader() {
     desktop.addEventListener('change', closeOnDesktop);
     document.addEventListener('keydown', close);
     return () => {
-      document.body.style.overflow = previous;
+      unlockScroll();
       document.removeEventListener('keydown', close);
       desktop.removeEventListener('change', closeOnDesktop);
       previousFocus?.focus();
@@ -195,7 +201,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
         <Logo variant="header" />
 
-        <nav aria-label="მთავარი ნავიგაცია" className="hidden items-center gap-7 xl:flex">
+        <nav aria-label="მთავარი ნავიგაცია" className="hidden items-center gap-7 whitespace-nowrap xl:flex">
           {NAV.map((entry) =>
             'items' in entry ? (
               <Dropdown key={entry.label} group={entry} />
@@ -213,23 +219,29 @@ export function SiteHeader() {
           )}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <a
-            href={SITE.phoneHref}
-            aria-label={`დარეკვა: ${SITE.phone}`}
-            title={SITE.phone}
-            className="hidden size-10 place-items-center rounded-full text-plum-800 transition hover:bg-cream-200 sm:grid"
+            href={HEADER_CONTACT.phoneHref}
+            aria-label={`დარეკვა: ${HEADER_CONTACT.phone}`}
+            aria-describedby={phoneTooltipId}
+            onFocus={() => setPhoneTooltipDismissed(false)}
+            onPointerEnter={() => setPhoneTooltipDismissed(false)}
+            onKeyDown={event => { if (event.key === 'Escape') setPhoneTooltipDismissed(true); }}
+            className={`relative hidden size-10 shrink-0 place-items-center rounded-full text-plum-800 transition hover:bg-cream-200 sm:grid ${styles.phoneLink}`}
           >
             <Phone aria-hidden="true" className="size-5" strokeWidth={1.5} />
+            <span id={phoneTooltipId} role="tooltip" className={`${styles.phoneTooltip}${phoneTooltipDismissed ? ` ${styles.tooltipDismissed}` : ''}`}>{HEADER_CONTACT.phone}</span>
           </a>
           <Link
             href={INTRODUCTORY_MEETING_ROUTE}
-            className="hidden rounded-full bg-mist-300 px-5 py-2.5 text-sm text-plum-800 transition hover:bg-mist-400 sm:inline-flex"
+            aria-haspopup="dialog"
+            className="hidden whitespace-nowrap rounded-full bg-mist-300 px-5 py-2.5 text-sm text-plum-800 transition hover:bg-mist-400 sm:inline-flex"
           >
             გაცნობითი შეხვედრა
           </Link>
           <button
             type="button"
+            id="site-mobile-menu-trigger"
             aria-label="მენიუს გახსნა"
             aria-expanded={menuOpen}
             aria-controls={menuOpen ? 'site-mobile-menu' : undefined}
@@ -276,10 +288,19 @@ export function SiteHeader() {
                 </Link>
               ),
             )}
-            <a href={SITE.phoneHref} className="mt-8 flex items-center gap-3 text-plum-700">
+            <a href={HEADER_CONTACT.phoneHref} className="mt-8 flex items-center gap-3 text-plum-700">
               <Phone aria-hidden="true" className="size-5" strokeWidth={1.5} />
-              {SITE.phone}
+              {HEADER_CONTACT.phone}
             </a>
+            <Link
+              href={INTRODUCTORY_MEETING_ROUTE}
+              aria-haspopup="dialog"
+              data-dialog-return-focus="site-mobile-menu-trigger"
+              onClick={() => setMenuOpen(false)}
+              className="mt-6 inline-flex whitespace-nowrap rounded-full bg-mist-300 px-5 py-2.5 text-sm text-plum-800 transition hover:bg-mist-400"
+            >
+              გაცნობითი შეხვედრა
+            </Link>
           </nav>
         </div>
       ) : null}

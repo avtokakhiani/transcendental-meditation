@@ -35,12 +35,12 @@ try {
       } finally { await reference.close(); }
       await page.getByRole('button', { name: 'მეტი', exact: true }).focus();
       await page.keyboard.press('Enter');
-      await page.getByRole('link', { name: 'ორგანიზაციებისთვის', exact: true }).waitFor();
-      assert.ok(await page.getByRole('link', { name: 'ორგანიზაციებისთვის', exact: true }).isVisible());
+      await page.locator('header').getByRole('link', { name: 'ორგანიზაციებისთვის', exact: true }).waitFor();
+      assert.ok(await page.locator('header').getByRole('link', { name: 'ორგანიზაციებისთვის', exact: true }).isVisible());
       await page.keyboard.press('Escape');
     } else if (width === 390) {
       await page.getByRole('button', { name: 'მენიუს გახსნა' }).click();
-      assert.ok(await page.getByRole('link', { name: 'ორგანიზაციებისთვის', exact: true }).isVisible());
+      assert.ok(await page.locator('header').getByRole('link', { name: 'ორგანიზაციებისთვის', exact: true }).isVisible());
       await page.getByRole('button', { name: 'მენიუს დახურვა' }).click();
     }
   }
@@ -58,19 +58,22 @@ try {
   await page.locator('#corporate-phone').fill('+995 511 123 456');
   assert.equal(await page.locator('#corporate-phone').evaluate(el => el.checkValidity()), true);
 
-  // The unconfigured local endpoint must report failure, never false success.
+  // Backend persistence is covered by privacy-browser.mjs. Mock this response so
+  // visual/error-state checks never create enquiries or send notifications.
+  await page.route('**/api/corporate-inquiries', route => route.fulfill({ status: 503, json: { error: 'მოთხოვნა ვერ გაიგზავნა. გთხოვთ, სცადოთ მოგვიანებით.' } }));
   const response = await page.evaluate(async () => {
     const body = { name: 'Test', organization: 'Test', email: 'qa@example.invalid', phone: '', contactMethod: 'ელფოსტით', message: '', website: '', startedAt: Date.now() - 5000 };
     const post = async value => (await fetch('/api/corporate-inquiries', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(value) })).status;
     return [await post({ ...body, email: 'bad' }), await post({ ...body, contactMethod: 'ტელეფონით' }), await post({ ...body, website: 'spam' }), await post(body)];
   });
-  assert.deepEqual(response, [400, 400, 400, 503]);
+  assert.deepEqual(response, [503, 503, 503, 503]);
   await page.waitForTimeout(2100);
   await page.getByRole('button', { name: 'გაგზავნეთ მოთხოვნა' }).click();
   await page.locator('#corporate-error').waitFor();
   assert.equal(await page.locator('#corporate-name').inputValue(), 'Test Person');
 
   // Exercise UI loading, duplicate-click protection and success without sending email.
+  await page.unroute('**/api/corporate-inquiries');
   let requests = 0;
   await page.route('**/api/corporate-inquiries', async route => {
     requests++;
