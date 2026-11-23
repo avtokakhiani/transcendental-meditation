@@ -12,7 +12,7 @@ if (-not (Test-Path -LiteralPath 'apps/web/.env')) {
     throw 'Create apps/web/.env using .env.example before starting.'
 }
 
-# Keep existing database and media; do not run the sample seed.
+# Keep existing database and media; administrator initialization is an explicit action.
 docker compose up -d --wait --wait-timeout 240 sqlserver azurite
 if ($LASTEXITCODE -ne 0) { throw 'Could not start local dependencies. Check Docker Desktop.' }
 docker compose stop web

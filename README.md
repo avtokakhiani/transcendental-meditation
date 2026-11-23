@@ -7,7 +7,7 @@ Same architecture as `realtor-crm`: pnpm monorepo, Next.js 16 (App Router) + Tai
 
 ```
 apps/web                Next.js app
-  prisma/               schema, migrations, seed (sample Georgian content)
+  prisma/               schema, migrations, create-only administrator bootstrap
   src/app/(site)        public pages: /, /blog, /blog/[slug], /books, /books/[slug]
   src/app/(reader)      immersive reader: /books/[slug]/[page]
   src/app/admin         admin panel: /admin/login, posts, books + pages, media
@@ -27,10 +27,17 @@ docker compose up -d --build
 ```
 
 Open http://localhost:31997. The first start downloads the images, builds the app,
-applies database migrations, and seeds five Georgian blog posts, a sample book,
-and the admin account. Sign in at http://localhost:31997/admin with username
-`admin` and password `ChangeMe_12345` (the local default). Node and pnpm are
-provided by the containers; installing them on the host is optional.
+and applies database migrations. Startup never seeds accounts or editorial content.
+On an empty database, explicitly create the initial administrator using a password
+supplied through your environment (do not put the password in the command):
+
+```sh
+docker compose run --rm -e SEED_ADMIN_PASSWORD migrate pnpm exec prisma db seed
+```
+
+Sign in with username `admin` and your chosen password. An existing `admin` account
+is left completely unchanged. Node and pnpm are provided by the containers;
+installing them on the host is optional for this Docker workflow.
 
 ```sh
 docker compose ps -a            # container status; migrate should exit with code 0
@@ -39,10 +46,11 @@ docker compose stop            # stop, keeping containers and data
 docker compose start           # start the existing containers again
 ```
 
-Database and uploaded files persist in Docker volumes. The startup seed runs on
-`docker compose up` and can overwrite sample content; use `stop`/`start` for
-routine restarts after editing content. Extra data from another laptop needs a
-database and storage export from that laptop; Git includes only the sample seed.
+Database and uploaded files persist in Docker volumes. Docker startup and schema
+migrations do not populate or overwrite editorial content. Extra data from another
+laptop needs a database and storage export from that laptop; Git does not contain
+the database's published posts or books. A database reset requires restoring real
+content from backup; running the seed cannot restore it.
 
 ### Run the development server on the host
 
@@ -64,11 +72,18 @@ pnpm install
 cp .env.example apps/web/.env     # then set AUTH_SECRET: openssl rand -base64 32
 pnpm db:up                        # SQL Server on :1434, Azurite on :10010
 pnpm --filter @tm/web prisma:deploy
-pnpm db:seed                      # admin user + sample posts and a book
+pnpm db:seed                      # explicit initial admin creation only; existing accounts/content unchanged
 pnpm dev                          # http://localhost:31997
 ```
 
 Admin panel: http://localhost:31997/admin, user `admin`, password = `SEED_ADMIN_PASSWORD` from `.env`.
+
+The seed never creates posts, books, or book pages and never updates existing records.
+The introductory TM page still requires its published database post, so restore that
+record from a trusted backup when initializing a replacement database. Keep exports
+under the ignored `apps/web/private/backups/` directory, outside public assets.
+Run `pnpm --filter @tm/web test:seed` to check migrations, empty-database bootstrap,
+and repeated seed execution against a separate temporary SQL database.
 
 Schema changes: edit `apps/web/prisma/schema.prisma`, then `pnpm db:migrate` (creates a migration).
 
@@ -118,4 +133,4 @@ practices and required settings are explicitly verified. Verification flags do n
    `AZURE_STORAGE_CONNECTION_STRING`.
 3. GitHub `production` environment secrets: `DATABASE_URL`, `AZURE_WEBAPP_PUBLISH_PROFILE`. Set `APP_NAME` in the workflow.
 4. Seed the first admin once against production: `DATABASE_URL=... SEED_ADMIN_PASSWORD=... pnpm db:seed`
-   (this also inserts the sample content — delete it in the admin panel afterwards).
+   (administrator creation only; existing accounts and editorial content are preserved).

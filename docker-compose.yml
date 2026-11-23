@@ -38,7 +38,7 @@ services:
     volumes:
       - tm-azurite-data:/data
 
-  # One-shot: applies migrations and seeds the admin user + sample content, then exits.
+  # One-shot: schema migrations only. Administrator initialization is an explicit action.
   migrate:
     build:
       context: .
@@ -48,8 +48,7 @@ services:
     working_dir: /repo/apps/web
     environment:
       DATABASE_URL: &database_url "sqlserver://sqlserver:1433;database=transcendental_meditation;user=sa;password=${MSSQL_SA_PASSWORD:-LocalDev_Pa55w0rd!};encrypt=true;trustServerCertificate=true"
-      SEED_ADMIN_PASSWORD: "${SEED_ADMIN_PASSWORD:-ChangeMe_12345}"
-    command: sh -c "pnpm exec prisma migrate deploy && pnpm exec prisma db seed"
+    command: pnpm exec prisma migrate deploy
     depends_on:
       sqlserver:
         condition: service_healthy
