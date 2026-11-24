@@ -10,9 +10,9 @@ export default async function NewPostPage() {
     <div className="mx-auto max-w-6xl">
       <Link href="/admin/posts" className="inline-flex items-center gap-2 text-sm text-plum-500 hover:text-plum-900">
         <ArrowLeft aria-hidden="true" className="size-4" />
-        პოსტები
+        სტატიები
       </Link>
-      <h1 className="mb-8 mt-4 text-2xl font-normal text-plum-900">ახალი პოსტი</h1>
+      <h1 className="mb-8 mt-4 text-2xl font-normal text-plum-900">ახალი სტატია</h1>
       <PostForm media={media} />
     </div>
   );

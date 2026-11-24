@@ -1,18 +1,10 @@
 import Link from 'next/link';
-import { getLatestArticles } from '@/content/articles';
-import { getArticleCardCopy } from '@/content/article-card-copy';
 import { ArticleImage } from './article-image';
 import styles from './latest-articles.module.css';
+import {publicArticleCatalog} from '@/server/public-articles';
 
-export function LatestArticles() {
-  const articles = getLatestArticles().map((article) => {
-    const copy = getArticleCardCopy(article.slug);
-    return {
-      ...article,
-      title: copy?.title ?? article.title,
-      description: copy?.excerpt ?? article.description,
-    };
-  });
+export async function LatestArticles() {
+  const articles = await publicArticleCatalog();
 
   return (
     <section className={styles.section} aria-label="სტატიები">

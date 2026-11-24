@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import { PrismaClient } from '@prisma/client';
 import { articleInputSchema, type ArticleInput } from '../src/lib/articles/authoring';
 import { ArticleConflict, changeArticle, legacyToken, loadArticleEditor } from '../src/server/services/article-revisions';
-import { savePost } from '../src/server/services/posts';
+import { savePost } from '../scripts/article-foundation/archive/legacy-posts';
 
 test('isolated revision lifecycle, compatibility, assets, restore and concurrent writers', async () => {
   process.loadEnvFile('.env');

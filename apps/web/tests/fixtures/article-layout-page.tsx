@@ -1,4 +1,4 @@
-import { PostArticle } from '@/components/post-article';
+import { PostArticle } from '../../scripts/article-foundation/archive/legacy-post-article';
 import { StandardArticle } from '@/app/(site)/blog/[slug]/standard-article';
 
 const paragraph = 'მედიტაცია ხელს უწყობს სტრესის შემცირებას და ზოგადი კეთილდღეობის გაუმჯობესებას.';

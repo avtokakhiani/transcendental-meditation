@@ -9,13 +9,14 @@ import { URL } from 'node:url';
 import { PrismaClient } from '@prisma/client';
 import { chromium } from 'playwright';
 process.loadEnvFile('.env');
-const run = 'phase4-2026-11-24', directory = `private/article-foundation/${run}/previews`;
+const run = process.env.ARTICLE_BACKUP_RUN??'phase4-2026-11-24', directory = `private/article-foundation/${run}/${run.startsWith('phase6')?'migrated-previews':'previews'}`;
 await mkdir(directory, {recursive: true});
 const backup = JSON.parse(await readFile(`private/article-foundation/${run}/backup.json`, 'utf8'));
 assert.match(backup.restoredDatabase, /^article_foundation_restore_\d+$/);
 const db = new PrismaClient({datasourceUrl: process.env.DATABASE_URL.replace(/database=[^;]+/, `database=${backup.restoredDatabase}`)});
 const base = 'http://localhost:31998', browser = await chromium.launch({channel: 'chrome'});
 const results = [], errors = [];
+const originalPosts=await db.post.findMany(),originalRevisions=(await db.postRevision.findMany({select:{id:true}})).map(row=>row.id);
 async function settle(page) {
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(async () => {for (let y=0;y<document.documentElement.scrollHeight;y+=700) {window.scrollTo(0,y); await new Promise(resolve=>window.setTimeout(resolve,40));} window.scrollTo(0,0); await Promise.all([...document.images].map(image=>image.decode().catch(()=>{})));});
@@ -35,6 +36,7 @@ async function pixels(page, a, b) {
 try {
   const actor = await db.user.findFirstOrThrow({where:{role:'admin',isActive:true}});
   const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+  context.setDefaultNavigationTimeout(120000);
   const payload=Buffer.from(JSON.stringify({userId:actor.id,expiresAt:Date.now()+3600000})).toString('base64url');
   await context.addCookies([{name:'tm_session',value:`${payload}.${createHmac('sha256',process.env.AUTH_SECRET).update(payload).digest('base64url')}`,url:base,httpOnly:true,sameSite:'Lax'}]);
   await context.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
@@ -63,6 +65,7 @@ try {
     await page.goto(`${base}/admin/posts/${post.id}`,{waitUntil:'networkidle'});
     const sections=JSON.parse(post.publishedRevision.document).blocks;
     assert.equal(await page.locator('[data-preserved-section]').count(),sections.length);
+    if(run.startsWith('phase6'))for(const detail of await page.locator('[data-preserved-section] details').all()){await detail.locator('summary').click();await detail.locator('[data-component-preview] figure').waitFor({timeout:120000});}
     const field=page.locator('[data-preserved-field]').filter({visible:true}).first();
     const originalValue=await field.inputValue();
     // Choose a visible text field rather than an image or URL.
@@ -81,4 +84,7 @@ try {
   const anonymous=await browser.newContext();const unauth=await anonymous.newPage();await unauth.goto(`${base}/admin/article-preview/${posts[0].id}`);assert.match(unauth.url(),/\/admin\/login/);await anonymous.close();
   assert.deepEqual(errors,[]);await writeFile(`${directory}/report.json`,JSON.stringify({passed:true,results,errors,editedAndRestored:4,unauthorizedRedirect:true},null,2));
   console.log('12 exact content/geometry and raster preview comparisons passed; all 4 migrated bodies edited and restored through admin.');
-} finally {await browser.close();await db.$disconnect();}
+} finally {
+  await db.$transaction(async tx=>{for(const post of originalPosts){const {id,...data}=post;await tx.post.update({where:{id},data});}await tx.postRevision.deleteMany({where:{postId:{in:originalPosts.map(row=>row.id)},id:{notIn:originalRevisions}}});},{timeout:60000});
+  await browser.close();await db.$disconnect();
+}

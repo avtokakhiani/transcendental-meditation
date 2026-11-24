@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import { uploadImage } from './upload-image';
 import { labelClass } from './ui';
 
-export function CoverField({ name = 'coverImageUrl', defaultValue = '', aspect = 'aspect-[16/9]' }: { name?: string; defaultValue?: string; aspect?: string }) {
+export function CoverField({ name = 'coverImageUrl', defaultValue = '', aspect = 'aspect-[16/9]', label = 'ყდის სურათი' }: { name?: string; defaultValue?: string; aspect?: string; label?: string }) {
   const [url, setUrl] = useState(defaultValue);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ export function CoverField({ name = 'coverImageUrl', defaultValue = '', aspect =
 
   return (
     <div>
-      <span className={labelClass}>ყდის სურათი</span>
+      <span className={labelClass}>{label}</span>
       <input type="hidden" name={name} value={url} />
       <div className={`relative mt-1.5 ${aspect} overflow-hidden rounded-2xl border border-dashed border-cream-300 bg-white`}>
         {url.length > 0 ? (

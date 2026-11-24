@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { getLatestArticles, type Article } from '../src/content/articles';
-import { getRelatedArticles } from '../src/content/related-articles';
+import { getLatestArticles, type Article } from '../scripts/article-foundation/archive/article-catalog';
+import { getRelatedArticles } from '../scripts/article-foundation/archive/legacy-related-articles';
 
 const now = new Date('2026-11-18T12:00:00Z');
 function article(slug: string, category = 'health', publishedAt = '2026-10-01T00:00:00Z'): Article {

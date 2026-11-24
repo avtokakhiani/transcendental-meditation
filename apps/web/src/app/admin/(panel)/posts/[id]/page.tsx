@@ -27,10 +27,10 @@ export default async function EditPostPage({
     <div className="mx-auto max-w-6xl">
       <Link href="/admin/posts" className="inline-flex items-center gap-2 text-sm text-plum-500 hover:text-plum-900">
         <ArrowLeft aria-hidden="true" className="size-4" />
-        პოსტები
+        სტატიები
       </Link>
       <div className="mb-8 mt-4 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-normal text-plum-900">პოსტის რედაქტირება</h1>
+        <h1 className="text-2xl font-normal text-plum-900">სტატიის რედაქტირება</h1>
         <div className="flex items-center gap-2">
           {post.status === 'published' ? (
             <Link href={`/blog/${post.slug}`} target="_blank" className="inline-flex items-center gap-2 px-3 py-2 text-sm text-plum-600 hover:text-plum-900">
@@ -42,7 +42,7 @@ export default async function EditPostPage({
             <input type="hidden" name="id" value={post.id} />
             <input type="hidden" name="version" value={post.version} />
             <input type="hidden" name="legacyToken" value={data.legacyToken} />
-            <ConfirmButton message="წავშალოთ პოსტი? ამ მოქმედების დაბრუნება შეუძლებელია.">
+            <ConfirmButton message="წავშალოთ სტატია? ამ მოქმედების დაბრუნება შეუძლებელია.">
               <Trash2 aria-hidden="true" className="size-4" />
               წაშლა
             </ConfirmButton>
@@ -50,7 +50,7 @@ export default async function EditPostPage({
         </div>
       </div>
       <PostForm key={`${post.version}:${post.updatedAt.toISOString()}`} initial={data.input} context={{ id: post.id, version: post.version,
-        legacyToken: data.legacyToken, status: post.status, protectedPage: post.slug === INTRODUCTION_SLUG && !isPreservedBody(data.input.body),
+        legacyToken: data.legacyToken, status: post.status, essential: post.slug === INTRODUCTION_SLUG, aliases: post.slugAliases.map(alias=>alias.slug), protectedPage: post.slug === INTRODUCTION_SLUG && !isPreservedBody(data.input.body),
         diverged: data.diverged, draftRevisionId: post.draftRevisionId, publishedRevisionId: post.publishedRevisionId,
         revisions: post.revisions.map(revision => ({ ...revision, createdAt: revision.createdAt.toISOString() })),
       }} media={media} saved={saved === '1'} />

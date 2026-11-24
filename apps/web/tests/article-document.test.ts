@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { z } from 'zod';
 import { createComponentRegistry } from '../src/lib/articles/component-registry';
-import { parseArticleDocument, referencedMedia, safeLinkSchema, validateArticleDocument } from '../src/lib/articles/document';
+import { parseArticleDocument, referencedMedia, referencedComponentImages, safeLinkSchema, validateArticleDocument } from '../src/lib/articles/document';
 import { validateRevisionBody } from '../src/lib/articles/revision-contract';
 
 const registry = createComponentRegistry([{ id: 'test.comparison', version: 1, label: 'Comparison', accessibility: 'data-table', propsSchema: z.object({ datasetId: z.enum(['approved-study']), variant: z.enum(['bars']) }) }]);
@@ -13,6 +13,21 @@ test('versioned documents preserve legacy prose and validated component data', (
   const input = { ...document(), blocks: [{ type: 'prose', id: 'copy', format: 'markdown', content: 'ქართული **ტექსტი** and English' }, component] };
   assert.deepEqual(parseArticleDocument(JSON.stringify(input), registry), input);
   assert.deepEqual(validateArticleDocument({ version: 1, blocks: [{ type: 'prose', id: 'html', format: 'html', content: '<p>Approved legacy HTML</p>' }], sources: [] }).blocks[0], { type: 'prose', id: 'html', format: 'html', content: '<p>Approved legacy HTML</p>' });
+});
+
+test('optional component geometry preserves old documents and rejects unsafe or out-of-range sizing',()=>{
+  const input={...document(),blocks:[{...component,align:'right',widthPercent:65}]};
+  assert.deepEqual(validateArticleDocument(input,registry),input);
+  for(const props of [{widthPercent:0},{widthPercent:101},{widthPercent:NaN},{align:'absolute'},{style:'position:fixed'}])assert.throws(()=>validateArticleDocument({...document(),blocks:[{...component,...props}]},registry));
+});
+
+test('registered graph assets are tracked in free and nested research blocks',()=>{
+  const mediaId='11111111-1111-4111-8111-111111111111';
+  const graph={type:'component',id:'graph',reference:{componentId:'preserved.heart.graph1',componentVersion:1,props:{fields:{f25:`/api/media/${mediaId}`,f26:'Graph alternative text'}}},summary:'Research graph',sourceIds:[]};
+  const doc=validateArticleDocument({version:1,sources:[],blocks:[{type:'research',id:'research',chartSide:'left',prose:{type:'prose',id:'copy',format:'html',content:'<p>Research.</p>'},visual:graph}]});
+  assert.deepEqual(referencedMedia(doc),[mediaId]);assert.deepEqual(referencedComponentImages(doc),[`/api/media/${mediaId}`]);
+  const svg=validateArticleDocument({version:1,sources:[],blocks:[{...graph,reference:{componentId:'research.svg',componentVersion:1,props:{assetId:'blood-pressure',alt:'Research'}}}]});
+  assert.deepEqual(referencedComponentImages(svg),['/images/tm-blood-pressure-chart-en.svg']);
 });
 
 test('unknown document versions, nodes, component versions, props and executable payloads fail closed', () => {

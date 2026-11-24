@@ -50,7 +50,7 @@ try {
   const sources = await sourceInventory();
   const reviewed = await reviewedSourceChanges();
   for (const [file, digest] of Object.entries(inventory.sources)) {
-    if (sources[file] !== digest && reviewed[file] === sources[file]) report.reviewedSourceChanges.push(file);
+    if (sources[file] !== digest && Object.hasOwn(reviewed,file) && reviewed[file] === (sources[file]??null)) report.reviewedSourceChanges.push(file);
     else if (sources[file] !== digest) report.errors.push(`Unreviewed source/asset changed: ${file}`);
     else report.existingSourceFilesPreserved++;
   }

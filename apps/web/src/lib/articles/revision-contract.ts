@@ -18,5 +18,4 @@ export const postSlugAliasSchema = z.strictObject({
   slug: z.string().min(1).max(120).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   postId: z.uuid(),
 });
-// Future alias creation must check BOTH canonical slugs and aliases in one transaction.
-// This phase creates no aliases and makes no changes to existing URL resolution.
+// Alias creation checks canonical slugs and aliases under matching transaction range locks.

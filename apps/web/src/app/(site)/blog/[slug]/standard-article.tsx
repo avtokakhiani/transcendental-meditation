@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import type { Article } from '@/content/articles';
+import type { Article } from '@/lib/articles/presentation';
 import { ArticleContent, ArticleSections, ArticleCta } from '@/components/article-layout';
 import hero from '../../stress-and-anxiety/stress-and-anxiety.module.css';
 import overlay from '../articles-hero.module.css';

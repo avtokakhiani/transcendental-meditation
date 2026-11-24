@@ -5,19 +5,21 @@ import process from 'node:process';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { articles } from '../../src/content/articles.ts';
-import { getArticleCardCopy } from '../../src/content/article-card-copy.ts';
+import { articles } from './archive/article-catalog.ts';
+import { getArticleCardCopy } from './archive/article-card-copy.ts';
 import { artifacts, db, files, hash, json, sourceInventory, reviewedSourceChanges, web } from './local.mjs';
 
 const mode = process.argv[2];
 const statesOnly = process.argv.includes('--states-only');
 const faqOnly = process.argv.includes('--faq-only');
+const articlesOnly = process.argv.includes('--articles-only');
 const resume = process.argv.includes('--resume');
 assert.ok(!resume || mode === 'after', 'Only verified after captures can be resumed');
 const routeFilter = process.argv.find(value => value.startsWith('--route='))?.slice(8);
 const widthFilter = Number(process.argv.find(value => value.startsWith('--width='))?.slice(8)) || null;
 assert.ok(['before', 'after'].includes(mode), 'Use before or after');
-const base = 'http://localhost:31997';
+const base = process.env.FOUNDATION_BASE_URL ?? 'http://localhost:31997';
+assert.match(base,/^http:\/\/localhost:3199[78]$/,'Capture local development servers only');
 const output = path.join(artifacts, mode);
 const widths = [1440, 768, 390];
 const browser = await chromium.launch({ channel: 'chrome' });
@@ -117,7 +119,7 @@ try {
     await context.route('**/*', route => new URL(route.request().url()).origin === base ? route.continue() : route.abort());
     const page = await context.newPage();
     page.on('pageerror', error => report.errors.push(`${width}: ${error.message}`));
-    for (const route of statesOnly || faqOnly ? [] : routeFilter ? [routeFilter] : manifest.routes) {
+    for (const route of statesOnly || faqOnly ? [] : routeFilter ? [routeFilter] : articlesOnly ? manifest.routes.filter(route=>route==='/'||route==='/blog'||route.startsWith('/blog/')) : manifest.routes) {
       if (resume) {
         const key = `${name(route)}-${width}`;
         try {
@@ -129,7 +131,7 @@ try {
       await capture(page, route, width);
       console.log(`${mode}: ${width} ${route}`);
     }
-    if (routeFilter) { await context.close(); continue; }
+    if (routeFilter || articlesOnly) { await context.close(); continue; }
     if (faqOnly) {
       await page.goto(`${base}/faq`, { waitUntil: 'networkidle' }); await settle(page);
       const summary = page.locator('main details summary').first();
@@ -173,7 +175,7 @@ try {
   if (mode === 'after') {
     const current = await sourceInventory();
     const reviewed = await reviewedSourceChanges();
-    for (const [file, digest] of Object.entries(manifest.sources)) if (current[file] !== digest && current[file] !== reviewed[file]) report.errors.push(`Unreviewed source/asset changed: ${file}`);
+    for (const [file, digest] of Object.entries(manifest.sources)) if (current[file] !== digest && (!Object.hasOwn(reviewed,file)||(current[file]??null)!==reviewed[file])) report.errors.push(`Unreviewed source/asset changed: ${file}`);
     // Raw pixel differences are retained for the separate compare.mjs raster/DOM/source gate.
     for (const comparison of report.comparisons) if (comparison.dimensionsChanged) report.errors.push(`Screenshot dimensions changed: ${comparison.file}`);
   }

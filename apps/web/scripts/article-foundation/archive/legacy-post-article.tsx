@@ -2,8 +2,8 @@ import { formatDateKa } from '@tm/shared';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import type { PostDetail } from '@/server/services/posts';
-import { getPostArticleLayout } from '@/content/article-layouts';
-import { RichContent } from './rich-content';
+import { getPostArticleLayout } from './legacy-layouts';
+import { RichContent } from '@/components/rich-content';
 import {
   ArticleContent,
   ArticleCta,
@@ -11,8 +11,8 @@ import {
   articleProseClassName,
   legacyArticleClassName,
   legacyArticleReadingClassName,
-} from './article-layout';
-import styles from './post-article.module.css';
+} from '@/components/article-layout';
+import styles from '@/components/post-article.module.css';
 
 /** The default CMS route uses article standards automatically, for HTML and Markdown. */
 export function PostArticle({ post }: { post: PostDetail }) {

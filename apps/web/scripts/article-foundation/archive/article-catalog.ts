@@ -1,18 +1,7 @@
-import type { ArticleSection } from './article-sections';
+import type {Article} from '../../../src/lib/articles/presentation';
+export type {Article} from '../../../src/lib/articles/presentation';
 
-export interface Article {
-  slug: string;
-  publishedAt: string;
-  title: string;
-  description: string;
-  author: string;
-  readingMinutes: number;
-  category: string;
-  image: { src: string; alt: string } | null;
-  sections?: readonly ArticleSection[];
-}
-
-// Add articles here; the listing and article pages share this data.
+// Historical Phase 4 migration fixture only. Never use for public delivery.
 // Supply an ISO publication timestamp (including timezone) for every new article.
 // Existing timestamps initialize publication order from the order articles were added.
 // Set missing images to the supplied reference photographs when available.

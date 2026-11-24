@@ -27,9 +27,9 @@ function Visual({ block, doc }: { block: Extract<ArticleDocument['blocks'][numbe
       else content = <p>{block.summary}</p>;
     } catch { content = <p role="note">{block.summary}</p>; }
   }
-  const align = block.type === 'figure' ? block.align : 'center';
+  const align = block.align ?? 'center';
   const alignment = align === 'left' ? styles.left : align === 'right' ? styles.right : align === 'wrap-left' ? styles.wrapLeft : align === 'wrap-right' ? styles.wrapRight : '';
-  return <figure id={block.id} className={`${styles.figure} ${alignment}`} style={{ width: `${block.type === 'figure' ? block.widthPercent ?? 100 : 100}%` }}>{content}{block.type === 'component' ? <p className={styles.caption}>{block.summary}</p> : null}{block.caption ? <figcaption className={styles.caption}>{block.caption}</figcaption> : null}<SourceLinks ids={block.sourceIds} doc={doc} /></figure>;
+  return <figure id={block.id} className={`${styles.figure} ${alignment}`} style={{ width: `${block.widthPercent ?? 100}%` }}>{content}{block.type === 'component' ? <p className={styles.caption}>{block.summary}</p> : null}{block.caption ? <figcaption className={styles.caption}>{block.caption}</figcaption> : null}<SourceLinks ids={block.sourceIds} doc={doc} /></figure>;
 }
 export function StructuredDocument({ document }: { document: ArticleDocument }) {
   // Validate shape here, then isolate unavailable component versions per visual.
@@ -43,7 +43,7 @@ export function StructuredDocument({ document }: { document: ArticleDocument }) 
     return <Visual key={block.id} block={block} doc={doc} />;
   })}</div></ArticleContent>{doc.sources.length ? <section className={styles.references} aria-label="წყაროები"><h2 className="mb-5 text-2xl">წყაროები</h2><ol className="list-decimal space-y-4 pl-6">{doc.sources.map(source => <li key={source.id} id={`source-${source.id}`}>{source.url ? <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a> : source.title}{source.citation ? <p>{source.citation}</p> : null}</li>)}</ol></section> : null}</>;
 }
-/** This renderer is private-preview only in Phase 3. Public routes are unchanged. */
+/** Shared validated-revision rendering for public delivery and authenticated preview. */
 export function RevisionArticle({ revision }: { revision: PostRevision }) {
   const presentation = revision.presentation ? JSON.parse(revision.presentation) : {};
   if (revision.document && JSON.parse(revision.document).blocks.some((block: { type: string }) => block.type === 'preserved')) {

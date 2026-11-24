@@ -6,7 +6,7 @@ import path from 'node:path';
 import { PrismaClient } from '@prisma/client';
 import { artifacts, connection, database, db, json, readProtected, snapshot } from './local.mjs';
 import { backfill, legacyFields } from './backfill.mjs';
-import { deletePost, getPublishedPost, savePost } from '../../src/server/services/posts.ts';
+import { deletePost, getPublishedPost, savePost } from './archive/legacy-posts.ts';
 
 const rehearsal = process.argv.includes('--rehearsal');
 let client = db;

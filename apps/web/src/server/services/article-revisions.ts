@@ -2,9 +2,10 @@ import { createHash, randomUUID } from 'node:crypto';
 import type { Post, PostRevision, Prisma, PrismaClient } from '@prisma/client';
 import { marked } from 'marked';
 import { contentToText } from '@tm/shared';
-import { articles } from '../../content/articles';
+import {postSlugAliasSchema} from '../../lib/articles/revision-contract';
+import {validatePublicationLayout} from '../../lib/articles/layout-contract';
 import { articleInputSchema, INTRODUCTION_SLUG, type ArticleInput } from '../../lib/articles/authoring';
-import { assetSchema, parseArticleDocument, referencedMedia, type ArticleDocument } from '../../lib/articles/document';
+import { assetSchema, parseArticleDocument, referencedMedia, referencedComponentImages, type ArticleDocument } from '../../lib/articles/document';
 import { articleComponentRegistry } from '../../lib/articles/component-registry';
 import { visualAssets } from '../../lib/articles/visual-assets';
 import { preservedDefinitions } from '../../lib/articles/preserved';
@@ -82,7 +83,7 @@ export function revisionInput(revision: PostRevision): ArticleInput {
 
 export async function loadArticleEditor(db: PrismaClient, id: string) {
   const post = await db.post.findUnique({ where: { id }, include: { draftRevision: true, publishedRevision: true,
-    revisions: { orderBy: { number: 'desc' }, select: { id: true, number: true, createdAt: true, title: true, createdById: true } } } });
+    slugAliases: true, revisions: { orderBy: { number: 'desc' }, select: { id: true, number: true, createdAt: true, title: true, createdById: true } } } });
   if (!post) return null;
   const input: ArticleInput = post.draftRevision ? revisionInput(post.draftRevision) : {
     title: post.title, slug: post.slug, displayHeading: null, cardTitle: null, excerpt: post.excerpt, cardExcerpt: null,
@@ -97,7 +98,7 @@ export async function loadArticleEditor(db: PrismaClient, id: string) {
 async function validateAssets(tx: Prisma.TransactionClient, input: ArticleInput, doc: ArticleDocument | null) {
   const ids = new Set(doc ? referencedMedia(doc) : []);
   const copies = doc ? doc.blocks.flatMap(b => b.type === 'prose' ? [b] : b.type === 'research' ? [b.prose] : []) : [{ content: input.body.serialized, format: input.body.format }];
-  const imageUrls = [...(input.coverImageUrl ? [input.coverImageUrl] : [])];
+  const imageUrls = [...(input.coverImageUrl ? [input.coverImageUrl] : []),...(doc?referencedComponentImages(doc):[])];
   for (const copy of copies) {
     const normalized = proseHtml(copy.content, copy.format);
     for (const match of normalized.matchAll(/<img\b[^>]*\bsrc="([^"]*)"/gi)) imageUrls.push(match[1]!);
@@ -134,7 +135,7 @@ async function validateAssets(tx: Prisma.TransactionClient, input: ArticleInput,
 
 export interface ArticleCommand {
   id?: string; expectedVersion: number; expectedLegacyToken: string; actorId: string;
-  intent: 'save' | 'publish' | 'unpublish' | 'restore' | 'reconcile' | 'delete'; revisionId?: string;
+  intent: 'save' | 'publish' | 'unpublish' | 'restore' | 'reconcile' | 'delete' | 'alias'; revisionId?: string; aliasSlug?: string;
   input?: ArticleInput;
 }
 
@@ -149,17 +150,31 @@ export async function changeArticle(db: PrismaClient, command: ArticleCommand) {
     } else {
       if (!command.input || command.intent !== 'save' && command.intent !== 'publish') throw new ArticleValidation('სტატია ვერ მოიძებნა.');
       const input = articleInputSchema.parse(command.input);
-      if (articles.some(article => article.slug === input.slug) || input.slug === INTRODUCTION_SLUG || await tx.postSlugAlias.findUnique({ where: { slug: input.slug } })) throw new ArticleValidation('ეს მისამართი უკვე გამოიყენება.');
+      // Share range-lock order with alias creation; separate table uniqueness is insufficient.
+      await tx.$queryRaw`SELECT [id] FROM [posts] WITH (UPDLOCK,HOLDLOCK) WHERE [slug]=${input.slug}`;
+      await tx.$queryRaw`SELECT [slug] FROM [post_slug_aliases] WITH (UPDLOCK,HOLDLOCK) WHERE [slug]=${input.slug}`;
+      if (input.slug === INTRODUCTION_SLUG || await tx.post.findUnique({where:{slug:input.slug}}) || await tx.postSlugAlias.findUnique({ where: { slug: input.slug } })) throw new ArticleValidation('ეს მისამართი უკვე გამოიყენება.');
       post = await tx.post.create({ data: { title: input.title, slug: input.slug, content: '', contentFormat: 'html', authorId: command.actorId } });
     }
     const currentRevision = await tx.postRevision.findUnique({ where: { id: post.publishedRevisionId ?? post.draftRevisionId ?? '00000000-0000-0000-0000-000000000000' } });
     const provenance = currentRevision?.presentation ? JSON.parse(currentRevision.presentation) : {};
     const migrated = provenance.migrationPhase === 4;
-    if (migrated && ['delete', 'unpublish', 'reconcile'].includes(command.intent)) throw new ArticleValidation('მიგრირებული გვერდის საჯარო ცვლილებები შემდეგ ეტაპამდე შეჩერებულია.');
+    if (post.slug === INTRODUCTION_SLUG && ['delete','unpublish'].includes(command.intent)) throw new ArticleValidation('„რა არის TM?“ აუცილებელი გვერდია და მისი წაშლა ან გამოქვეყნების გაუქმება დაცულია.');
+    if (migrated && command.intent === 'reconcile') throw new ArticleValidation('დაცული განლაგების ისტორიული HTML-ის ავტომატური ჩანაცვლება დაუშვებელია. შეაჯერეთ ველები სტრუქტურირებული რედაქტორიდან.');
     const protectedPage = post.slug === INTRODUCTION_SLUG && !migrated;
     if (protectedPage && command.intent !== 'save' && command.intent !== 'reconcile') throw new ArticleValidation('ამ გვერდის საჯარო ცვლილებები ცალკე მიგრაციის შემდეგ გახდება ხელმისაწვდომი.');
     const shadow = await tx.postRevision.findUnique({ where: { id: post.publishedRevisionId ?? post.draftRevisionId ?? '00000000-0000-0000-0000-000000000000' } });
     if (command.intent !== 'reconcile' && hasLegacyDivergence(post, shadow)) throw new ArticleConflict('ძველ მონაცემებში გარე ცვლილებაა. ჯერ შეაჯერეთ ვერსიები.');
+    if (command.intent === 'alias') {
+      const alias = postSlugAliasSchema.parse({slug: command.aliasSlug, postId: post.id});
+      if (alias.slug === INTRODUCTION_SLUG) throw new ArticleValidation('ეს მისამართი დაცულია.');
+      await tx.$queryRaw`SELECT [id] FROM [posts] WITH (UPDLOCK,HOLDLOCK) WHERE [slug]=${alias.slug}`;
+      await tx.$queryRaw`SELECT [slug] FROM [post_slug_aliases] WITH (UPDLOCK,HOLDLOCK) WHERE [slug]=${alias.slug}`;
+      if (await tx.post.findUnique({where:{slug:alias.slug}}) || await tx.postSlugAlias.findUnique({where:{slug:alias.slug}})) throw new ArticleValidation('ეს მისამართი უკვე გამოიყენება.');
+      await tx.postSlugAlias.create({data:alias});
+      await tx.post.update({where:{id:post.id},data:{version:{increment:1},updatedAt:post.updatedAt}});
+      return {id:post.id,version:post.version+1,revisionId:post.draftRevisionId};
+    }
     if (command.intent === 'delete') {
       await tx.post.delete({ where: { id: post.id } });
       return { id: post.id, version: post.version + 1, revisionId: null };
@@ -196,7 +211,8 @@ export async function changeArticle(db: PrismaClient, command: ArticleCommand) {
     }
     const mediaIds = await validateAssets(tx, parsed, doc);
     if (command.intent === 'publish') {
-      if (parsed.coverImageUrl && !parsed.coverImageAlt) throw new ArticleValidation('ყდის სურათს დაუმატეთ ალტერნატიული ტექსტი.');
+      try {validatePublicationLayout(parsed.layoutKey,doc,post);} catch {throw new ArticleValidation('სტატიის განლაგება და შინაარსი ერთმანეთს უნდა შეესაბამებოდეს.');}
+      if (parsed.coverImageUrl && !parsed.coverImageAlt) throw new ArticleValidation('მთავარ სურათს დაუმატეთ ალტერნატიული ტექსტი.');
       const meaningful = doc ? doc.blocks.some(block => block.type === 'prose' ? meaningfulProse(block.content, block.format) : block.type !== 'citation') : meaningfulProse(parsed.body.serialized, parsed.body.format);
       if (!meaningful) throw new ArticleValidation('გამოქვეყნებამდე დაამატეთ სტატიის შინაარსი.');
     }
@@ -222,7 +238,7 @@ export async function changeArticle(db: PrismaClient, command: ArticleCommand) {
         ...(post.draftRevisionId ? {} : pointers), version: { increment: 1 }, updatedAt: post.updatedAt } });
     } else if (command.intent === 'publish') {
       if (migrated) {
-        await tx.post.update({ where: {id: post.id}, data: {...pointers, publishedRevisionId: revision.id, publishedRevisionPostId: post.id, version: {increment: 1}, updatedAt: post.updatedAt} });
+        await tx.post.update({ where: {id: post.id}, data: {...pointers, publishedRevisionId: revision.id, publishedRevisionPostId: post.id, status:'published',publishedAt:post.publishedAt??new Date(), version: {increment: 1}, updatedAt: post.updatedAt} });
         return {id: post.id, version: post.version + 1, revisionId: revision.id};
       }
       const projection = revisionProjection(revision);

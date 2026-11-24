@@ -1,4 +1,4 @@
-import type { Article } from './articles';
+import type { Article } from './article-catalog';
 import type { PostCard } from '@/server/services/posts';
 
 /** The articles listing's catalog is the only source of recommendations. */

@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 const ITEMS = [
   { label: 'მონაცემთა დაცვა', href: '/admin/privacy', Icon: CalendarDays },
   { label: 'შეხვედრები', href: '/admin/meetings', Icon: CalendarDays },
-  { label: 'პოსტები', href: '/admin/posts', Icon: Newspaper },
+  { label: 'სტატიები', href: '/admin/posts', Icon: Newspaper },
   { label: 'წიგნები', href: '/admin/books', Icon: BookOpen },
   { label: 'მედია', href: '/admin/media', Icon: ImageIcon },
 ] as const;

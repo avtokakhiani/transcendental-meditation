@@ -10,15 +10,17 @@ export const componentReferenceSchema = z.strictObject({
 });
 export type ComponentReference = z.infer<typeof componentReferenceSchema>;
 
-/** Data-only contract. A future renderer must explicitly map these IDs to static imports.
+/** Data-only contract. Renderers explicitly map these IDs to static imports.
  * No module path, JSX, function, event handler or executable source is stored in content.
  */
 export interface ComponentDefinition {
   id: string;
   version: number;
   label: string;
+  kind?: 'graph' | 'visual';
   propsSchema: z.ZodObject;
   accessibility: 'text-summary' | 'data-table';
+  imageAssets?: (props: ComponentReference['props']) => readonly string[];
 }
 
 export function createComponentRegistry(definitions: readonly ComponentDefinition[]) {
@@ -32,11 +34,17 @@ export function createComponentRegistry(definitions: readonly ComponentDefinitio
   }
   return Object.freeze({
     list: () => [...entries.values()],
+    imageAssets: (input: ComponentReference): readonly string[] => {
+      const definition=entries.get(`${input.componentId}@${input.componentVersion}`);
+      if(!definition)throw new Error('Unregistered component or version');
+      const props=z.record(z.string(),z.json()).parse(definition.propsSchema.parse(input.props));
+      return definition.imageAssets?.(props)??[];
+    },
     validate: (input: unknown): ComponentReference => {
       const reference = componentReferenceSchema.parse(input);
       const definition = entries.get(`${reference.componentId}@${reference.componentVersion}`);
       if (!definition) throw new Error('Unregistered component or version');
-      // Only the schema-validated props can cross into a future React renderer.
+      // Only schema-validated props cross into a registered React renderer.
       const props = z.record(z.string(), z.json()).parse(definition.propsSchema.parse(reference.props));
       return { ...reference, props };
     },
@@ -50,7 +58,7 @@ export const comparisonPropsSchema = z.strictObject({
 });
 export const svgPropsSchema = z.strictObject({ assetId: z.enum(visualAssets.map(asset => asset.id)), alt: z.string().min(1).max(2000) });
 export const articleComponentRegistry = createComponentRegistry([
-  { id: 'research.svg', version: 1, label: 'სამეცნიერო SVG გრაფიკი', propsSchema: svgPropsSchema, accessibility: 'text-summary' },
-  { id: 'research.comparison', version: 1, label: 'ინტერაქტიული შედარების გრაფიკი', propsSchema: comparisonPropsSchema, accessibility: 'data-table' },
-  ...preservedGraphDefinitions.map(graph => ({ id: graph.id, version: 1, label: `არსებული კვლევის გრაფიკი · ${graph.id}`, propsSchema: z.strictObject({ fields: preservedFieldsSchema(graph.fields) }), accessibility: 'text-summary' as const })),
+  { id: 'research.svg', version: 1, kind:'graph', label: 'სამეცნიერო SVG გრაფიკი', propsSchema: svgPropsSchema, accessibility: 'text-summary', imageAssets:props=>[visualAssets.find(asset=>asset.id===props.assetId)!.path] },
+  { id: 'research.comparison', version: 1, kind:'graph', label: 'ინტერაქტიული შედარების გრაფიკი', propsSchema: comparisonPropsSchema, accessibility: 'data-table' },
+  ...preservedGraphDefinitions.map((graph,index) => ({ id: graph.id, version: 1, kind:'graph' as const, label: ['სტრესის კვლევა — პირველი გრაფიკი','სტრესის კვლევა — მეორე გრაფიკი','გულის ჯანმრთელობა — პირველი გრაფიკი','გულის ჯანმრთელობა — მეორე გრაფიკი','ძილის კვლევის გრაფიკი','TM-ის განსხვავების გრაფიკი','ღრმა დასვენების გრაფიკი'][index]??'არსებული კვლევის გრაფიკი', propsSchema: z.strictObject({ fields: preservedFieldsSchema(graph.fields) }), accessibility: 'text-summary' as const, imageAssets:(props:ComponentReference['props'])=>Object.entries(graph.fields).filter(([,field])=>field.kind==='image').map(([key])=>(props.fields as Record<string,string>)[key]!) })),
 ]);

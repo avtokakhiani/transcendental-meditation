@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ImageIcon } from 'lucide-react';
-import type { Article } from '@/content/articles';
+import type { Article } from '@/lib/articles/presentation';
 import styles from './latest-articles.module.css';
 
 export function ArticleImage({ image }: { image: Article['image'] }) {

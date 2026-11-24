@@ -29,6 +29,8 @@ const figureSchema = z.strictObject({
 });
 const componentSchema = z.strictObject({
   type: z.literal('component'), id, reference: componentReferenceSchema,
+  widthPercent: z.number().min(10).max(100).optional(),
+  align: z.enum(['left', 'center', 'right']).optional(),
   summary: z.string().min(1).max(4000), caption: z.string().max(4000).optional(), sourceIds: z.array(id).max(100),
 });
 const citationSchema = z.strictObject({ type: z.literal('citation'), id, sourceId: id, label: z.string().min(1).max(100) });
@@ -47,7 +49,7 @@ export const articleDocumentSchema = z.strictObject({
 export type ArticleDocument = z.infer<typeof articleDocumentSchema>;
 
 /** Enforce limits before recursive Zod parsing. Prose remains inert data and MUST use the
- * existing sanitized HTML/Markdown renderers at future cutover; JSON validation is not sanitization.
+ * existing sanitized HTML/Markdown renderers; JSON validation is not sanitization.
  */
 export function validateArticleDocument(input: unknown, registry: ComponentRegistry = articleComponentRegistry): ArticleDocument {
   const pending = [{ value: input, depth: 0 }];
@@ -104,6 +106,7 @@ export function parseArticleDocument(serialized: string, registry?: ComponentReg
 
 export function referencedMedia(doc: ArticleDocument): string[] {
   const ids = new Set<string>();
+  for(const value of referencedComponentImages(doc)){const match=/^\/api\/media\/([0-9a-f-]{36})$/i.exec(value);if(match)ids.add(match[1]!);}
   for (const block of doc.blocks) {
     if (block.type === 'preserved') {
       const values = [...Object.values(block.fields), ...block.visuals.flatMap(visual => Object.values(visual.props.fields as Record<string, string>))];
@@ -113,4 +116,15 @@ export function referencedMedia(doc: ArticleDocument): string[] {
     if (visual.type === 'figure' && visual.asset.kind === 'media') ids.add(visual.asset.mediaId);
   }
   return [...ids].sort();
+}
+
+/** Developer-owned asset extractors run only after the versioned props schema validates. */
+export function referencedComponentImages(doc:ArticleDocument):string[]{
+  const images=new Set<string>();
+  for(const block of doc.blocks){
+    const visual=block.type==='research'?block.visual:block;
+    const refs=block.type==='preserved'?block.visuals:visual.type==='component'?[visual.reference]:[];
+    for(const reference of refs)for(const image of articleComponentRegistry.imageAssets(reference))images.add(image);
+  }
+  return [...images].sort();
 }

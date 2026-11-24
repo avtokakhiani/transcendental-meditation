@@ -1,4 +1,3 @@
-import { getArticleCardCopy } from '@/content/article-card-copy';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { PostCard } from '@/components/post-card';
@@ -22,7 +21,7 @@ export function LatestPosts({ posts }: { posts: PostCardData[] }) {
 
         <div className="mt-7 grid gap-x-8 gap-y-0 sm:mt-8 md:grid-cols-2 lg:grid-cols-3">
           {posts.slice(0, 3).map((post, index) => (
-            <PostCard key={post.id} post={{ ...post, ...getArticleCardCopy(post.slug) }} index={index} variant="latest" />
+            <PostCard key={post.id} post={post} index={index} variant="latest" />
           ))}
         </div>
       </div>
