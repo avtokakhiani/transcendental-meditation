@@ -99,10 +99,13 @@ export async function getPublishedPost(db: PrismaClient, slug: string): Promise<
 
 /** Admin list: every status, newest edits first. */
 export async function listAllPosts(db: PrismaClient) {
-  return db.post.findMany({
+  const rows = await db.post.findMany({
     orderBy: { updatedAt: 'desc' },
-    select: { id: true, slug: true, title: true, status: true, publishedAt: true, updatedAt: true },
+    select: { id: true, slug: true, title: true, status: true, publishedAt: true, updatedAt: true,
+      draftRevisionId: true, publishedRevisionId: true, draftRevision: { select: { title: true } } },
   });
+  return rows.map(row => ({ ...row, title: row.draftRevision?.title ?? row.title,
+    hasDraftChanges: Boolean(row.publishedRevisionId && row.draftRevisionId !== row.publishedRevisionId) }));
 }
 
 export async function getPostForEdit(db: PrismaClient, id: string) {
@@ -126,7 +129,11 @@ export async function savePost(
   const existing =
     options.id === undefined
       ? null
-      : await db.post.findUnique({ where: { id: options.id }, select: { publishedAt: true } });
+      : await db.post.findUnique({ where: { id: options.id }, select: { publishedAt: true, draftRevisionId: true, publishedRevisionId: true, version: true } });
+
+  if (existing && (existing.draftRevisionId || existing.publishedRevisionId || existing.version > 0)) {
+    throw new Error('ვერსიებით მართული სტატია შეინახეთ სტატიის რედაქტორიდან.');
+  }
 
   const publishedAt =
     input.status === 'published' ? (existing?.publishedAt ?? new Date()) : (existing?.publishedAt ?? null);

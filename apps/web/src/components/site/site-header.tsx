@@ -117,11 +117,12 @@ function Dropdown({ group }: { group: NavGroup }) {
   );
 }
 
-export function SiteHeader() {
+export function SiteHeader({ previewPathname }: { previewPathname?: string } = {}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [phoneTooltipDismissed, setPhoneTooltipDismissed] = useState(false);
   const phoneTooltipId = useId();
-  const pathname = usePathname();
+  const currentPathname = usePathname();
+  const pathname = previewPathname ?? currentPathname;
   const transparentOnTop = pathname === '/stress-and-anxiety'
     || pathname === '/about'
     || pathname === '/faq'

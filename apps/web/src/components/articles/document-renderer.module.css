@@ -1,0 +1,12 @@
+.figure { margin: 0 auto 2rem; max-width: 100%; break-inside: avoid; }
+.figure img { display: block; width: 100%; height: auto; }
+.caption { margin-top: 1rem; font-size: .875rem; line-height: 1.7; color: var(--color-plum-500); }
+.left { margin-left: 0; }
+.right { margin-right: 0; }
+.research { display: grid; gap: 2rem; margin-block: 2.5rem; }
+.research > * { min-width: 0; }
+.prose { display: flow-root; }
+.prose a, .caption a, .references a { text-decoration: underline; text-underline-offset: .2em; }
+.references { max-width: 800px; margin: 3rem auto; padding-inline: 1.5rem; overflow-wrap: anywhere; }
+@media(min-width: 1024px) { .research { grid-template-columns: 1fr 1fr; gap: 3rem; } .chartLeft > :last-child { order: -1; } .wrapLeft { float: left; margin-right: 2rem; } .wrapRight { float: right; margin-left: 2rem; } }
+@media(max-width: 639px) { .figure { width: 100% !important; } }

@@ -1,0 +1,1269 @@
+{
+  "stress-v1": {
+    "name": "stress-article-hero",
+    "functionName": "PresetStressArticleHeroV1",
+    "fields": {
+      "f1": {
+        "kind": "image",
+        "label": "ყდის სურათი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ყდის სურათი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "მთავარი სათაური 3"
+      },
+      "f4": {
+        "kind": "text",
+        "label": "ტექსტი 4"
+      },
+      "f5": {
+        "kind": "text",
+        "label": "ტექსტი 5"
+      },
+      "f6": {
+        "kind": "text",
+        "label": "ტექსტი 6"
+      },
+      "f7": {
+        "kind": "text",
+        "label": "ტექსტი 7"
+      },
+      "f8": {
+        "kind": "text",
+        "label": "ტექსტი 8"
+      },
+      "f9": {
+        "kind": "text",
+        "label": "ტექსტი 9"
+      },
+      "f10": {
+        "kind": "text",
+        "label": "ტექსტი 10"
+      },
+      "f11": {
+        "kind": "text",
+        "label": "ტექსტი 11"
+      },
+      "f12": {
+        "kind": "text",
+        "label": "ტექსტი 12"
+      },
+      "f13": {
+        "kind": "text",
+        "label": "ტექსტი 13"
+      },
+      "f14": {
+        "kind": "text",
+        "label": "ტექსტი 14"
+      },
+      "f15": {
+        "kind": "text",
+        "label": "ტექსტი 15"
+      },
+      "f16": {
+        "kind": "text",
+        "label": "ტექსტი 16"
+      },
+      "f17": {
+        "kind": "text",
+        "label": "ტექსტი 17"
+      },
+      "f18": {
+        "kind": "text",
+        "label": "ტექსტი 18"
+      },
+      "f19": {
+        "kind": "text",
+        "label": "ტექსტი 19"
+      },
+      "f20": {
+        "kind": "text",
+        "label": "ტექსტი 20"
+      },
+      "f21": {
+        "kind": "text",
+        "label": "ტექსტი 21"
+      },
+      "f22": {
+        "kind": "text",
+        "label": "ტექსტი 22"
+      },
+      "f23": {
+        "kind": "text",
+        "label": "ტექსტი 23"
+      },
+      "f24": {
+        "kind": "text",
+        "label": "ტექსტი 24"
+      },
+      "f25": {
+        "kind": "text",
+        "label": "ტექსტი 25"
+      },
+      "f26": {
+        "kind": "text",
+        "label": "ტექსტი 26"
+      },
+      "f27": {
+        "kind": "text",
+        "label": "ტექსტი 27"
+      },
+      "f28": {
+        "kind": "text",
+        "label": "ტექსტი 28"
+      },
+      "f29": {
+        "kind": "text",
+        "label": "ტექსტი 29"
+      },
+      "f30": {
+        "kind": "text",
+        "label": "ტექსტი 30"
+      },
+      "f31": {
+        "kind": "text",
+        "label": "ტექსტი 31"
+      },
+      "f32": {
+        "kind": "text",
+        "label": "ტექსტი 32"
+      },
+      "f33": {
+        "kind": "text",
+        "label": "ტექსტი 33"
+      },
+      "f34": {
+        "kind": "text",
+        "label": "ტექსტი 34"
+      },
+      "f35": {
+        "kind": "text",
+        "label": "ტექსტი 35"
+      },
+      "f36": {
+        "kind": "text",
+        "label": "ტექსტი 36"
+      },
+      "f37": {
+        "kind": "text",
+        "label": "ტექსტი 37"
+      },
+      "f38": {
+        "kind": "text",
+        "label": "ტექსტი 38"
+      },
+      "f39": {
+        "kind": "text",
+        "label": "ტექსტი 39"
+      },
+      "f40": {
+        "kind": "text",
+        "label": "ტექსტი 40"
+      },
+      "f41": {
+        "kind": "text",
+        "label": "ტექსტი 41"
+      },
+      "f42": {
+        "kind": "text",
+        "label": "ტექსტი 42"
+      },
+      "f43": {
+        "kind": "text",
+        "label": "ტექსტი 43"
+      },
+      "f44": {
+        "kind": "text",
+        "label": "ტექსტი 44"
+      },
+      "f45": {
+        "kind": "text",
+        "label": "ტექსტი 45"
+      },
+      "f46": {
+        "kind": "link",
+        "label": "ბმული 46"
+      },
+      "f47": {
+        "kind": "text",
+        "label": "ტექსტი 47"
+      },
+      "f48": {
+        "kind": "text",
+        "label": "ტექსტი 48"
+      },
+      "f49": {
+        "kind": "text",
+        "label": "ტექსტი 49"
+      },
+      "f50": {
+        "kind": "text",
+        "label": "ტექსტი 50"
+      },
+      "f51": {
+        "kind": "text",
+        "label": "ტექსტი 51"
+      },
+      "f52": {
+        "kind": "text",
+        "label": "ტექსტი 52"
+      },
+      "f53": {
+        "kind": "text",
+        "label": "ტექსტი 53"
+      },
+      "f54": {
+        "kind": "text",
+        "label": "ტექსტი 54"
+      },
+      "f55": {
+        "kind": "text",
+        "label": "ტექსტი 55"
+      },
+      "f56": {
+        "kind": "text",
+        "label": "ტექსტი 56"
+      },
+      "f57": {
+        "kind": "text",
+        "label": "ტექსტი 57"
+      },
+      "f58": {
+        "kind": "text",
+        "label": "ტექსტი 58"
+      },
+      "f59": {
+        "kind": "text",
+        "label": "ტექსტი 59"
+      },
+      "f60": {
+        "kind": "text",
+        "label": "ტექსტი 60"
+      },
+      "f61": {
+        "kind": "text",
+        "label": "ტექსტი 61"
+      },
+      "f62": {
+        "kind": "text",
+        "label": "ტექსტი 62"
+      },
+      "f63": {
+        "kind": "text",
+        "label": "ტექსტი 63"
+      },
+      "f64": {
+        "kind": "text",
+        "label": "ტექსტი 64"
+      },
+      "f65": {
+        "kind": "text",
+        "label": "ტექსტი 65"
+      },
+      "f66": {
+        "kind": "text",
+        "label": "ტექსტი 66"
+      },
+      "f67": {
+        "kind": "text",
+        "label": "ტექსტი 67"
+      },
+      "f68": {
+        "kind": "text",
+        "label": "ტექსტი 68"
+      },
+      "f69": {
+        "kind": "text",
+        "label": "ტექსტი 69"
+      },
+      "f70": {
+        "kind": "text",
+        "label": "ტექსტი 70"
+      },
+      "f71": {
+        "kind": "text",
+        "label": "ტექსტი 71"
+      },
+      "f72": {
+        "kind": "text",
+        "label": "ტექსტი 72"
+      },
+      "f73": {
+        "kind": "text",
+        "label": "ტექსტი 73"
+      },
+      "f74": {
+        "kind": "text",
+        "label": "ტექსტი 74"
+      },
+      "f75": {
+        "kind": "text",
+        "label": "ტექსტი 75"
+      },
+      "f76": {
+        "kind": "text",
+        "label": "ტექსტი 76"
+      },
+      "f77": {
+        "kind": "text",
+        "label": "ტექსტი 77"
+      },
+      "f78": {
+        "kind": "text",
+        "label": "ტექსტი 78"
+      },
+      "f79": {
+        "kind": "text",
+        "label": "ტექსტი 79"
+      },
+      "f80": {
+        "kind": "text",
+        "label": "ტექსტი 80"
+      },
+      "f81": {
+        "kind": "text",
+        "label": "ტექსტი 81"
+      },
+      "f82": {
+        "kind": "text",
+        "label": "ტექსტი 82"
+      },
+      "f83": {
+        "kind": "text",
+        "label": "ტექსტი 83"
+      },
+      "f84": {
+        "kind": "text",
+        "label": "ტექსტი 84"
+      },
+      "f85": {
+        "kind": "text",
+        "label": "ტექსტი 85"
+      },
+      "f86": {
+        "kind": "text",
+        "label": "ტექსტი 86"
+      },
+      "f87": {
+        "kind": "text",
+        "label": "ტექსტი 87"
+      },
+      "f88": {
+        "kind": "text",
+        "label": "ტექსტი 88"
+      },
+      "f89": {
+        "kind": "text",
+        "label": "ტექსტი 89"
+      },
+      "f90": {
+        "kind": "text",
+        "label": "ტექსტი 90"
+      },
+      "f91": {
+        "kind": "text",
+        "label": "ტექსტი 91"
+      },
+      "f92": {
+        "kind": "text",
+        "label": "ტექსტი 92"
+      },
+      "f93": {
+        "kind": "text",
+        "label": "ტექსტი 93"
+      },
+      "f96": {
+        "kind": "text",
+        "label": "ტექსტი 96"
+      },
+      "f97": {
+        "kind": "text",
+        "label": "ტექსტი 97"
+      },
+      "f98": {
+        "kind": "text",
+        "label": "ტექსტი 98"
+      },
+      "f99": {
+        "kind": "text",
+        "label": "ტექსტი 99"
+      },
+      "f100": {
+        "kind": "text",
+        "label": "ტექსტი 100"
+      },
+      "f101": {
+        "kind": "text",
+        "label": "ტექსტი 101"
+      },
+      "f102": {
+        "kind": "text",
+        "label": "ტექსტი 102"
+      },
+      "f103": {
+        "kind": "text",
+        "label": "ტექსტი 103"
+      },
+      "f104": {
+        "kind": "text",
+        "label": "ტექსტი 104"
+      },
+      "f105": {
+        "kind": "text",
+        "label": "ტექსტი 105"
+      },
+      "f106": {
+        "kind": "text",
+        "label": "ტექსტი 106"
+      },
+      "f107": {
+        "kind": "text",
+        "label": "ტექსტი 107"
+      },
+      "f110": {
+        "kind": "text",
+        "label": "ტექსტი 110"
+      },
+      "f111": {
+        "kind": "text",
+        "label": "ტექსტი 111"
+      },
+      "f112": {
+        "kind": "text",
+        "label": "ტექსტი 112"
+      },
+      "f113": {
+        "kind": "text",
+        "label": "ტექსტი 113"
+      },
+      "f114": {
+        "kind": "text",
+        "label": "ტექსტი 114"
+      },
+      "f115": {
+        "kind": "text",
+        "label": "ტექსტი 115"
+      },
+      "f116": {
+        "kind": "text",
+        "label": "ტექსტი 116"
+      },
+      "f117": {
+        "kind": "text",
+        "label": "ტექსტი 117"
+      }
+    },
+    "graphs": [
+      {
+        "id": "preserved.stress.graph1",
+        "fields": {
+          "f94": {
+            "kind": "image",
+            "label": "სურათი 94"
+          },
+          "f95": {
+            "kind": "text",
+            "label": "ალტერნატიული ტექსტი 95"
+          }
+        }
+      },
+      {
+        "id": "preserved.stress.graph2",
+        "fields": {
+          "f108": {
+            "kind": "image",
+            "label": "სურათი 108"
+          },
+          "f109": {
+            "kind": "text",
+            "label": "ალტერნატიული ტექსტი 109"
+          }
+        }
+      }
+    ]
+  },
+  "heart-v1": {
+    "name": "heart-article-hero",
+    "functionName": "PresetHeartArticleHeroV1",
+    "fields": {
+      "f1": {
+        "kind": "image",
+        "label": "ყდის სურათი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ყდის სურათი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "მთავარი სათაური 3"
+      },
+      "f4": {
+        "kind": "text",
+        "label": "ტექსტი 4"
+      },
+      "f5": {
+        "kind": "text",
+        "label": "ტექსტი 5"
+      },
+      "f6": {
+        "kind": "text",
+        "label": "ტექსტი 6"
+      },
+      "f7": {
+        "kind": "text",
+        "label": "ტექსტი 7"
+      },
+      "f8": {
+        "kind": "text",
+        "label": "ტექსტი 8"
+      },
+      "f9": {
+        "kind": "text",
+        "label": "ტექსტი 9"
+      },
+      "f10": {
+        "kind": "text",
+        "label": "ტექსტი 10"
+      },
+      "f11": {
+        "kind": "text",
+        "label": "ტექსტი 11"
+      },
+      "f12": {
+        "kind": "text",
+        "label": "ტექსტი 12"
+      },
+      "f13": {
+        "kind": "text",
+        "label": "ტექსტი 13"
+      },
+      "f14": {
+        "kind": "text",
+        "label": "ტექსტი 14"
+      },
+      "f15": {
+        "kind": "text",
+        "label": "ტექსტი 15"
+      },
+      "f16": {
+        "kind": "text",
+        "label": "ტექსტი 16"
+      },
+      "f17": {
+        "kind": "text",
+        "label": "ტექსტი 17"
+      },
+      "f18": {
+        "kind": "text",
+        "label": "ტექსტი 18"
+      },
+      "f19": {
+        "kind": "text",
+        "label": "ტექსტი 19"
+      },
+      "f20": {
+        "kind": "text",
+        "label": "ტექსტი 20"
+      },
+      "f21": {
+        "kind": "text",
+        "label": "ტექსტი 21"
+      },
+      "f22": {
+        "kind": "text",
+        "label": "ტექსტი 22"
+      },
+      "f23": {
+        "kind": "text",
+        "label": "ტექსტი 23"
+      },
+      "f24": {
+        "kind": "text",
+        "label": "ტექსტი 24"
+      },
+      "f27": {
+        "kind": "text",
+        "label": "ტექსტი 27"
+      },
+      "f28": {
+        "kind": "text",
+        "label": "ტექსტი 28"
+      },
+      "f29": {
+        "kind": "text",
+        "label": "ტექსტი 29"
+      },
+      "f30": {
+        "kind": "text",
+        "label": "ტექსტი 30"
+      },
+      "f31": {
+        "kind": "text",
+        "label": "ტექსტი 31"
+      },
+      "f32": {
+        "kind": "text",
+        "label": "ტექსტი 32"
+      },
+      "f33": {
+        "kind": "text",
+        "label": "ტექსტი 33"
+      },
+      "f34": {
+        "kind": "text",
+        "label": "ტექსტი 34"
+      },
+      "f35": {
+        "kind": "text",
+        "label": "ტექსტი 35"
+      },
+      "f36": {
+        "kind": "text",
+        "label": "ტექსტი 36"
+      },
+      "f37": {
+        "kind": "text",
+        "label": "ტექსტი 37"
+      },
+      "f38": {
+        "kind": "text",
+        "label": "ტექსტი 38"
+      },
+      "f39": {
+        "kind": "text",
+        "label": "ტექსტი 39"
+      },
+      "f40": {
+        "kind": "text",
+        "label": "ტექსტი 40"
+      },
+      "f41": {
+        "kind": "text",
+        "label": "ტექსტი 41"
+      },
+      "f42": {
+        "kind": "text",
+        "label": "ტექსტი 42"
+      },
+      "f43": {
+        "kind": "text",
+        "label": "ტექსტი 43"
+      },
+      "f44": {
+        "kind": "text",
+        "label": "ტექსტი 44"
+      },
+      "f47": {
+        "kind": "text",
+        "label": "ტექსტი 47"
+      },
+      "f48": {
+        "kind": "text",
+        "label": "ტექსტი 48"
+      },
+      "f49": {
+        "kind": "text",
+        "label": "ტექსტი 49"
+      },
+      "f50": {
+        "kind": "text",
+        "label": "ტექსტი 50"
+      },
+      "f51": {
+        "kind": "text",
+        "label": "ტექსტი 51"
+      },
+      "f52": {
+        "kind": "text",
+        "label": "ტექსტი 52"
+      },
+      "f53": {
+        "kind": "text",
+        "label": "ტექსტი 53"
+      },
+      "f54": {
+        "kind": "text",
+        "label": "ტექსტი 54"
+      },
+      "f55": {
+        "kind": "text",
+        "label": "ტექსტი 55"
+      },
+      "f56": {
+        "kind": "text",
+        "label": "ტექსტი 56"
+      }
+    },
+    "graphs": [
+      {
+        "id": "preserved.heart.graph1",
+        "fields": {
+          "f25": {
+            "kind": "image",
+            "label": "სურათი 25"
+          },
+          "f26": {
+            "kind": "text",
+            "label": "ალტერნატიული ტექსტი 26"
+          }
+        }
+      },
+      {
+        "id": "preserved.heart.graph2",
+        "fields": {
+          "f45": {
+            "kind": "image",
+            "label": "სურათი 45"
+          },
+          "f46": {
+            "kind": "text",
+            "label": "ალტერნატიული ტექსტი 46"
+          }
+        }
+      }
+    ]
+  },
+  "sleep-v1": {
+    "name": "sleep-article-hero",
+    "functionName": "PresetSleepArticleHeroV1",
+    "fields": {
+      "f1": {
+        "kind": "image",
+        "label": "ყდის სურათი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ყდის სურათი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "მთავარი სათაური 3"
+      },
+      "f4": {
+        "kind": "text",
+        "label": "ტექსტი 4"
+      },
+      "f5": {
+        "kind": "text",
+        "label": "ტექსტი 5"
+      },
+      "f6": {
+        "kind": "text",
+        "label": "ტექსტი 6"
+      },
+      "f7": {
+        "kind": "text",
+        "label": "ტექსტი 7"
+      },
+      "f8": {
+        "kind": "text",
+        "label": "ტექსტი 8"
+      },
+      "f9": {
+        "kind": "text",
+        "label": "ტექსტი 9"
+      },
+      "f10": {
+        "kind": "text",
+        "label": "ტექსტი 10"
+      },
+      "f11": {
+        "kind": "text",
+        "label": "ტექსტი 11"
+      },
+      "f12": {
+        "kind": "text",
+        "label": "ტექსტი 12"
+      },
+      "f13": {
+        "kind": "text",
+        "label": "ტექსტი 13"
+      },
+      "f14": {
+        "kind": "text",
+        "label": "ტექსტი 14"
+      },
+      "f15": {
+        "kind": "text",
+        "label": "ტექსტი 15"
+      },
+      "f16": {
+        "kind": "text",
+        "label": "ტექსტი 16"
+      },
+      "f17": {
+        "kind": "text",
+        "label": "ტექსტი 17"
+      },
+      "f18": {
+        "kind": "text",
+        "label": "ტექსტი 18"
+      },
+      "f19": {
+        "kind": "text",
+        "label": "ტექსტი 19"
+      },
+      "f20": {
+        "kind": "text",
+        "label": "ტექსტი 20"
+      },
+      "f21": {
+        "kind": "text",
+        "label": "ტექსტი 21"
+      },
+      "f22": {
+        "kind": "text",
+        "label": "ტექსტი 22"
+      },
+      "f23": {
+        "kind": "text",
+        "label": "ტექსტი 23"
+      },
+      "f24": {
+        "kind": "text",
+        "label": "ტექსტი 24"
+      },
+      "f25": {
+        "kind": "text",
+        "label": "ტექსტი 25"
+      },
+      "f26": {
+        "kind": "text",
+        "label": "ტექსტი 26"
+      },
+      "f27": {
+        "kind": "text",
+        "label": "ტექსტი 27"
+      },
+      "f28": {
+        "kind": "text",
+        "label": "ტექსტი 28"
+      },
+      "f29": {
+        "kind": "text",
+        "label": "ტექსტი 29"
+      },
+      "f30": {
+        "kind": "text",
+        "label": "ტექსტი 30"
+      },
+      "f31": {
+        "kind": "text",
+        "label": "ტექსტი 31"
+      },
+      "f32": {
+        "kind": "text",
+        "label": "ტექსტი 32"
+      },
+      "f33": {
+        "kind": "text",
+        "label": "ტექსტი 33"
+      },
+      "f34": {
+        "kind": "text",
+        "label": "ტექსტი 34"
+      },
+      "f35": {
+        "kind": "text",
+        "label": "ტექსტი 35"
+      },
+      "f36": {
+        "kind": "text",
+        "label": "ტექსტი 36"
+      },
+      "f37": {
+        "kind": "text",
+        "label": "ტექსტი 37"
+      },
+      "f38": {
+        "kind": "text",
+        "label": "ტექსტი 38"
+      },
+      "f39": {
+        "kind": "text",
+        "label": "ტექსტი 39"
+      },
+      "f40": {
+        "kind": "text",
+        "label": "ტექსტი 40"
+      },
+      "f41": {
+        "kind": "text",
+        "label": "ტექსტი 41"
+      },
+      "f42": {
+        "kind": "text",
+        "label": "ტექსტი 42"
+      },
+      "f43": {
+        "kind": "text",
+        "label": "ტექსტი 43"
+      },
+      "f44": {
+        "kind": "text",
+        "label": "ტექსტი 44"
+      },
+      "f45": {
+        "kind": "text",
+        "label": "ტექსტი 45"
+      },
+      "f46": {
+        "kind": "text",
+        "label": "ტექსტი 46"
+      },
+      "f47": {
+        "kind": "text",
+        "label": "ტექსტი 47"
+      },
+      "f48": {
+        "kind": "text",
+        "label": "ტექსტი 48"
+      },
+      "f49": {
+        "kind": "text",
+        "label": "ტექსტი 49"
+      },
+      "f50": {
+        "kind": "text",
+        "label": "ტექსტი 50"
+      },
+      "f51": {
+        "kind": "text",
+        "label": "ტექსტი 51"
+      },
+      "f52": {
+        "kind": "text",
+        "label": "ტექსტი 52"
+      },
+      "f53": {
+        "kind": "text",
+        "label": "ტექსტი 53"
+      },
+      "f54": {
+        "kind": "text",
+        "label": "ტექსტი 54"
+      },
+      "f55": {
+        "kind": "text",
+        "label": "ტექსტი 55"
+      },
+      "f56": {
+        "kind": "text",
+        "label": "ტექსტი 56"
+      },
+      "f57": {
+        "kind": "text",
+        "label": "ტექსტი 57"
+      },
+      "f58": {
+        "kind": "text",
+        "label": "ტექსტი 58"
+      },
+      "f61": {
+        "kind": "text",
+        "label": "ტექსტი 61"
+      },
+      "f62": {
+        "kind": "text",
+        "label": "ტექსტი 62"
+      },
+      "f63": {
+        "kind": "text",
+        "label": "ტექსტი 63"
+      },
+      "f64": {
+        "kind": "text",
+        "label": "ტექსტი 64"
+      },
+      "f65": {
+        "kind": "text",
+        "label": "ტექსტი 65"
+      },
+      "f66": {
+        "kind": "text",
+        "label": "ტექსტი 66"
+      },
+      "f67": {
+        "kind": "text",
+        "label": "ტექსტი 67"
+      },
+      "f68": {
+        "kind": "text",
+        "label": "ტექსტი 68"
+      },
+      "f69": {
+        "kind": "text",
+        "label": "ტექსტი 69"
+      },
+      "f70": {
+        "kind": "text",
+        "label": "ტექსტი 70"
+      },
+      "f71": {
+        "kind": "text",
+        "label": "ტექსტი 71"
+      },
+      "f72": {
+        "kind": "text",
+        "label": "ტექსტი 72"
+      },
+      "f73": {
+        "kind": "text",
+        "label": "ტექსტი 73"
+      },
+      "f74": {
+        "kind": "text",
+        "label": "ტექსტი 74"
+      }
+    },
+    "graphs": [
+      {
+        "id": "preserved.sleep.graph1",
+        "fields": {
+          "f59": {
+            "kind": "image",
+            "label": "სურათი 59"
+          },
+          "f60": {
+            "kind": "text",
+            "label": "ალტერნატიული ტექსტი 60"
+          }
+        }
+      }
+    ]
+  },
+  "what-is-tm-intro-v1": {
+    "name": "what-is-tm-intro",
+    "functionName": "PresetWhatIsTmIntroV1",
+    "fields": {
+      "f1": {
+        "kind": "image",
+        "label": "ყდის სურათი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ტექსტი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "აღწერა 3"
+      },
+      "f4": {
+        "kind": "text",
+        "label": "ტექსტი 4"
+      },
+      "f5": {
+        "kind": "text",
+        "label": "ტექსტი 5"
+      },
+      "f6": {
+        "kind": "text",
+        "label": "ტექსტი 6"
+      },
+      "f7": {
+        "kind": "text",
+        "label": "ტექსტი 7"
+      },
+      "f8": {
+        "kind": "text",
+        "label": "ტექსტი 8"
+      }
+    },
+    "graphs": []
+  },
+  "what-is-tm-not-v1": {
+    "name": "what-is-tm-not",
+    "functionName": "PresetWhatIsTmNotV1",
+    "fields": {
+      "f1": {
+        "kind": "text",
+        "label": "ტექსტი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ტექსტი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "ტექსტი 3"
+      },
+      "f4": {
+        "kind": "text",
+        "label": "ტექსტი 4"
+      },
+      "f5": {
+        "kind": "link",
+        "label": "ბმული 5"
+      },
+      "f6": {
+        "kind": "text",
+        "label": "ტექსტი 6"
+      }
+    },
+    "graphs": []
+  },
+  "what-is-tm-different-v1": {
+    "name": "what-is-tm-different",
+    "functionName": "PresetWhatIsTmDifferentV1",
+    "fields": {
+      "f1": {
+        "kind": "text",
+        "label": "ტექსტი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ტექსტი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "ტექსტი 3"
+      }
+    },
+    "graphs": [
+      {
+        "id": "preserved.what-is-tm-different.graph1",
+        "fields": {
+          "f4": {
+            "kind": "text",
+            "label": "ტექსტი 4"
+          },
+          "f5": {
+            "kind": "text",
+            "label": "ტექსტი 5"
+          },
+          "f6": {
+            "kind": "text",
+            "label": "აღწერა 6"
+          },
+          "f7": {
+            "kind": "image",
+            "label": "სურათი 7"
+          },
+          "f8": {
+            "kind": "text",
+            "label": "ალტერნატიული ტექსტი 8"
+          }
+        }
+      }
+    ]
+  },
+  "what-is-tm-restful-alertness-v1": {
+    "name": "what-is-tm-restful-alertness",
+    "functionName": "PresetWhatIsTmRestfulAlertnessV1",
+    "fields": {
+      "f1": {
+        "kind": "text",
+        "label": "ტექსტი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ტექსტი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "ტექსტი 3"
+      },
+      "f4": {
+        "kind": "text",
+        "label": "ტექსტი 4"
+      }
+    },
+    "graphs": [
+      {
+        "id": "preserved.what-is-tm-restful-alertness.graph1",
+        "fields": {
+          "f5": {
+            "kind": "text",
+            "label": "ტექსტი 5"
+          },
+          "f6": {
+            "kind": "text",
+            "label": "ტექსტი 6"
+          },
+          "f7": {
+            "kind": "text",
+            "label": "აღწერა 7"
+          },
+          "f8": {
+            "kind": "image",
+            "label": "სურათი 8"
+          },
+          "f9": {
+            "kind": "text",
+            "label": "ალტერნატიული ტექსტი 9"
+          }
+        }
+      }
+    ]
+  },
+  "what-is-tm-maharishi-v1": {
+    "name": "what-is-tm-maharishi",
+    "functionName": "PresetWhatIsTmMaharishiV1",
+    "fields": {
+      "f1": {
+        "kind": "image",
+        "label": "სურათი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ალტერნატიული ტექსტი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "ტექსტი 3"
+      },
+      "f4": {
+        "kind": "text",
+        "label": "ტექსტი 4"
+      },
+      "f5": {
+        "kind": "text",
+        "label": "ტექსტი 5"
+      },
+      "f6": {
+        "kind": "text",
+        "label": "ტექსტი 6"
+      },
+      "f7": {
+        "kind": "text",
+        "label": "ტექსტი 7"
+      }
+    },
+    "graphs": []
+  },
+  "what-is-tm-tony-nader-v1": {
+    "name": "what-is-tm-tony-nader",
+    "functionName": "PresetWhatIsTmTonyNaderV1",
+    "fields": {
+      "f1": {
+        "kind": "text",
+        "label": "ტექსტი 1"
+      },
+      "f2": {
+        "kind": "text",
+        "label": "ტექსტი 2"
+      },
+      "f3": {
+        "kind": "text",
+        "label": "ტექსტი 3"
+      },
+      "f4": {
+        "kind": "text",
+        "label": "ტექსტი 4"
+      },
+      "f5": {
+        "kind": "image",
+        "label": "სურათი 5"
+      },
+      "f6": {
+        "kind": "text",
+        "label": "ალტერნატიული ტექსტი 6"
+      }
+    },
+    "graphs": []
+  }
+}

@@ -139,10 +139,91 @@ model Post {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  /// Additive foundation only: legacy columns above remain authoritative until public cutover.
+  kind                String  @default("article") @db.NVarChar(20)
+  version             Int     @default(0)
+  draftRevisionId     String? @db.UniqueIdentifier
+  draftRevisionPostId String? @db.UniqueIdentifier
+  publishedRevisionId String? @db.UniqueIdentifier
+  publishedRevisionPostId String? @db.UniqueIdentifier
+
   author User? @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  revisions PostRevision[] @relation("PostRevisions")
+  draftRevision PostRevision? @relation("DraftRevision", fields: [draftRevisionPostId, draftRevisionId], references: [postId, id], onDelete: NoAction, onUpdate: NoAction)
+  publishedRevision PostRevision? @relation("PublishedRevision", fields: [publishedRevisionPostId, publishedRevisionId], references: [postId, id], onDelete: NoAction, onUpdate: NoAction)
+  slugAliases PostSlugAlias[]
 
   @@index([status, publishedAt])
+  @@index([kind, status, publishedAt])
   @@map("posts")
+}
+
+/// Append-only editorial snapshots. Legacy HTML/Markdown are retained byte-for-byte.
+/// SQL Server JSON is validated text, never a Prisma Json field.
+model PostRevision {
+  id                 String   @id @default(uuid()) @db.UniqueIdentifier
+  postId             String   @db.UniqueIdentifier
+  number             Int
+  sourceHash         String   @db.VarChar(64)
+  sourceUpdatedAt    DateTime @db.DateTime2
+  title              String   @db.NVarChar(300)
+  displayHeading     String?  @db.NVarChar(300)
+  cardTitle          String?  @db.NVarChar(300)
+  excerpt            String?  @db.NVarChar(500)
+  cardExcerpt        String?  @db.NVarChar(500)
+  editorialByline    String?  @db.NVarChar(300)
+  category           String?  @db.NVarChar(150)
+  coverImageUrl      String?  @db.NVarChar(2048)
+  coverImageAlt      String?  @db.NVarChar(1000)
+  seoTitle           String?  @db.NVarChar(300)
+  seoDescription     String?  @db.NVarChar(2000)
+  socialImageUrl     String?  @db.NVarChar(2048)
+  layoutKey          String   @default("standard-v1") @db.NVarChar(80)
+  /// Legacy representation remains separate from a future structured document.
+  content            String   @db.NVarChar(Max)
+  contentFormat      String   @db.NVarChar(10)
+  document           String?  @db.NVarChar(Max)
+  documentVersion    Int?
+  /// Approved presentation details, not arbitrary CSS or executable code.
+  presentation       String?  @db.NVarChar(Max)
+  plainText          String?  @db.NVarChar(Max)
+  readingMinutes     Int?
+  createdById        String?  @db.UniqueIdentifier
+  createdAt          DateTime @default(now()) @db.DateTime2
+
+  post Post @relation("PostRevisions", fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  draftFor Post[] @relation("DraftRevision")
+  publishedFor Post[] @relation("PublishedRevision")
+  mediaReferences PostRevisionMedia[]
+
+  @@unique([postId, number])
+  @@unique([postId, sourceHash])
+  /// Composite key enforces that revision pointers belong to the same post.
+  @@unique([postId, id])
+  @@map("post_revisions")
+}
+
+/// Future redirect source. Current public routes do not consume aliases yet.
+model PostSlugAlias {
+  slug      String @id @db.NVarChar(120)
+  postId    String @db.UniqueIdentifier
+  createdAt DateTime @default(now()) @db.DateTime2
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([postId])
+  @@map("post_slug_aliases")
+}
+
+/// A media object may be referenced by many revisions; deleting referenced media is restricted.
+model PostRevisionMedia {
+  revisionId String @db.UniqueIdentifier
+  mediaId    String @db.UniqueIdentifier
+  revision PostRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  media Media @relation(fields: [mediaId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([revisionId, mediaId])
+  @@index([mediaId])
+  @@map("post_revision_media")
 }
 
 model Book {
@@ -203,6 +284,7 @@ model Media {
   originalName String   @db.NVarChar(260)
   uploadedById String?  @db.UniqueIdentifier
   createdAt    DateTime @default(now())
+  revisionReferences PostRevisionMedia[]
 
   @@index([createdAt])
   @@map("media")

@@ -30,6 +30,7 @@ export default async function AdminPostsPage() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] text-plum-900">{post.title}</p>
                     <p className="truncate text-xs text-plum-400">/blog/{post.slug}</p>
+                    {post.hasDraftChanges ? <p className="mt-1 text-xs text-plum-500">არის გამოუქვეყნებელი ცვლილებები</p> : null}
                   </div>
                   <StatusBadge status={post.status} />
                   <span className="w-36 text-xs text-plum-400 sm:text-right">განახლდა {formatDateKa(post.updatedAt)}</span>

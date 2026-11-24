@@ -2,6 +2,8 @@ import path from 'node:path';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  // Separate host development output for the isolated article workflow test server.
+  distDir: process.env.ARTICLE_TEST_SERVER === 'true' ? '.next/article-tests' : '.next',
   // OAuth codes and state must never appear in development request logs.
   logging: { incomingRequests: { ignore: [/\/api\/admin\/calendar-test\/callback(?:\?|$)/] } },
   async headers() {
@@ -19,7 +21,15 @@ const nextConfig: NextConfig = {
       // Only the clean admin page permits same-origin referrers; OAuth API/callback URLs never do.
       { key: 'Referrer-Policy', value: source === '/admin/calendar-test' ? 'same-origin' : 'no-referrer' },
       { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
-    ] }))];
+    ] })), { source: '/admin/posts/:path*', headers: [
+      { key: 'Cache-Control', value: 'private, no-store, max-age=0' },
+      { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+      { key: 'Referrer-Policy', value: 'same-origin' },
+    ] }, { source: '/admin/article-preview/:path*', headers: [
+      { key: 'Cache-Control', value: 'private, no-store, max-age=0' },
+      { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+      { key: 'Referrer-Policy', value: 'same-origin' },
+    ] }];
   },
   reactStrictMode: true,
   experimental: {

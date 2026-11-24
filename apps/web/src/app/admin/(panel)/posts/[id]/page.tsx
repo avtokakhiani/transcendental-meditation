@@ -4,7 +4,10 @@ import { notFound } from 'next/navigation';
 import { ConfirmButton } from '@/components/admin/confirm-button';
 import { PostForm } from '@/components/admin/post-form';
 import { prisma } from '@/server/db';
-import { getPostForEdit } from '@/server/services/posts';
+import { loadArticleEditor } from '@/server/services/article-revisions';
+import { listRecentMedia } from '@/server/services/media';
+import { isPreservedBody } from '@/lib/articles/preserved';
+import { INTRODUCTION_SLUG } from '@/lib/articles/authoring';
 import { deletePostAction } from '../actions';
 
 export default async function EditPostPage({
@@ -15,8 +18,10 @@ export default async function EditPostPage({
   searchParams: Promise<{ saved?: string }>;
 }) {
   const [{ id }, { saved }] = await Promise.all([params, searchParams]);
-  const post = await getPostForEdit(prisma, id).catch(() => null);
-  if (post === null) notFound();
+  const data = await loadArticleEditor(prisma, id).catch(() => null);
+  if (data === null) notFound();
+  const { post } = data;
+  const media = await listRecentMedia(prisma);
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -33,16 +38,22 @@ export default async function EditPostPage({
               ნახვა
             </Link>
           ) : null}
-          <form action={deletePostAction}>
+          {post.slug !== INTRODUCTION_SLUG && !isPreservedBody(data.input.body) ? <form action={deletePostAction}>
             <input type="hidden" name="id" value={post.id} />
+            <input type="hidden" name="version" value={post.version} />
+            <input type="hidden" name="legacyToken" value={data.legacyToken} />
             <ConfirmButton message="წავშალოთ პოსტი? ამ მოქმედების დაბრუნება შეუძლებელია.">
               <Trash2 aria-hidden="true" className="size-4" />
               წაშლა
             </ConfirmButton>
-          </form>
+          </form> : null}
         </div>
       </div>
-      <PostForm key={post.updatedAt.toISOString()} post={post} saved={saved === '1'} />
+      <PostForm key={`${post.version}:${post.updatedAt.toISOString()}`} initial={data.input} context={{ id: post.id, version: post.version,
+        legacyToken: data.legacyToken, status: post.status, protectedPage: post.slug === INTRODUCTION_SLUG && !isPreservedBody(data.input.body),
+        diverged: data.diverged, draftRevisionId: post.draftRevisionId, publishedRevisionId: post.publishedRevisionId,
+        revisions: post.revisions.map(revision => ({ ...revision, createdAt: revision.createdAt.toISOString() })),
+      }} media={media} saved={saved === '1'} />
     </div>
   );
 }

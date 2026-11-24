@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
+import { createHmac } from 'node:crypto';
+import path from 'node:path';
+import process from 'node:process';
+import console from 'node:console';
+import { chromium } from 'playwright';
+import { artifacts, db, json } from './local.mjs';
+const browser = await chromium.launch({ channel: 'chrome' });
+try {
+  const base = 'http://localhost:31997';
+  const actor = await db.user.findFirstOrThrow({ where: { isActive: true } });
+  const post = await db.post.findUniqueOrThrow({ where: { slug: 'ra-aris-transtsendentuli-meditatsia' } });
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
+  const payload = Buffer.from(JSON.stringify({ userId: actor.id, expiresAt: Date.now() + 300000 })).toString('base64url');
+  await context.addCookies([{ name: 'tm_session', value: `${payload}.${createHmac('sha256', process.env.AUTH_SECRET).update(payload).digest('base64url')}`, url: base, httpOnly: true, sameSite: 'Lax' }]);
+  const page = await context.newPage(), errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  assert.equal((await page.goto(`${base}/admin/posts/new`, { waitUntil: 'networkidle' })).status(), 200);
+  await page.locator('[data-article-authoring] .tiptap').waitFor();
+  assert.equal(await page.locator('[name="seoTitle"]').count(), 1);
+  assert.equal(await page.getByRole('button', { name: 'კვლევის სექციის დამატება', exact: true }).count(), 1);
+  await page.screenshot({ path: path.join(artifacts, 'admin/main-editor-template.png'), fullPage: true, animations: 'disabled', style: 'nextjs-portal { visibility: hidden !important; }' });
+  await page.goto(`${base}/admin/posts/${post.id}`, { waitUntil: 'networkidle' });
+  assert.equal(await page.getByRole('button', { name: 'გამოქვეყნება', exact: true }).isDisabled(), true);
+  assert.equal(await page.locator('[data-article-document-editor]').count(), 0);
+  const preview = await page.goto(`${base}/admin/posts/${post.id}/preview`, { waitUntil: 'networkidle' });
+  assert.equal(preview.status(), 200); assert.match(preview.headers()['cache-control'], /no-store/);
+  assert.equal(await page.locator('article h1').count(), 1);
+  assert.deepEqual(errors, []);
+  await json(path.join(artifacts, 'main-smoke.json'), { servedUpdatedEditor: true, originalIntroductionProtected: true, authenticatedCompatibilityPreview: true, cacheControl: preview.headers()['cache-control'], errors });
+  console.log('Main localhost serves the updated editor; existing introduction stays protected and previews its existing components. Read-only smoke passed.');
+} finally { await browser.close(); await db.$disconnect(); }

@@ -1,47 +1,41 @@
 'use server';
-
-import { postInputSchema } from '@tm/shared';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { z } from 'zod';
 import type { FormState } from '@/components/admin/form-feedback';
+import { articleInputSchema } from '@/lib/articles/authoring';
 import { requireUser } from '@/server/auth';
 import { prisma } from '@/server/db';
-import { deletePost, isPostSlugTaken, savePost } from '@/server/services/posts';
-
-function read(formData: FormData, key: string): string {
-  const value = formData.get(key);
-  return typeof value === 'string' ? value : '';
-}
-
-export async function savePostAction(_previous: FormState, formData: FormData): Promise<FormState> {
+import { ArticleConflict, ArticleValidation, changeArticle } from '@/server/services/article-revisions';
+const read = (data: FormData, key: string) => typeof data.get(key) === 'string' ? String(data.get(key)) : '';
+const intentSchema = z.enum(['save', 'publish', 'restore', 'unpublish', 'reconcile']);
+export async function savePostAction(_previous: FormState, data: FormData): Promise<FormState> {
   const user = await requireUser();
-  const id = read(formData, 'id') || undefined;
-
-  const parsed = postInputSchema.safeParse({
-    title: read(formData, 'title'),
-    slug: read(formData, 'slug'),
-    excerpt: read(formData, 'excerpt'),
-    coverImageUrl: read(formData, 'coverImageUrl'),
-    content: read(formData, 'content'),
-    contentFormat: read(formData, 'contentFormat') || 'markdown',
-    status: read(formData, 'status'),
-  });
-  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'მონაცემები არასწორია' };
-
-  if (await isPostSlugTaken(prisma, parsed.data.slug, id)) {
-    return { error: 'ეს მისამართი უკვე გამოყენებულია სხვა პოსტში' };
+  let id: string;
+  try {
+    const intent = intentSchema.parse(read(data, 'intent') || 'save');
+    const input = intent === 'save' || intent === 'publish' ? articleInputSchema.parse({
+      ...Object.fromEntries(['title', 'slug', 'displayHeading', 'cardTitle', 'excerpt', 'cardExcerpt', 'editorialByline', 'category', 'coverImageUrl', 'coverImageAlt', 'coverCrop', 'seoTitle', 'seoDescription', 'layoutKey'].map(key => [key, read(data, key)])),
+      body: { format: read(data, 'bodyFormat'), serialized: read(data, 'body') },
+    }) : undefined;
+    const saved = await changeArticle(prisma, { id: read(data, 'id') || undefined, expectedVersion: z.coerce.number().int().nonnegative().parse(read(data, 'version')), expectedLegacyToken: read(data, 'legacyToken'), actorId: user.id, intent, input, revisionId: read(data, 'revisionId') || undefined });
+    id = saved.id;
+  } catch (error) {
+    if (error instanceof ArticleConflict || error instanceof ArticleValidation) return { error: error.message };
+    if (error instanceof z.ZodError) {
+      const labels: Record<string, string> = { title: 'სათაური', summary: 'გრაფიკის ტექსტური განმარტება', alt: 'სურათის ალტერნატიული ტექსტი', rows: 'გრაფიკის მონაცემები', label: 'მაჩვენებლის დასახელება', value: 'მაჩვენებლის მნიშვნელობა', url: 'წყაროს ბმული', coverImageAlt: 'ყდის ალტერნატიული ტექსტი', slug: 'სტატიის მისამართი' };
+      const field = error.issues[0]?.path.map(String).reverse().find(key => labels[key]);
+      return { error: field ? `შეავსეთ ან შეასწორეთ ველი: ${labels[field]}.` : 'შეამოწმეთ სურათები, გრაფიკის მონაცემები და წყაროები. ყველა მითითებული წყარო უნდა არსებობდეს.' };
+    }
+    if (typeof error === 'object' && error && 'code' in error && error.code === 'P2002') return { error: 'ეს მისამართი უკვე გამოიყენება. აირჩიეთ სხვა მისამართი.' };
+    return { error: 'სტატია ვერ შეინახა. ცვლილებები ფორმაში დარჩა; სცადეთ ხელახლა.' };
   }
-
-  const saved = await savePost(prisma, parsed.data, { ...(id === undefined ? {} : { id }), authorId: user.id });
-
   revalidatePath('/', 'layout');
-  redirect(`/admin/posts/${saved.id}?saved=1`);
+  redirect(`/admin/posts/${id}?saved=1`);
 }
-
-export async function deletePostAction(formData: FormData): Promise<void> {
-  await requireUser();
-  const id = read(formData, 'id');
-  if (id.length > 0) await deletePost(prisma, id);
+export async function deletePostAction(data: FormData): Promise<void> {
+  const user = await requireUser();
+  await changeArticle(prisma, { id: read(data, 'id'), expectedVersion: Number(read(data, 'version')), expectedLegacyToken: read(data, 'legacyToken'), actorId: user.id, intent: 'delete' });
   revalidatePath('/', 'layout');
   redirect('/admin/posts');
 }
