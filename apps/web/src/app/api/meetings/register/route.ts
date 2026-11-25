@@ -5,12 +5,19 @@ import { prisma } from '@/server/db';
 import { notifyMeetingRegistration } from '@/server/meeting-notifications';
 import { MeetingUnavailable, registerForMeeting } from '@/server/services/meetings';
 import { productionPrivacyBlocked } from '@/lib/privacy-retention';
+import { noUpcomingMeetingsNotice, publicMeetingRegistrationEnabled } from '@/lib/meeting-registration-policy';
 
 export const runtime = 'nodejs';
 const attempts = new Map<string, { count: number; expires: number }>();
 const fail = (status: number, error = registrationError) => Response.json({ error }, { status, headers: { 'Cache-Control': 'no-store' } });
 
 export async function POST(request: Request) {
+  // Block before reading contact details, querying SQL or scheduling notifications.
+  if (!publicMeetingRegistrationEnabled()) {
+    return Response.json({ error: noUpcomingMeetingsNotice, code: 'MEETING_REGISTRATION_DISABLED' }, {
+      status: 403, headers: { 'Cache-Control': 'no-store' },
+    });
+  }
   if (productionPrivacyBlocked()) return fail(503);
   if (request.headers.get('origin') !== new URL(request.url).origin) return fail(403);
   if (!request.headers.get('content-type')?.startsWith('application/json')) return fail(415);

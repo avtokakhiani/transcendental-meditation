@@ -1,52 +1,56 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { POST } from '../src/app/api/corporate-inquiries/route';
+import { nextRequestContext } from './next-request-context';
 
-test('corporate endpoint validates, handles delivery failures, and sends all details', async () => {
-  const originalFetch = globalThis.fetch;
-  const saved = { key: process.env.RESEND_API_KEY, from: process.env.CORPORATE_FROM_EMAIL, to: process.env.ADMIN_EMAIL };
-  const inquiry = { name: 'QA Person', organization: 'QA Organization', email: 'route-qa@example.invalid', phone: '+995 511 123456', contactMethod: 'ტელეფონით', message: 'Corporate QA', website: '', startedAt: Date.now() - 5000 };
-  const request = (body = inquiry, origin = 'http://localhost:31997') => new Request('http://localhost:31997/api/corporate-inquiries', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-  try {
-    assert.equal((await POST(request(inquiry, 'https://other.invalid'))).status, 403);
-    assert.equal((await POST(request({ ...inquiry, email: 'invalid' }))).status, 400);
-    assert.equal((await POST(request({ ...inquiry, phone: '' }))).status, 400);
-    assert.equal((await POST(request({ ...inquiry, website: 'spam' }))).status, 400);
-    assert.equal((await POST(request({ ...inquiry, startedAt: Date.now() }))).status, 400);
-    delete process.env.RESEND_API_KEY;
-    delete process.env.CORPORATE_FROM_EMAIL;
-    delete process.env.ADMIN_EMAIL;
-    assert.equal((await POST(request())).status, 503);
-
-    // Dummy credentials are confined to this process; no network mail is sent.
-    process.env.RESEND_API_KEY = 'test-only';
-    process.env.CORPORATE_FROM_EMAIL = 'sender@example.invalid';
-    process.env.ADMIN_EMAIL = 'admin@example.invalid';
-    const keys: string[] = [];
-    globalThis.fetch = async (url, options) => {
-      assert.equal(url, 'https://api.resend.com/emails');
-      const body = JSON.parse(String(options?.body));
-      assert.equal(body.from, 'sender@example.invalid');
-      assert.deepEqual(body.to, ['admin@example.invalid']);
-      assert.equal(body.reply_to, inquiry.email);
-      for (const field of ['name', 'organization', 'email', 'phone', 'contactMethod', 'message'] as const) assert.ok(body.text.includes(inquiry[field]));
-      assert.ok(!body.text.includes('რომელი პროგრამა გაინტერესებთ?'));
-      keys.push(new Headers(options?.headers).get('Idempotency-Key')!);
-      return Response.json({ id: 'mock-email-id' });
-    };
-    assert.deepEqual(await (await POST(request())).json(), { ok: true });
-    assert.deepEqual(await (await POST(request())).json(), { ok: true });
-    assert.equal(keys[0], keys[1]);
-    globalThis.fetch = async () => Response.json({ error: 'provider failure' }, { status: 500 });
-    assert.equal((await POST(request())).status, 502);
-    globalThis.fetch = async () => { throw new Error('network failure'); };
-    assert.equal((await POST(request())).status, 502);
-    assert.equal((await POST(request())).status, 429);
-  } finally {
-    globalThis.fetch = originalFetch;
-    for (const [name, value] of [['RESEND_API_KEY', saved.key], ['CORPORATE_FROM_EMAIL', saved.from], ['ADMIN_EMAIL', saved.to]]) {
-      if (value === undefined) delete process.env[name!];
-      else process.env[name!] = value;
-    }
+test('corporate receipt requires storage, not mail acceptance; failures never confirm', async t => {
+  const saved = { ...process.env };
+  const globalState = globalThis as typeof globalThis & { prisma?: unknown };
+  const previous = globalState.prisma;
+  t.after(() => {
+    for (const key of Object.keys(process.env)) if (!(key in saved)) delete process.env[key];
+    Object.assign(process.env, saved);
+    if (previous === undefined) delete globalState.prisma; else globalState.prisma = previous;
+  });
+  Object.assign(process.env, { NODE_ENV: 'test', DATABASE_URL: 'sqlserver://127.0.0.1:1;database=fake;user=fake;password=fake',
+    AUTH_SECRET: 'synthetic-corporate-secret-at-least-32-characters', AZURE_STORAGE_ACCOUNT: 'synthetic' });
+  delete process.env.RESEND_API_KEY;
+  let rejectStorage = false, finish: (() => void) | undefined;
+  const rows = new Map<string, string>();
+  globalState.prisma = { corporateInquiry: { async upsert(input: { where: { deduplicationKey: string } }) {
+    if (rejectStorage) throw new Error('synthetic database unavailable');
+    await new Promise<void>(resolve => { finish = resolve; });
+    const key = input.where.deduplicationKey;
+    if (!rows.has(key)) rows.set(key, '11111111-1111-4111-8111-111111111111');
+    return { id: rows.get(key) };
+  } } };
+  const network = t.mock.method(globalThis, 'fetch', () => { throw new Error('Network forbidden'); });
+  const context = await nextRequestContext();
+  const { POST } = await import('../src/app/api/corporate-inquiries/route');
+  const { corporateContactMethods } = await import('../src/lib/corporate-inquiry');
+  const input = { name: 'Synthetic Person', organization: 'Synthetic Org', email: 'unit@example.invalid', phone: '',
+    contactMethod: corporateContactMethods[1], message: 'Synthetic message', website: '', startedAt: Date.now() - 5000 };
+  const request = (body: unknown = input, origin = 'http://localhost') => new Request('http://localhost/api/corporate-inquiries', {
+    method: 'POST', headers: { origin, 'content-type': 'application/json' }, body: JSON.stringify(body),
+  });
+  assert.equal((await POST(request(input, 'https://other.invalid'))).status, 403);
+  assert.equal((await POST(request({ ...input, email: 'bad' }))).status, 400);
+  assert.equal((await POST(request({ ...input, website: 'spam' }))).status, 400);
+  assert.equal((await POST(request({ ...input, startedAt: Date.now() }))).status, 400);
+  for (let i = 0; i < 2; i++) {
+    let confirmed = false;
+    const receipt = context.run(() => POST(request())).then(response => { confirmed = true; return response; });
+    while (!finish) await new Promise(resolve => setImmediate(resolve));
+    assert.equal(confirmed, false, 'No confirmation before storage resolves');
+    assert.equal(context.pending.length, 0);
+    finish(); finish = undefined;
+    assert.deepEqual(await (await receipt).json(), { ok: true });
+    await context.drain();
   }
+  assert.equal(rows.size, 1);
+  rejectStorage = true;
+  const failed = await context.run(() => POST(request({ ...input, email: 'dbfail@example.invalid' })));
+  assert.equal(failed.status, 503);
+  assert.equal((await failed.json()).ok, undefined);
+  assert.equal(context.pending.length, 0);
+  assert.equal(network.mock.calls.length, 0);
 });

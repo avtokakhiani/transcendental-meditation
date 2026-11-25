@@ -7,7 +7,6 @@ import { INTRODUCTORY_MEETING_ROUTE } from '@/lib/routes';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { MeetingRegistration } from './meeting-registration';
 import styles from './meetings.module.css';
-import { TEMPORARY_MEETING_PREVIEW_ENABLED, temporaryTestMeetings } from './temporary-test-meetings';
 
 /** One site-wide enhancement of meeting links; their href remains a working fallback. */
 export function MeetingPanel() {
@@ -71,7 +70,7 @@ export function MeetingPanel() {
     }}>
     {open && <>
       <button type="button" autoFocus className={styles.close} aria-label="პანელის დახურვა" onClick={() => setOpen(false)}><X aria-hidden="true" size={22} /></button>
-      <MeetingRegistration titleId={titleId} previewMeetings={TEMPORARY_MEETING_PREVIEW_ENABLED ? temporaryTestMeetings : undefined} />
+      <MeetingRegistration titleId={titleId} />
     </>}
   </dialog>;
 }

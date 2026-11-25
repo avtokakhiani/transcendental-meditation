@@ -3,19 +3,20 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { ChevronDown, MapPin, Video } from 'lucide-react';
 import { formatCompactMeetingDate, registrationError, registrationSchema, type PublicMeeting } from '@/lib/meetings';
+import { noUpcomingMeetingsNotice, publicMeetingRegistrationEnabled } from '@/lib/meeting-registration-policy';
 import styles from './meetings.module.css';
 
-export function MeetingRegistration({ titleId, standalone = false, previewMeetings }: { titleId: string; standalone?: boolean; previewMeetings?: PublicMeeting[] }) {
-  const [meetings, setMeetings] = useState<PublicMeeting[]>(previewMeetings ?? []);
-  const [loading, setLoading] = useState(!previewMeetings);
+export function MeetingRegistration({ titleId, standalone = false }: { titleId: string; standalone?: boolean }) {
+  const registrationEnabled = publicMeetingRegistrationEnabled();
+  const [meetings, setMeetings] = useState<PublicMeeting[]>([]);
+  const [loading, setLoading] = useState(registrationEnabled);
   const [error, setError] = useState('');
   const [selected, setSelected] = useState<string | null>(null);
   const [version, setVersion] = useState(0);
   const id = useId();
 
   useEffect(() => {
-    if (previewMeetings) {
-      setMeetings(previewMeetings);
+    if (!registrationEnabled) {
       setLoading(false);
       return;
     }
@@ -34,19 +35,19 @@ export function MeetingRegistration({ titleId, standalone = false, previewMeetin
     void load();
     const timer = window.setInterval(() => void load(), 60000);
     return () => { controller.abort(); window.clearInterval(timer); };
-  }, [version, previewMeetings]);
+  }, [version, registrationEnabled]);
 
-  const upcoming = meetings.filter(meeting => new Date(meeting.startsAt).getTime() > Date.now())
-    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+  const upcoming = registrationEnabled ? meetings.filter(meeting => new Date(meeting.startsAt).getTime() > Date.now())
+    .sort((a, b) => a.startsAt.localeCompare(b.startsAt)) : [];
   const Heading = standalone ? 'h1' : 'h2';
   return (
     <div className={styles.content}>
       <Heading id={titleId} className={styles.title}>გაცნობითი შეხვედრები</Heading>
       <p className={styles.subtitle}>აირჩიე სასურველი შეხვედრა და დარეგისტრირდი.</p>
-      {loading ? <p role="status" className={styles.notice}>შეხვედრები იტვირთება…</p> : error ? (
+      {registrationEnabled && loading ? <p role="status" className={styles.notice}>შეხვედრები იტვირთება…</p> : registrationEnabled && error ? (
         <div className={styles.notice}><p role="alert">{error}</p><button type="button" className={styles.retry} onClick={() => { setLoading(true); setVersion(value => value + 1); }}>სცადე ხელახლა</button></div>
       ) : upcoming.length === 0 ? (
-        <p role="status" className={styles.notice}>ამჟამად გაცნობითი შეხვედრები დაგეგმილი არ არის. გთხოვ, მოგვიანებით შემოგვიერთდე.</p>
+        <p role="status" className={styles.notice}>{noUpcomingMeetingsNotice}</p>
       ) : <ul className={styles.list}>{upcoming.map(meeting => {
         const expanded = selected === meeting.id;
         const formId = `${id}-${meeting.id}`;
@@ -60,12 +61,12 @@ export function MeetingRegistration({ titleId, standalone = false, previewMeetin
               </span>
               {meeting.teacher && <span className={styles.teacher}>{meeting.teacher}</span>}
               {meeting.format === 'in_person' && <span className={styles.location}>{meeting.location}</span>}
-              {!meeting.temporaryTest && (meeting.availability !== 'open' || meeting.remaining !== null) && <span className={styles.availability}>{meeting.availability === 'closed' ? 'რეგისტრაცია დახურულია' : meeting.availability === 'full' ? 'ყველა ადგილი დაკავებულია' : `დარჩენილია ${meeting.remaining} ადგილი`}</span>}
+              {(meeting.availability !== 'open' || meeting.remaining !== null) && <span className={styles.availability}>{meeting.availability === 'closed' ? 'რეგისტრაცია დახურულია' : meeting.availability === 'full' ? 'ყველა ადგილი დაკავებულია' : `დარჩენილია ${meeting.remaining} ადგილი`}</span>}
             </span>
             {meeting.availability === 'open' && <ChevronDown aria-hidden="true" size={20} className={expanded ? styles.rotated : undefined} />}
           </button>
           {expanded && <div id={formId} className={styles.expansion}>
-            <RegistrationForm meetingId={meeting.id} temporaryTest={meeting.temporaryTest} available={meeting.availability === 'open'} onRegistered={() => setVersion(value => value + 1)} />
+            <RegistrationForm meetingId={meeting.id} available={meeting.availability === 'open'} onRegistered={() => setVersion(value => value + 1)} />
           </div>}
         </li>;
       })}</ul>}
@@ -73,7 +74,7 @@ export function MeetingRegistration({ titleId, standalone = false, previewMeetin
   );
 }
 
-function RegistrationForm({ meetingId, available, onRegistered, temporaryTest = false }: { meetingId: string; available: boolean; onRegistered: () => void; temporaryTest?: boolean }) {
+function RegistrationForm({ meetingId, available, onRegistered }: { meetingId: string; available: boolean; onRegistered: () => void }) {
   const [pending, setPending] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -83,10 +84,10 @@ function RegistrationForm({ meetingId, available, onRegistered, temporaryTest = 
   const feedback = useRef<HTMLParagraphElement>(null);
   useEffect(() => { if (success || error) feedback.current?.focus(); }, [success, error]);
 
-  if (success) return <p ref={feedback} tabIndex={-1} role="status" className={styles.success}>{temporaryTest ? 'ფორმა წარმატებით შეივსო.' : 'რეგისტრაცია წარმატებით დასრულდა. გელოდებით შეხვედრაზე!'}</p>;
+  if (success) return <p ref={feedback} tabIndex={-1} role="status" className={styles.success}>რეგისტრაცია წარმატებით დასრულდა. გელოდებით შეხვედრაზე!</p>;
   return <form aria-label="შეხვედრაზე რეგისტრაცია" aria-busy={pending} onSubmit={async event => {
     event.preventDefault();
-    if (sending.current || !available) return;
+    if (sending.current || !available || !publicMeetingRegistrationEnabled()) return;
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form));
     const parsed = registrationSchema.safeParse({ ...data, meetingId });
@@ -100,11 +101,6 @@ function RegistrationForm({ meetingId, available, onRegistered, temporaryTest = 
     }
     sending.current = true; setPending(true); setError(''); setFieldErrors({});
     try {
-      if (temporaryTest) {
-        await new Promise(resolve => window.setTimeout(resolve, 350));
-        setSuccess(true);
-        return;
-      }
       const response = await fetch('/api/meetings/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(parsed.data) });
       const result = await response.json();
       if (!response.ok || result.ok !== true) {
@@ -129,10 +125,10 @@ function RegistrationForm({ meetingId, available, onRegistered, temporaryTest = 
       </div>)}
     </div>
     <div hidden aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
-    {!temporaryTest && <p className={styles.privacy}>შეყვანილი მონაცემები გამოიყენება შეხვედრაზე რეგისტრაციისა და შენთან დაკავშირებისთვის.</p>}
+    <p className={styles.privacy}>შეყვანილი მონაცემები გამოიყენება შეხვედრაზე რეგისტრაციისა და შენთან დაკავშირებისთვის.</p>
     <p className={styles.privacy}><a href="/privacy-policy" className="underline underline-offset-4">კონფიდენციალურობის პოლიტიკა</a></p>
     {error && <p ref={feedback} tabIndex={-1} role="alert" className={styles.error}>{error}</p>}
     {!available && <p role="status" className={styles.error}>ამ შეხვედრაზე რეგისტრაცია აღარ არის ხელმისაწვდომი.</p>}
-    <button className={styles.submit} type="submit" disabled={pending || !available}>{pending ? (temporaryTest ? 'მუშავდება…' : 'იგზავნება…') : 'რეგისტრაცია'}</button>
+    <button className={styles.submit} type="submit" disabled={pending || !available}>{pending ? 'იგზავნება…' : 'რეგისტრაცია'}</button>
   </form>;
 }

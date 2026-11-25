@@ -4,8 +4,31 @@ import { appendErasure, readErasureLedger, type ErasureEntry } from '@/server/pr
 
 export async function reapplyErasureLedger(db: PrismaClient) {
   for (const entry of await readErasureLedger()) {
-    if (entry.scope === 'registration') await db.meetingRegistration.deleteMany({ where: { id: entry.targetId } });
-    else await db.corporateInquiry.deleteMany({ where: { id: entry.targetId } });
+    await db.$transaction(async tx => {
+      // Serialize replay with notification delivery. A previously completed
+      // erasure takes precedence over restrictions/holds resurrected by a backup.
+      if (entry.scope === 'registration') await tx.$queryRaw`SELECT [id] FROM [dbo].[meeting_registrations] WITH (UPDLOCK, HOLDLOCK) WHERE [id] = ${entry.targetId}`;
+      else await tx.$queryRaw`SELECT [id] FROM [dbo].[corporate_inquiries] WITH (UPDLOCK, HOLDLOCK) WHERE [id] = ${entry.targetId}`;
+      const record = entry.scope === 'registration'
+        ? await tx.meetingRegistration.findUnique({ where: { id: entry.targetId } })
+        : await tx.corporateInquiry.findUnique({ where: { id: entry.targetId } });
+      // Receipt IDs in newer independent journals also recover deletion tasks
+      // when the backup predates delivery. Legacy journals remain readable.
+      const receipts = [...new Set([...(entry.externalEmailIds || []), record?.adminEmailId,
+        record && 'participantEmailId' in record ? record.participantEmailId : null].filter((id): id is string => !!id))];
+      const task = await tx.privacyErasure.findFirst({ where: { scope: entry.scope, targetId: entry.targetId } });
+      if (!task) {
+        await tx.privacyErasure.create({ data: { scope: entry.scope, targetId: entry.targetId,
+          createdAt: new Date(entry.deletedAt), externalEmailIds: receipts.length ? JSON.stringify(receipts) : null } });
+      } else if (receipts.length) {
+        const existing = task.externalEmailIds ? JSON.parse(task.externalEmailIds) as string[] : [];
+        if (receipts.some(id => !existing.includes(id))) await tx.privacyErasure.update({ where: { id: task.id }, data: {
+          externalEmailIds: JSON.stringify([...new Set([...existing, ...receipts])]), externalDoneAt: null,
+        } });
+      }
+      if (entry.scope === 'registration') await tx.meetingRegistration.deleteMany({ where: { id: entry.targetId } });
+      else await tx.corporateInquiry.deleteMany({ where: { id: entry.targetId } });
+    });
   }
 }
 
@@ -24,8 +47,8 @@ export async function erasePrivateRecord(db: PrismaClient, scope: PrivateRecordS
       throw new Error('Record has a documented preservation hold');
     }
     if (options.expiredOnly && record.retentionExpiresAt > now) return false;
-    const ids = [record.adminEmailId, 'participantEmailId' in record ? record.participantEmailId : null].filter(Boolean);
-    await (options.journal || appendErasure)({ scope, targetId: id, deletedAt: now.toISOString() });
+    const ids = [record.adminEmailId, 'participantEmailId' in record ? record.participantEmailId : null].filter((value): value is string => !!value);
+    await (options.journal || appendErasure)({ scope, targetId: id, deletedAt: now.toISOString(), ...(ids.length ? { externalEmailIds: ids } : {}) });
     await tx.privacyErasure.create({ data: { scope, targetId: id, createdAt: now, externalEmailIds: ids.length ? JSON.stringify(ids) : null } });
     await tx.privacyAudit.create({ data: { scope, targetId: id, actorId: options.actorId, action: options.expiredOnly ? 'retention_erasure' : 'requested_erasure', createdAt: now } });
     if (scope === 'registration') await tx.meetingRegistration.delete({ where: { id } });

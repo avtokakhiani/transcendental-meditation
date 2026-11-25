@@ -10,7 +10,9 @@ Original audit baseline: both TypeScript projects passed; 60 safe unit tests pas
 
 No launch date was provided. The owner must supply the predetermined date and timezone, staffing coverage and fallback decision. Work below is ordered by dependency, not assigned fictional calendar dates. If mandatory verification cannot finish before that date, move the launch or adopt an explicitly approved reduced scope that satisfies the same safety gates.
 
-The audit originally authorized documentation only. The subsequent implementation request authorizes local remediation of F01, verified backups and testing, followed by a stop before the next independent blocker. It does not authorize deployment, purchases, DNS changes, content rewriting or working-data cleanup.
+The audit originally authorized documentation only. Subsequent requests authorize local F01 remediation and assessment/remediation of the next independent P0, with verified backups/testing and a stop after each blocker. The latest request requires owner approval before visible functionality changes and a stop when an essential owner decision is reached. Deployment, purchases, external configuration changes, unrelated content rewriting and working-data cleanup remain unauthorized.
+
+The owner subsequently **explicitly approved Option A for F04**, including the existing no-meetings notice and server-side submission disablement while preserving administration, integration groundwork and corporate inquiries. That local implementation and its verification are recorded below. No further P0 work is authorized within this implementation step.
 
 ### F01 implementation update — 25 November 2026
 
@@ -18,15 +20,66 @@ The audit originally authorized documentation only. The subsequent implementatio
 
 Private filesystem traversal no longer pulls the workspace into tracing. Production requires private storage outside the release. Build inputs are allowlisted; production builds refuse runtime `.env` files; Docker context and final runtime boundaries are enforced independently. Directory and actual archive gates reject private/configuration/recovery/tooling material and known secret values. The relocated package retains public assets, article administration, shared dependencies and native Prisma support.
 
-Owner/account access is still required to assess historical artifact distribution and any necessary credential rotation. Durable production private storage, migration/access controls and recovery remain F11/F14; no production attestation is implied. The site remains **NO-GO**. F04 and all other independent blockers are untouched; implementation stops here as requested.
+Owner/account access is still required to assess historical artifact distribution and any necessary credential rotation. Durable production private storage, migration/access controls and recovery remain F11/F14; no production attestation is implied. The site remains **NO-GO**. This was the stop point for the F01 implementation; the later approved F04 change is recorded below.
+
+### F04 assessment before owner approval — 25 November 2026
+
+**Historical assessment, superseded by the approved implementation below.** At this point F04 awaited an essential owner decision. F01's completed local controls were reviewed without rebuilding or repeating their remediation. Its historical-exposure review and production private-storage decisions remain open.
+
+Source review confirms that `MeetingPanel` still passes enabled preview meetings to `MeetingRegistration`. The `temporaryTest` submission branch waits 350 ms and shows success without calling the API or storing a row. The standalone `/introductory-meeting` page instead fetches SQL availability. A fresh read-only local SQL check found **0 meetings, 0 future open meetings and 0 registrations**. No synthetic meeting was inserted, registration submitted, email sent or Calendar call made.
+
+The existing real-registration backend awaits a SQL transaction before returning `{ ok: true }`. It has per-meeting SQL locking, duplicate protection and capacity/closing-time checks. Authenticated meeting administration exposes stored participants and pending notification/retry status. These are useful foundations for a manual service, but this assessment does **not** re-certify concurrency, notification delivery, privacy approval or production readiness. Production collection remains subject to the existing privacy/mail gates; no flags or credentials were changed.
+
+Both viable choices change visible registration behavior, so neither was implemented under the latest approval requirement:
+
+| Owner choice | Concrete initial-launch behavior | Remaining prerequisites |
+| --- | --- | --- |
+| **A — Temporarily unavailable registration (recommended with the current empty schedule)** | Remove preview meetings and simulated success from public use. Preserve existing links, URLs, panel/page structure and styles; show the existing truthful no-meetings notice consistently. Disable registration submission on the server as well as withholding the form. Add a contact alternative only if the owner supplies an approved monitored destination. | Owner approval of this visible fallback. Production privacy, hosting/admin/security/recovery and other launch gates still apply. |
+| **B — SQL receipt with manual staff handling** | Both panel and standalone page use the same real SQL availability and registration API. Show success only after durable SQL receipt; errors never show success. Staff review stored registrations independently of mail and manually handle joining instructions, invitations, reminders and changes. No Google Calendar automation. | Owner-confirmed future schedules, location/joining instructions and capacity; named primary/deputy and response deadline; approved privacy operations and verified notification/contact channels before enabling collection. No preview schedule is treated as a real commitment. |
+
+For B, the implementation verification must use disposable SQL and synthetic participants: durable receipt/commit failure, retries/duplicates, capacity/closed meetings, delayed/failed notifications, operator reconciliation, origin/body/validation/privacy denials, and panel/standalone consistency. For A, verify disabled API submission, no public preview/form/simulated success, identical fallback across entry points, keyboard/mobile behavior and preservation of approved pages/assets. A new verified source/SQL backup is required before subsequent consequential application/data changes; this assessment made none.
+
+Assessment evidence and verified before-edit documentation copies are outside the repository at `%LOCALAPPDATA%/learnTM/prelaunch/f04-assessment-1795612606047/`. The read-only SQL summary contains counts only. At that assessment stage application/runtime files, working records, media, `.env` and the F01 report were unchanged; the local web server was not restarted and no browser/implementation pass was claimed. F04 remained open pending the owner's choice. See the subsequent implementation results below.
+
+### F04 approved implementation — 25 November 2026
+
+**Locally resolved through approved Option A: public meeting registration is unavailable.** The existing introductory meeting buttons, panel, URLs, styles and no-meetings notice are preserved. Both panel and standalone page show that notice without preview meetings or a registration form. The shared code gate is disabled in every environment; opening an admin meeting or changing environment/privacy flags cannot enable public registration.
+
+The timer-based simulated-success path is removed. The public POST endpoint returns 403 with `MEETING_REGISTRATION_DISABLED` and no success payload before reading the body or calling SQL/mail; availability returns an uncached empty list. Meeting administration, real SQL registration/notification services, schema/migrations and Calendar groundwork remain intact. Corporate inquiries and their independent privacy/security gates are unchanged.
+
+Verified results: fresh encrypted source/SQL/record backups with disk readback; 12 live endpoint cases; development/production-mode handler checks with no body reads or SQL/mail calls; 84 page views across all 28 public routes at 1440/768/390px, including 63 available-panel checks and the reader's existing separate navigation; mobile-menu/focus/Escape/scroll behavior; standalone/no-JavaScript fallback; anonymous admin denial and authenticated meeting editor access; corporate validation and three intercepted form-failure checks; 12 existing article/privacy regressions; the retained disposable-SQL storage/concurrency/duplicate/capacity and mocked notification/retry suite; focused lint, TypeScript and an isolated default-layout production build. No client exceptions were recorded. All 64 public assets, approved content/styles/graphs, unrelated source, schema, working `.env` and database records are unchanged.
+
+See [the F04 remediation report](prelaunch-registration-remediation.md) for exact evidence and the safe re-enablement checklist after the full integration. Local evidence/backups: `%LOCALAPPDATA%/learnTM/prelaunch/f04-1795612828074/`. No deployment, external change, meeting fixture, email or Calendar action was performed. The final release must still pass its production-compatible staging/release checks. F01 historical exposure/private-storage follow-ups and F08/F11/F14 remain open; **launch remains NO-GO**. Stop after F04 before starting the next P0.
+
+### F08 assessment — owner decision required, 25 November 2026
+
+**Next unresolved P0: F08 remains open.** Its underlying problem is unverified production privacy practices, not a warning that can be suppressed. The production collection gate already denies requests when attestations/settings are missing. No approval flags, collection behavior, approved public policy text, F01 controls or F04 unavailable-registration behavior were changed.
+
+The local presence-only check found 0 of 6 privacy attestations true and 0 of 5 required mail/origin settings present. This is not a production-account inspection. A new synthetic security regression verifies 38 negative production corporate handler cases return 503 before reading submitted data, touching SQL or sending mail/network requests. Focused lint and TypeScript pass. These code checks cannot attest provider configuration, legal/processor/Maps review, retention, mailbox ownership or staffed rights/incident handling.
+
+See [the F08 assessment and owner decision record](prelaunch-privacy-assessment.md) for the evidence matrix and concrete choices. **Recommended A:** preserve corporate functionality and keep production collection blocked until owner/qualified-reviewer decisions and actual operational evidence are complete. **Alternative B:** separately approve an honest corporate contact-only/unavailable fallback, including visible wording and any monitored contact destination; baseline hosting/logging/admin/policy/Maps requirements still apply. B was not implemented and would not by itself close F08.
+
+Documentation backups and non-destructive test evidence are outside the repository at `%LOCALAPPDATA%/learnTM/prelaunch/f08-assessment-1795616096697/`. Runtime/content/assets/schema/configuration and the completed F01/F04 reports are unchanged; no working-data mutation, production setting, external service or destructive operation was involved. **Stop at this owner decision before dependent implementation or the next independent P0. Launch remains NO-GO.**
 
 ## 2. Launch blockers
+
+### F08 local implementation update — 25 November 2026
+
+The owner approved **Option A: preserve corporate inquiries with manual management**, keep F04 meeting registration disabled, defer Calendar/non-essential automation, and preserve the approved policy/retention commitments and Maps embed. This supersedes the scope-choice stop above and the older generic meeting-launch requirements below. **Locally actionable F08 work is implemented and verified; F08 itself remains OPEN / NO-GO** pending [production configuration and approval evidence](f08-production-approval-checklist.md).
+
+The corporate-only gate no longer requires a sender for disabled meetings; all six privacy attestations, corporate mail prerequisites and HTTPS origin remain enforced. The obsolete email-only corporate test was replaced by a database-free unit test of durable receipt/error semantics and Next's notification scheduling boundary. Disposable SQL and a separate host Next dev server verified real storage/confirmation, duplicate handling, database failure without success, failed/network/invalid-receipt notifications, manual retry, restrictions and erasure. No real mail was sent and the live test server used all six attestations false.
+
+Recovery now retains optional provider receipt IDs in the independent minimal erasure journal, and replay locks records against notification delivery and reconstructs pending external-deletion tasks without acknowledging them. An encrypted native synthetic SQL backup was restored into a separate disposable database, checked with DBCC CHECKDB, and replayed successfully, including a backup predating delivery/erasure. Legacy journals remain readable; historical missing receipt IDs still need manual provider/mailbox reconciliation. No working records were changed.
+
+The F21 representation drift was resolved by matching Prisma's introspected `dateadd(month,(12),sysutcdatetime())` expression. The existing migration chain deploys to a disposable SQL database with an empty schema diff. No migration/reset or SQL default/data change was made to the working database; the 12-month behavior is unchanged.
+
+See [F08 remediation and verification](prelaunch-privacy-remediation.md), [Georgian owner instructions](f08-owner-operations-ka.md), and the [unchecked production approval checklist](f08-production-approval-checklist.md). Verified encrypted backups/evidence: `%LOCALAPPDATA%/learnTM/prelaunch/f08-local-1795617037415/`. F01 historical exposure/private storage, F11/F14 provider recovery/infrastructure, real mail delivery, actual retention, owner/deputy rehearsal, qualified review and Maps remain launch blockers. No approval flag or external service was changed. Stop after this local F08 scope; do not begin another independent P0.
 
 | Audit ID | Blocker | Required exit evidence |
 | --- | --- | --- |
 | F01 | Local private-file packaging causes remediated; historical exposure review remains open | Local final-package/archive, native runtime and preservation checks passed; owner review of historical artifact distribution and any required rotation still needed |
-| F04 | Meeting side panel simulates success without storing registrations | No public simulated success; all entry points use real confirmed availability, or honest contact/no-meeting fallback |
-| F08 | Privacy/collection prerequisites unverified; production gates incomplete | Actual controls and qualified review recorded before attestations; forms enabled only after approval |
+| F04 | Locally resolved through owner-approved unavailable-registration mode; automation deferred | Existing notice/panel/URLs preserved; simulated success removed; server-disabled submission and regression checks pass. Verify this mode on the eventual staged release before public promotion |
+| F08 | Corporate-only local remediation verified; production/owner evidence outstanding | Preserved corporate/manual scope approved. Complete the unchecked production privacy/configuration checklist, real delivery/recovery, staffing rehearsal and qualified/Maps review before attestations. Remains OPEN / NO-GO |
 | F11 | Production backup/restore and durable independent erasure ledger unproven | Restart/deploy/restore rehearsal proves no resurrection; keys/media/SQL recoverable; approved retention enforced |
 | F14 | Production runtime, SQL/Blob, HTTPS, secrets and isolation unverified | Exact release works on production-compatible private staging; least privilege, durability, monitoring and owner control established |
 
@@ -39,7 +92,7 @@ Preserve all approved public texts, visual layouts, images, scientific graphics,
 - Homepage; introductory article; all six benefits/research destinations; how-to-learn; existing approved articles and visuals.
 - The real published book, detail page and reader; corporate/about/FAQ; header/footer/navigation; privacy and terms.
 - Private, authenticated article/book administration and previews, with a protected production admin boundary.
-- Real introductory meeting registrations and corporate inquiries only if their privacy, storage, mail and operator gates pass.
+- Corporate inquiries with manual management only after their privacy, storage, mail and operator gates pass. Introductory meeting registration remains disabled under F04; re-enablement/Calendar automation is deferred.
 
 Remove simulated meeting success and temporary book samples from the **public launch scope** through a separately approved change; preserve approved real content and established design. Obtain genuine teacher/contact information or approve temporary omission of incomplete slots. Do not create an Ayurveda page without the owner's intended approved content; it is absent from the implemented route inventory.
 
@@ -51,6 +104,8 @@ Two viable launch operating modes:
 | Information/contact-only release | Registration/inquiry submission disabled honestly with approved monitored contact alternative; no simulated success; no unnecessary collection. Hosting, packaging, HTTPS, admin, logging, Maps and applicable legal/privacy gates still apply |
 
 The second mode is not achieved by leaving visible forms that fail with 503. Production gates currently require mail/privacy settings for either form API. A reduced mode therefore needs an intentional approved product change and verification.
+
+The owner-approved F04 change now provides a **meeting-specific unavailable mode** with no visible registration form and server-enforced denial. It does not disable or approve corporate inquiries and does not waive their separate launch gates. Restoring meeting collection requires a new authorized integration change and the re-enablement checks in the F04 report.
 
 ## 4. Ordered mandatory implementation and verification
 
@@ -104,6 +159,8 @@ Configure backup ≤30-day and operational-log ≤90-day practices as documented
 
 ### Gate F — Make collection truthful and operational (F04, F09, F10, F25)
 
+**F04 initial-launch scope:** completed locally through approved unavailable-registration mode; collection/automation is deferred. Meeting-specific collection steps below are prerequisites for future re-enablement, not a requirement to build automation for this initial fallback. Corporate and other applicable collection/notification gates remain unresolved and independent. See [F04 results and re-enablement](prelaunch-registration-remediation.md).
+
 Disable public previews. Confirm real future meetings, teacher/timezone/location, capacity, registration close time and joining instructions. Verify side-panel and standalone behavior agree. Configure verified senders, Resend credentials, admin mailbox and domain authentication. Exercise an authorized staging registration/inquiry through durable receipt, delayed/failed notification, manual retry and actual inbox receipt. Include duplicate/capacity/closed/full/invalid/spam states. Do not use real visitors as fixtures.
 
 Assign a primary and backup operator. Before launch they must demonstrate:
@@ -143,9 +200,9 @@ Immediately after any later authorized promotion, check public homepage/all rout
 | Hosting/cloud account | Approved budget/provider/region, App Service or equivalent, production/staging separation, account administrators and MFA |
 | Database/storage | Azure SQL and Blob ownership/network rules, runtime/migration principals, backup/media recovery, durable private ledger mount |
 | Secrets | Managed store and rotation/access owner; database/Blob/auth/mail values supplied securely, never in documents/commits |
-| Mail/provider accounts | Resend account, verified sender domain, SPF/DKIM/DMARC, two sender identities, monitored admin and policy contact inboxes |
+| Mail/provider accounts | Resend account, verified corporate sender/domain, applicable SPF/DKIM/DMARC, monitored admin and policy contact inboxes; meeting sender deferred while F04 is disabled |
 | Privacy/qualified review | Controller identity, processor agreements/locations/transfers, Maps decision, rights/minor/incident/retention procedures and attestations |
-| Meetings | Confirmed teachers and schedules, authorized location/links, manual response/invitation/reminder/reschedule responsibilities |
+| Meetings | F04 remains disabled for initial launch. Teachers/schedules/location/Calendar/invitations are prerequisites for separately approved future re-enablement, not this launch |
 | Public identity/content | Approved contact details and teacher information, sample-book decision, Ayurveda launch expectation and approved source if required |
 | Release governance | Repository/environment protections, required reviewers, deploy authority, artifact-access/history evidence and rollback owner |
 | Recovery/monitoring | Retention, key custody, RPO/RTO, on-call contacts, alert channels and restore exercise sign-off |
@@ -159,6 +216,8 @@ All boxes require evidence or the specific approved safe workaround referenced i
 - [ ] Launch date, canonical host, launch mode and accountable owner/deputies recorded.
 - [ ] F01/F04/F08/F11/F14 closed; all other P1 findings closed or individually accepted with tested workaround and expiry.
 - [ ] Exact release artifact scanned: no credentials/private files/backups/ledger/logs/evidence/tests/unnecessary tools; historical contaminated-artifact recipients reviewed.
+- [ ] F01 owner follow-up: historical artifact distribution/access assessed; any required credential rotation completed through authorized secure channels.
+- [ ] F01/F11/F14 owner follow-up: durable production private-storage location, ACLs, migration and independent-ledger/recovery behavior configured and verified outside the release.
 - [ ] Frozen-lockfile clean build, TypeScript, lint, safe unit tests, isolated integration/browser tests pass; dependency exceptions justified.
 - [ ] SQL migration chain and schema compatibility verified; no reset or seed against working/production content.
 - [ ] Production Node/Prisma/OpenSSL startup, SQL, Blob and public media work after restart; local defaults/ports not exposed.
@@ -167,8 +226,8 @@ All boxes require evidence or the specific approved safe workaround referenced i
 - [ ] Durable independent erasure ledger survives release/restore; SQL/media/key recovery demonstrated; backup/log/evidence retention assigned.
 - [ ] No simulated registrations/sample-book read promises/unapproved teacher placeholders remain publicly actionable.
 - [ ] Confirmed meetings or honest disabled/contact-only state; all registration entry points agree.
-- [ ] Corporate and meeting receipt/error/duplicate/capacity/pending-retry scenarios verified in staging; mail and monitored contact inboxes tested.
-- [ ] Manual operator/deputy demonstrate reconciliation, invitations/reminders and reschedule/cancel/rights handling.
+- [ ] Corporate receipt/error/duplicate/pending-retry scenarios verified on actual staging; real mail and monitored contact inboxes tested. Meeting endpoints remain disabled; capacity/invitations belong to future re-enablement.
+- [ ] Manual operator/deputy demonstrate corporate reconciliation, retry, contact-date/rights/incident handling and escalation. Meeting invitations/reminders/rescheduling are deferred.
 - [ ] All approved routes/content/graphics/URLs preserved; public links/media/404 behavior checked on exact release.
 - [ ] Mobile/tablet/desktop, keyboard/screen reader/zoom/contrast and critical form/dialog/reader journeys reviewed.
 - [ ] Performance measurements recorded from production-compatible staging; monitoring and error/queue alerts active.
@@ -190,8 +249,8 @@ These items may follow launch once the mandatory gates above are satisfied.
 | Performance scaling | Catalog query/cache/pagination, larger-book delivery, image budgets, route-level bundle analysis and field CWV optimization based on measurements (F19) |
 | Broader CI automation | Full reproducible disposable SQL/media environments, expanded publication/privacy/reader browser gates and scheduled dependency review beyond minimum release checks (F24) |
 | Security hardening | Tested fuller CSP/reporting, stricter malformed-ID handling, media decode/dimension limits beyond launch edge safeguards, account/session management improvements; no deferral of an unmitigated P1 |
-| Migration hygiene | Resolve the known SQL default normalization diff in isolation; never reset a live database (F21) |
+| Migration hygiene | F21 default-expression representation normalized locally with empty disposable schema diff; no working SQL/reset/migration change. Validate compatibility on the eventual target; broader migration cleanup remains deferred |
 | Dev tooling cleanup | Safely exclude production-unneeded Calendar/recovery/test tools and archived fixtures while preserving developer/recovery evidence (F22) |
 | Product/content extensions | Owner-approved Ayurveda scope, additional real books/teacher content, further accessibility refinements; no automatic editorial rewrite |
 
-No automation implementation or SEO rewriting was begun. The next step is owner review and explicit approval of the selected remediation scope.
+No Calendar automation or SEO rewriting was begun. The preserved-corporate/manual scope is approved and its local F08 tasks are complete. Next, obtain the unchecked production/owner/qualified-review evidence; no external configuration or deployment is authorized by this local completion.

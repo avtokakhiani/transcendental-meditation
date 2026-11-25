@@ -45,7 +45,7 @@ model MeetingRegistration {
   participantNotifiedAt  DateTime?
   adminEmailId           String?  @db.NVarChar(100)
   participantEmailId     String?  @db.NVarChar(100)
-  retentionExpiresAt     DateTime @default(dbgenerated("DATEADD(month, 12, SYSUTCDATETIME())")) @db.DateTime2
+  retentionExpiresAt     DateTime @default(dbgenerated("dateadd(month,(12),sysutcdatetime())")) @db.DateTime2
   processingRestrictedAt DateTime?
   holdUntil              DateTime?
   holdReason             String?  @db.NVarChar(40)

@@ -10,7 +10,7 @@ export function privacyStorageDirectory() {
   });
 }
 
-export interface ErasureEntry { scope: PrivateRecordScope; targetId: string; deletedAt: string }
+export interface ErasureEntry { scope: PrivateRecordScope; targetId: string; deletedAt: string; externalEmailIds?: string[] }
 export async function appendErasure(entry: ErasureEntry) {
   const directory = privacyStorageDirectory();
   const ledger = path.join(directory, 'erasures');
@@ -29,6 +29,7 @@ export async function readErasureLedger(): Promise<ErasureEntry[]> {
       if (!/^(registration|corporate)-[a-f\d-]{36}\.json$/i.test(name)) continue;
       const entry = JSON.parse(await readFile(path.join(ledger, name), 'utf8'));
       if (!['registration', 'corporate'].includes(entry.scope) || !/^[a-f\d-]{36}$/i.test(entry.targetId) || !Number.isFinite(Date.parse(entry.deletedAt))) throw new Error('Invalid erasure ledger');
+      if (entry.externalEmailIds !== undefined && (!Array.isArray(entry.externalEmailIds) || entry.externalEmailIds.length > 2 || !entry.externalEmailIds.every((id: unknown) => typeof id === 'string' && /^[\w-]{1,100}$/.test(id)))) throw new Error('Invalid erasure receipts');
       entries.push(entry);
     }
     return entries;

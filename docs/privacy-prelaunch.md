@@ -9,6 +9,8 @@ provides a direct-link fallback. The pre-launch label is outside the policy text
 **This implementation is not a declaration of legal compliance or production readiness.**
 Do not approve launch until the actual practices below have been configured and verified.
 
+Current implementation status (25 November 2026): [F01](prelaunch-packaging-remediation.md) requires production private storage outside the release, and [F04](prelaunch-registration-remediation.md) disables public meeting registration while preserving its administration/integration groundwork. The owner approved preserved corporate inquiries with manual management. [The local F08 report](prelaunch-privacy-remediation.md), [Georgian instructions](f08-owner-operations-ka.md) and [production approval checklist](f08-production-approval-checklist.md) distinguish local verification from outstanding production evidence; no production privacy attestation has been granted.
+
 ## Implemented locally
 
 | Data | Retention anchor | Enforcement |
@@ -18,7 +20,7 @@ Do not approve launch until the actual practices below have been configured and 
 | Application privacy/access audit | 90 days | Deletes old audit rows; audit contains action, staff ID and record ID, not submitted text, names, email or IP |
 | Managed local technical log files | 90 days | Prunes only `private/logs/learntm-*.jsonl` |
 | Managed encrypted local SQL backups | 30 days | Daily encrypted copy, SQL checksum verification, expiry cleanup |
-| Independent erasure ledger | 90 days | Minimal scope/record-ID/date files; reapplied before retention processing after startup/restore |
+| Independent erasure ledger | 90 days | Minimal scope/record-ID/date files and optional provider receipt IDs; reapplied before retention processing after startup/restore |
 
 Startup maintenance runs before the application starts; it repeats every minute while
 the long-running Node server is running. Due records are deleted on the next maintenance
@@ -39,8 +41,9 @@ than the enquiry body. Meeting administrator notifications also omit participant
 Participant confirmations still necessarily transmit the participant's address and confirmation
 content to the mail provider. Receipt IDs are recorded to support deletion handling.
 
-The four preview meetings remain simulated: no registration storage or email occurs for them.
-They must be removed/disabled and replaced with confirmed schedules before live registration.
+Public preview meetings and simulated success were removed from the public flow by F04.
+The existing no-meetings notice is shown, and the registration endpoint rejects submissions.
+Confirmed schedules and the complete re-enablement checklist are prerequisites for any future activation.
 Local email is disabled unless `PRIVACY_EMAIL_DELIVERY_ENABLED=true`; synthetic browser tests
 require it disabled. Do not enable it merely to make a local test pass.
 
@@ -86,10 +89,14 @@ Run privacy maintenance **before** enabling requests or notification delivery. T
 records listed in the ledger and applies current retention. The ledger must be durable and
 independent of the restored database, accessible only to the privacy operator.
 
-Automated tests verify erasure replay after restoring an individual deleted row, encryption
-round-trip/tamper rejection, and expiry cleanup. SQL validates backup checksums. A complete
-operational disaster-recovery restoration, certificate/key recovery and operator handover are
-still required before launch. Do not represent those as tested merely because these tests pass.
+Local F08 tests additionally restore an encrypted native synthetic SQL backup into a separate
+database, run DBCC CHECKDB, and replay the independent ledger before any restored data is
+served. Receipt IDs preserve pending external-deletion tasks even if the SQL backup predates
+delivery; replay is idempotent and never silently acknowledges external deletion. Legacy
+journals remain readable but cannot supply missing historical receipt IDs: reconcile those
+provider/mailbox copies manually. Production SQL/media/key recovery, certificate recovery,
+actual durable storage and operator handover remain launch blockers; local SQL tests do not
+attest them.
 
 ## External deletion is not automatic
 
@@ -98,7 +105,8 @@ Erasure creates a minimal task containing provider receipt IDs when such IDs exi
 An administrator must remove applicable provider/mailbox copies under the agreed retention,
 verify the result, and acknowledge the task in `/admin/privacy`. Pending tasks remain visible;
 they are not silently marked complete. Completed/minimal local records follow the log cycle.
-The independent ledger contains no enquiry content or email addresses.
+The independent ledger contains no enquiry content or email addresses; optional technical
+provider receipt IDs allow deletion tasks to be reconstructed after restore.
 
 Provider acceptance is not proof of inbox delivery. Bounce/delivery webhooks and automatic
 mail delivery retries have not been configured; administrators have manual retry controls.
@@ -109,8 +117,8 @@ Do not claim verified mail delivery or automatic remote erasure.
 1. Configure the real production host, SQL/storage region, TLS, least-privilege database account,
    encryption at rest, network restrictions, secret storage, and monitoring. The local runtime
    still uses development infrastructure and a privileged SQL account.
-2. Configure verified senders, Resend credentials and administrator address; verify actual
-   participant/admin delivery, provider logging/retention and mailbox retention/deletion.
+2. Configure the verified corporate sender, Resend credentials and administrator address; verify actual
+   corporate admin delivery, provider logging/retention and mailbox retention/deletion.
    The policy contact `info@learntm.ge` must be a working monitored mailbox.
 3. Configure **all** hosting/platform/access/security/diagnostic logs for at most 90 days,
    subject to documented lawful exceptions. This code controls application audit rows and
@@ -124,8 +132,9 @@ Do not claim verified mail delivery or automatic remote erasure.
    consent withdrawal, objections, preservation exceptions, incident handling, and required
    guardian/representative checks for minors. The admin interface supports record operations;
    it does not verify a person's age, identity, guardianship or legal basis automatically.
-7. Replace preview meetings, review administrator authentication (including login throttling/MFA
-   and session handling), and complete production security/dependency and legal review.
+7. Preserve F04's disabled meeting-registration state; review administrator authentication
+   (including login throttling/MFA and session handling), and complete production security/dependency
+   and qualified privacy review. Future meeting activation requires the separate F04 re-enablement checks.
 
 Production form APIs fail closed while required launch flags/settings are absent. The flags
 `PRIVACY_BACKUPS_VERIFIED`, `PRIVACY_LOG_RETENTION_VERIFIED`, `PRIVACY_PROCESSORS_VERIFIED`,
@@ -133,6 +142,8 @@ Production form APIs fail closed while required launch flags/settings are absent
 `PRIVACY_LAUNCH_APPROVED` are **operator attestations**, not infrastructure configuration.
 Set them true only after implementing and verifying the corresponding actual practices.
 Verified HTTPS `SITE_URL`, mail credentials and sender/admin settings are also checked.
+The meeting sender is required only if the source-controlled meeting policy is enabled;
+F04 remains disabled independently, without an environment switch.
 The admin privacy screen lists blockers without printing credential values.
 
 The pre-launch site has `X-Robots-Tag: noindex, nofollow`. This discourages indexing; it is

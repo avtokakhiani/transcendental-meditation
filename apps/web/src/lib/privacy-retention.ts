@@ -1,3 +1,5 @@
+import { publicMeetingRegistrationEnabled } from './meeting-registration-policy';
+
 export const PRIVACY_LOG_DAYS = 90;
 export const PRIVACY_BACKUP_DAYS = 30;
 export type PrivateRecordScope = 'registration' | 'corporate';
@@ -19,7 +21,8 @@ export function privacyLaunchBlockers() {
   for (const key of ['PRIVACY_LAUNCH_APPROVED', 'PRIVACY_BACKUPS_VERIFIED', 'PRIVACY_LOG_RETENTION_VERIFIED', 'PRIVACY_PROCESSORS_VERIFIED', 'PRIVACY_EXTERNAL_DELETION_VERIFIED', 'PRIVACY_RIGHTS_PROCESS_VERIFIED']) {
     if (process.env[key] !== 'true') blockers.push(key);
   }
-  for (const key of ['RESEND_API_KEY', 'MEETINGS_FROM_EMAIL', 'CORPORATE_FROM_EMAIL', 'ADMIN_EMAIL']) if (!process.env[key]) blockers.push(key);
+  for (const key of ['RESEND_API_KEY', 'CORPORATE_FROM_EMAIL', 'ADMIN_EMAIL']) if (!process.env[key]) blockers.push(key);
+  if (publicMeetingRegistrationEnabled() && !process.env.MEETINGS_FROM_EMAIL) blockers.push('MEETINGS_FROM_EMAIL');
   try { if (!process.env.SITE_URL || new URL(process.env.SITE_URL).protocol !== 'https:') blockers.push('SITE_URL_HTTPS'); } catch { blockers.push('SITE_URL_HTTPS'); }
   return blockers;
 }

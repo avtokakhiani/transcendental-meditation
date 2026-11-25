@@ -1,8 +1,8 @@
 import type { PublicMeeting } from '@/lib/meetings';
 
-// Preview only: never insert these into SQL or send them to the registration API.
-// Set this flag to false to remove all four test meetings from the panel.
-export const TEMPORARY_MEETING_PREVIEW_ENABLED = true;
+// Retained development fixtures, disconnected from the public panel. Never insert
+// these into SQL or treat them as stored registrations or confirmed schedules.
+export const TEMPORARY_MEETING_PREVIEW_ENABLED = false;
 
 export const temporaryTestMeetings: PublicMeeting[] = [
   {
