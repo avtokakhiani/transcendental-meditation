@@ -34,12 +34,21 @@ jobs:
       - run: pnpm --filter @tm/shared test
       - run: pnpm lint
 
+      - name: Prepare isolated build inputs
+        run: |
+          node --test scripts/release/artifact-security.test.mjs
+          node scripts/release/prepare-build.mjs "$RUNNER_TEMP/learntm-source"
+          cd "$RUNNER_TEMP/learntm-source"
+          pnpm install --offline --frozen-lockfile --ignore-scripts
+
       - name: Generate Prisma client
-        working-directory: apps/web
+        working-directory: ${{ runner.temp }}/learntm-source/apps/web
+        env:
+          DATABASE_URL: sqlserver://placeholder;database=build;user=build;password=build
         run: pnpm exec prisma generate
 
       - name: Build
-        working-directory: apps/web
+        working-directory: ${{ runner.temp }}/learntm-source/apps/web
         # Build-time values only; the real ones come from App Service settings.
         env:
           DATABASE_URL: sqlserver://placeholder;database=build;user=build;password=build
@@ -49,34 +58,17 @@ jobs:
 
       - name: Assemble standalone bundle
         run: |
-          mkdir -p deploy
-          cp -r apps/web/.next/standalone/. deploy/
-          mkdir -p deploy/apps/web/.next
-          cp -r apps/web/.next/static deploy/apps/web/.next/static
-          if [ -d apps/web/public ]; then cp -r apps/web/public deploy/apps/web/public; fi
-          # Azure flattens the traced next package and breaks pnpm's sibling dependency links.
-          # Materialize the complete runtime set beside next before OneDeploy optimizes it.
-          next_dir=$(realpath apps/web/node_modules/next)
-          next_modules=$(dirname "$next_dir")
-          find "$next_modules" -mindepth 1 -maxdepth 1 ! -name next \
-            -exec cp -LR {} deploy/apps/web/node_modules/ \;
-          # Next externalizes @prisma/client under .next/node_modules. Keep its generated
-          # .prisma sibling at the location Node resolves from that wrapper.
-          prisma_client_dir=$(realpath apps/web/node_modules/@prisma/client)
-          prisma_modules=$(dirname "$(dirname "$prisma_client_dir")")
-          mkdir -p deploy/apps/web/.next/node_modules/@prisma
-          cp -LR "$prisma_client_dir" deploy/apps/web/.next/node_modules/@prisma/client
-          cp -LR "$prisma_modules/.prisma" deploy/apps/web/.next/node_modules/.prisma
-          test -f deploy/apps/web/server.js
-          test -f deploy/apps/web/.next/BUILD_ID
-          test -f deploy/apps/web/.next/node_modules/.prisma/client/default.js
-          node -e "const paths = ['$PWD/deploy/apps/web/.next/node_modules']; require.resolve('.prisma/client/default', { paths }); require.resolve('@prisma/client/runtime/library.js', { paths })"
+          node scripts/release/assemble-artifact.mjs "$RUNNER_TEMP/learntm-source/apps/web" "$RUNNER_TEMP/deploy"
+          node scripts/release/verify-artifact.mjs --directory "$RUNNER_TEMP/deploy"
+          node scripts/release/verify-native-runtime.mjs "$RUNNER_TEMP/deploy"
+          tar --format=ustar -czf "$RUNNER_TEMP/web-release.tar.gz" -C "$RUNNER_TEMP/deploy" .
+          node scripts/release/verify-artifact.mjs --archive "$RUNNER_TEMP/web-release.tar.gz" --report "$RUNNER_TEMP/artifact-verification.json"
 
       - uses: actions/upload-artifact@v4
         with:
           name: web
-          path: deploy
-          include-hidden-files: true
+          path: ${{ runner.temp }}/web-release.tar.gz
+          if-no-files-found: error
 
   migrate:
     needs: build
@@ -109,10 +101,23 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
       - uses: actions/download-artifact@v4
         with:
           name: web
-          path: deploy
+          path: release-download
+
+      - name: Verify downloaded release before extraction and deployment
+        run: |
+          node scripts/release/verify-artifact.mjs --archive release-download/web-release.tar.gz
+          mkdir deploy
+          tar -xzf release-download/web-release.tar.gz -C deploy
+          node scripts/release/verify-artifact.mjs --directory deploy
 
       - uses: azure/webapps-deploy@v3
         with:

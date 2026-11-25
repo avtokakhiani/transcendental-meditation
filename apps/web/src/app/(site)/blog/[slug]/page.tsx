@@ -1,4 +1,5 @@
 import {notFound,permanentRedirect} from 'next/navigation';
+import type {Route} from 'next';
 import {headers} from 'next/headers';
 import {preload} from 'react-dom';
 import {publicArticle} from '@/server/public-articles';
@@ -19,7 +20,7 @@ export default async function ArticlePage(props:Props){
 
   const {slug}=await props.params,article=await publicArticle(slug);
   if(!article)notFound();
-  if(article.isAlias)permanentRedirect('/blog/'+article.canonicalSlug);
+  if(article.isAlias)permanentRedirect(('/blog/'+article.canonicalSlug) as Route);
   if(article.slug===INTRODUCTION_SLUG){const first=article.document?.blocks[0];const image=first?.type==='preserved'?first.fields.f1:null;if(image)preload(image,{as:'image',fetchPriority:'high'});}
   return <RevisionArticle revision={article.revision}/>;
 }

@@ -1,5 +1,7 @@
 import path from 'node:path';
 import type { NextConfig } from 'next';
+import { PHASE_PRODUCTION_BUILD } from 'next/constants';
+import { assertSafeBuildInputs } from './build-inputs.mjs';
 
 const nextConfig: NextConfig = {
   // Separate host development output for the isolated article workflow test server.
@@ -40,6 +42,21 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   // Tracing must start at the workspace root or the shared packages are left out of the bundle.
   outputFileTracingRoot: path.join(import.meta.dirname, '../..'),
+  // Private runtime state is mounted separately. Neither it nor development and
+  // recovery evidence is a deployment dependency, even when present on a builder.
+  outputFileTracingExcludes: {
+    '/*': [
+      './private/**/*', '../../**/private/**/*',
+      './.env*', '../../.env*', '../../**/.env*',
+      './build-inputs.mjs',
+      './src/**/*', './content/**/*', './prisma/**/*', './tests/**/*', './scripts/**/*', './docs/**/*',
+      '../../docs/**/*', '../../scripts/**/*', '../../output/**/*',
+      '../../packages/*/test/**/*', '../../packages/*/tests/**/*',
+      '../../**/*.bak', '../../**/*.bak.enc', '../../**/*.log', '../../**/*.jsonl',
+      './.next/dev/**/*', './.next/dev-recovery-*/**/*',
+      '../../.git/**/*', '../../.github/**/*',
+    ],
+  },
   // Workspace packages ship raw TypeScript, so Next must compile them rather than expect a build step.
   transpilePackages: ['@tm/shared'],
   typedRoutes: true,
@@ -48,4 +65,7 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default function config(phase: string): NextConfig {
+  if (phase === PHASE_PRODUCTION_BUILD) assertSafeBuildInputs(import.meta.dirname);
+  return nextConfig;
+}

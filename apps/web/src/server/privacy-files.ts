@@ -1,12 +1,13 @@
-import { mkdir, readFile, readdir, stat, unlink, writeFile } from 'node:fs/promises';
+import { lstat, mkdir, opendir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { PRIVACY_BACKUP_DAYS, PRIVACY_LOG_DAYS, type PrivateRecordScope } from '@/lib/privacy-retention';
+import { resolvePrivacyStorageDirectory } from './privacy-storage-path';
 
 export function privacyStorageDirectory() {
-  const directory = path.resolve(process.env.PRIVACY_STORAGE_DIR || path.join(process.cwd(), 'private'));
-  const relative = path.relative(path.resolve(process.cwd(), 'public'), directory);
-  if (!relative.startsWith('..') && !path.isAbsolute(relative)) throw new Error('Privacy storage cannot be publicly served');
-  return directory;
+  return resolvePrivacyStorageDirectory({
+    cwd: process.cwd(), production: process.env.NODE_ENV === 'production',
+    configured: process.env.PRIVACY_STORAGE_DIR,
+  });
 }
 
 export interface ErasureEntry { scope: PrivateRecordScope; targetId: string; deletedAt: string }
@@ -22,7 +23,9 @@ export async function readErasureLedger(): Promise<ErasureEntry[]> {
   try {
     const ledger = path.join(privacyStorageDirectory(), 'erasures');
     const entries: ErasureEntry[] = [];
-    for (const name of await readdir(ledger)) {
+    for await (const entryFile of await opendir(ledger)) {
+      if (!entryFile.isFile()) continue;
+      const name = entryFile.name;
       if (!/^(registration|corporate)-[a-f\d-]{36}\.json$/i.test(name)) continue;
       const entry = JSON.parse(await readFile(path.join(ledger, name), 'utf8'));
       if (!['registration', 'corporate'].includes(entry.scope) || !/^[a-f\d-]{36}$/i.test(entry.targetId) || !Number.isFinite(Date.parse(entry.deletedAt))) throw new Error('Invalid erasure ledger');
@@ -39,13 +42,21 @@ export async function prunePrivacyFiles(now = new Date()) {
     ['backups', /^learntm-backup-[\w-]+\.enc$/, PRIVACY_BACKUP_DAYS],
     ['logs', /^learntm-[\w-]+\.jsonl$/, PRIVACY_LOG_DAYS],
   ] as const) {
-    const folder = path.join(directory, subdirectory);
+    // Runtime-only mutable storage is explicitly not a deployable asset. The
+    // documented tracing opt-out prevents inference of the entire build tree;
+    // exclusions and final artifact checks independently enforce the boundary.
+    const folder = path.join(/* turbopackIgnore: true */ directory, subdirectory);
     await mkdir(folder, { recursive: true, mode: 0o700 });
-    for (const name of await readdir(folder)) {
+    // These are mutable runtime records, not build assets. Stream directory entries;
+    // avoid broad readdir/stat tracing and do not follow symlinks into other storage.
+    for await (const file of await opendir(folder)) {
+      if (!file.isFile()) continue;
+      const name = file.name;
       if (!pattern.test(name)) continue;
-      const target = path.join(folder, name), details = await stat(target);
+      const target = path.join(/* turbopackIgnore: true */ folder, name);
       const logDay = subdirectory === 'logs' ? name.match(/^learntm-(\d{4}-\d{2}-\d{2})\.jsonl$/)?.[1] : undefined;
       const backupTime = subdirectory === 'backups' ? name.match(/^learntm-backup-(\d{13})-/)?.[1] : undefined;
+      const details = await lstat(target);
       const created = logDay ? Date.parse(`${logDay}T00:00:00Z`) : backupTime ? Number(backupTime) : details.mtimeMs;
       // A copied or appended file must not reset the original retention clock.
       if (details.isFile() && created <= now.getTime() - days * 86400000) await unlink(target);
