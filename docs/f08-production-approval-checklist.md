@@ -14,6 +14,8 @@ For each item record privately: environment/account, accountable owner and deput
 
 ## Infrastructure and external services — F11/F14 dependencies
 
+Local F11 capabilities/evidence are recorded separately in [the F11 report](prelaunch-backup-recovery-remediation.md). Use its [production recovery checklist](f11-production-recovery-checklist.md) for the actual target. All production items here remain unchecked; local completion does not attest them.
+
 - [ ] Production-compatible private staging and production host, HTTPS/canonical origin, network isolation, secret store, least-privilege runtime/migration identities, administrative access/MFA and account ownership verified. No development service ports exposed.
 - [ ] Durable private storage outside source/release/public paths configured with restricted access. Independent erasure ledger survives restart, release replacement and SQL restore; it is not overwritten from a database backup.
 - [ ] SQL, uploaded media, required configuration and keys recoverable. Encrypt/protect backups; separate recoverable key custody; approve recovery objectives. Complete a provider-specific full restore and ledger replay before enabling any requests/mail. Local synthetic SQL recovery is not production media/key recovery evidence.

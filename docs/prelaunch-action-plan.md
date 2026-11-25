@@ -80,10 +80,18 @@ See [F08 remediation and verification](prelaunch-privacy-remediation.md), [Georg
 | F01 | Local private-file packaging causes remediated; historical exposure review remains open | Local final-package/archive, native runtime and preservation checks passed; owner review of historical artifact distribution and any required rotation still needed |
 | F04 | Locally resolved through owner-approved unavailable-registration mode; automation deferred | Existing notice/panel/URLs preserved; simulated success removed; server-disabled submission and regression checks pass. Verify this mode on the eventual staged release before public promotion |
 | F08 | Corporate-only local remediation verified; production/owner evidence outstanding | Preserved corporate/manual scope approved. Complete the unchecked production privacy/configuration checklist, real delivery/recovery, staffing rehearsal and qualified/Maps review before attestations. Remains OPEN / NO-GO |
-| F11 | Production backup/restore and durable independent erasure ledger unproven | Restart/deploy/restore rehearsal proves no resurrection; keys/media/SQL recoverable; approved retention enforced |
+| F11 | Local backup/recovery gaps resolved and verified; production readiness remains OPEN / NO-GO | Reuse article/F01/F08 native restore/replay evidence; complete the unchecked F11 production storage/schedule/key/access/monitoring and actual target SQL/media/ledger recovery checklist |
 | F14 | Production runtime, SQL/Blob, HTTPS, secrets and isolation unverified | Exact release works on production-compatible private staging; least privilege, durability, monitoring and owner control established |
 
 P1 items must also close before launch **unless their specific safe workaround is documented, exercised and accepted by the owner**. They cover lint/delivery, corporate verification, admin protection, upload safeguards/public-media policy, notification operations/mail, evidence retention, Maps/legal review, promotion/rollback, basic SEO/indexing, critical usability verification, dependency risk, public placeholders and public API abuse controls. Do not waive them with a generic “pre-existing” label.
+
+### F11 local implementation update — 25 November 2026
+
+The owner subsequently authorized local F11 work, stopping before F14. **Locally actionable backup/recovery work is complete; actual production F11 remains OPEN.** Existing article-system/F01 full native SQL restores, exact all-table comparisons, and F08 encrypted restore/erasure-task replay/retention evidence were reviewed and reused. Current working records match the authenticated existing F08 SQL backup; no unnecessary new working SQL backup or full restore was run.
+
+Local gaps fixed: recent backups must authenticate and use original filename time rather than mtime; encrypted output is read back before atomic publication; verification is read-only and fails empty/stale/corrupt/wrong-key/over-retention sets; missing production erasure storage stops startup; journal data is flushed before success and corrupt retry evidence is rejected. Targeted disposable SQL/Azurite tests cover helper creation/skip/corruption recovery, retention, fresh-process journal read and encrypted synthetic media restoration with byte/hash/content-type/metadata equality. No working data/media, public content/design, F01 packaging, F04 disabled state or F08 attestations were changed.
+
+See [F11 local remediation/evidence](prelaunch-backup-recovery-remediation.md) and [production recovery checklist](f11-production-recovery-checklist.md). Fresh verified encrypted source/record backups and evidence are outside the repository at `%LOCALAPPDATA%/learnTM/prelaunch/f11-local-1795627027180/`; the F08 SQL backup was authenticated and safely reused. Every production requirement remains unchecked: actual durable ledger completeness/private mount, SQL/media consistency, provider retention/scheduling, key custody/recovery, access controls, independent monitoring and owner/deputy target rehearsal/RPO/RTO. Historical F12 evidence still needs ownership/expiry review; nothing was deleted. No positive flag, deployment, provider/account configuration or additional infrastructure was introduced. **Stop here before F14.**
 
 ## 3. Minimum safe launch scope
 
@@ -136,6 +144,8 @@ Run TypeScript, shared and safe web unit tests, full lint, an isolated SQL integ
 **Exit:** reproducible passing checks, current dependency audit with any narrow exception documented/expiring, corporate fixture isolation proven. Complexity M–L.
 
 ### Gate D — Prepare private staging and runtime operations (F11, F14, F15)
+
+**Local F11 status:** targeted backup-tool fixes and synthetic media recovery verified; reuse full SQL/replay evidence as recorded in the F11 report. The [F11 production checklist](f11-production-recovery-checklist.md) remains wholly unverified. This local work does not complete Gate D or authorize F14/external configuration.
 
 Provision only after explicit authorization and owner account/budget decisions. Use a production-compatible long-running Node environment, migrated SQL Server/Azure SQL, private Blob Storage, a durable external ledger directory and a secret store. Separate staging/production data and credentials. Runtime SQL privileges must differ from migration privileges; use real certificate verification, not local trust overrides.
 

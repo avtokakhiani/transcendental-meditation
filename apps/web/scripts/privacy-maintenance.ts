@@ -1,8 +1,12 @@
-import { readFile, readdir } from 'node:fs/promises';
-import path from 'node:path';
-
 async function main() {
   process.loadEnvFile('.env');
+  if (process.argv.includes('--verify-backups')) {
+    if (process.argv.includes('--backup')) throw new Error('Verification must run separately from maintenance/backup');
+    const { verifyLocalPrivacyBackups } = await import('../src/server/privacy-backups');
+    const result = await verifyLocalPrivacyBackups();
+    console.log(`Authenticated encrypted backups verified: ${result.count}; recent: ${result.recent}. SQL restore and production readiness are separate checks.`);
+    return;
+  }
   const { prisma } = await import('../src/server/db');
   try {
     const { runPrivacyMaintenance } = await import('../src/server/privacy-maintenance');
@@ -10,19 +14,6 @@ async function main() {
     if (process.argv.includes('--backup')) {
       const { ensureLocalPrivacyBackup } = await import('../src/server/privacy-backups');
       await ensureLocalPrivacyBackup(true);
-    }
-    if (process.argv.includes('--verify-backups')) {
-      const { decryptBackup } = await import('../src/server/privacy-backups');
-      const { privacyStorageDirectory } = await import('../src/server/privacy-files');
-      const directory = path.join(privacyStorageDirectory(), 'backups');
-      let count = 0;
-      for (const name of await readdir(directory)) {
-        if (!/^learntm-backup-[\w-]+\.enc$/.test(name)) continue;
-        const plaintext = decryptBackup(await readFile(path.join(directory, name)));
-        if (!plaintext.length) throw new Error('Empty backup');
-        count++;
-      }
-      console.log(`Authenticated encrypted backups verified: ${count}`);
     }
     console.log('Privacy maintenance completed. External provider/mailbox deletion and hosting retention still require verification.');
   } finally { await prisma.$disconnect(); }

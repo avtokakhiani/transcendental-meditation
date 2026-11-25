@@ -56,6 +56,8 @@ This remains an unresolved launch review item. The ordinary external Maps link i
 
 ## Local maintenance and backup operation
 
+F11 local follow-up: [backup/recovery report](prelaunch-backup-recovery-remediation.md) reuses existing full SQL/replay evidence and verifies remaining helper/media gaps. [Actual production recovery](f11-production-recovery-checklist.md) is still launch-blocking. Production requires a provisioned regular `erasures/` directory; a missing ledger now fails startup. Never create an empty replacement to conceal lost history. Journal writes flush file data before return (directory flush also on non-Windows); actual target durability is unverified.
+
 Run from `apps/web`:
 
 ```powershell
@@ -70,9 +72,18 @@ pnpm typecheck
 The standard host development startup remains `start-dev.ps1`. Never run seeds as part of upkeep.
 New schema migrations were applied locally without deleting existing database/media content.
 
+`--verify-backups` now runs separately and read-only: no maintenance/pruning/SQL operations.
+It fails empty/missing, stale, corrupt, wrong-key, future or over-retention timestamped sets;
+it requires a recent authenticated non-empty backup. Legacy undated files cannot establish
+freshness and need owner inventory review. Do not combine it with `--backup`. Authentication
+does not replace native checksum/restore or actual production recovery verification.
+
 Local backups use the existing Docker SQL instance, `COPY_ONLY`, `CHECKSUM`, and `RESTORE
 VERIFYONLY`, then AES-256-GCM encryption. Temporary raw `.bak` staging files are removed;
 interrupted staging files are cleaned up on later runs. The helper refuses remote SQL hosts.
+Encrypted output is staged, authenticated/read back against original bytes, then published
+as a completed `.enc` file. Only authenticated original creation timestamps establish the
+daily local skip; touching/copying a stale file or a corrupt recent file cannot suppress a new copy.
 Only controlled backup/log filename patterns in the private directory are pruned.
 
 The 32-byte base64 backup key is stored only in the ignored local `.env`. Never put that key,

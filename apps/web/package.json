@@ -8,6 +8,7 @@
     "privacy:maintain": "tsx scripts/privacy-maintenance.ts",
     "test:privacy": "tsx tests/privacy-storage.ts && node tests/privacy-browser.mjs",
     "test:f08": "tsx --test tests/corporate-inquiries.test.ts tests/privacy-launch-gate.test.ts && tsx tests/f08-local.ts",
+    "test:f11": "tsx --test tests/privacy-recovery.test.ts && tsx tests/f11-backup-readiness.ts",
     "test:meetings": "tsx tests/meeting-storage.ts && node tests/meeting-registration-disabled-browser.mjs",
     "test:meetings-disabled": "tsx --test tests/meeting-registration-disabled.test.ts && node tests/meeting-registration-disabled-browser.mjs",
     "dev": "next dev -p 31997",
