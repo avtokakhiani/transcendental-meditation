@@ -1,22 +1,29 @@
-name: Deploy web app to Azure
+name: Deploy to Vercel
 
+# Every push to main is deployed to production (https://www.learntm.ge).
+# Required repository secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+# Never run two deploys at once, and never cancel one halfway through a migration.
 concurrency:
-  group: deploy-web
-  cancel-in-progress: true
+  group: deploy-production
+  cancel-in-progress: false
 
 env:
   NODE_VERSION: "22.x"
-  # Azure App Service name. Create the app before enabling this workflow.
-  APP_NAME: transcendental-meditation
+  VERCEL_CLI: vercel@68.0.0
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.learntm.ge
     steps:
       - uses: actions/checkout@v4
 
@@ -31,96 +38,21 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm --filter @tm/shared test
-      - run: pnpm lint
+      - name: Test shared package
+        run: pnpm --filter @tm/shared test
 
-      - name: Prepare isolated build inputs
-        run: |
-          node --test scripts/release/artifact-security.test.mjs
-          node scripts/release/prepare-build.mjs "$RUNNER_TEMP/learntm-source"
-          cd "$RUNNER_TEMP/learntm-source"
-          pnpm install --offline --frozen-lockfile --ignore-scripts
+      - name: Pull Vercel production settings
+        run: pnpm dlx ${{ env.VERCEL_CLI }} pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Generate Prisma client
-        working-directory: ${{ runner.temp }}/learntm-source/apps/web
-        env:
-          DATABASE_URL: sqlserver://placeholder;database=build;user=build;password=build
-        run: pnpm exec prisma generate
-
-      - name: Build
-        working-directory: ${{ runner.temp }}/learntm-source/apps/web
-        # Build-time values only; the real ones come from App Service settings.
-        env:
-          DATABASE_URL: sqlserver://placeholder;database=build;user=build;password=build
-          AUTH_SECRET: build-time-placeholder-value-at-least-32-chars
-          AZURE_STORAGE_ACCOUNT: placeholder
-        run: pnpm exec next build
-
-      - name: Assemble standalone bundle
-        run: |
-          node scripts/release/assemble-artifact.mjs "$RUNNER_TEMP/learntm-source/apps/web" "$RUNNER_TEMP/deploy"
-          node scripts/release/verify-artifact.mjs --directory "$RUNNER_TEMP/deploy"
-          node scripts/release/verify-native-runtime.mjs "$RUNNER_TEMP/deploy"
-          tar --format=ustar -czf "$RUNNER_TEMP/web-release.tar.gz" -C "$RUNNER_TEMP/deploy" .
-          node scripts/release/verify-artifact.mjs --archive "$RUNNER_TEMP/web-release.tar.gz" --report "$RUNNER_TEMP/artifact-verification.json"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: web
-          path: ${{ runner.temp }}/web-release.tar.gz
-          if-no-files-found: error
-
-  migrate:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-
+      # Migrations run before the new code goes live, against Neon's direct (unpooled) URL.
       - name: Apply database migrations
         working-directory: apps/web
-        env:
-          DATABASE_URL: ${{ secrets['DATABASE_URL'] }}
         run: |
-          test -n "$DATABASE_URL" || { echo "Missing DATABASE_URL secret" >&2; exit 1; }
-          pnpm exec prisma migrate deploy
+          DATABASE_URL=$(grep '^DATABASE_URL_UNPOOLED=' ../../.vercel/.env.production.local | cut -d= -f2- | tr -d '"')
+          if [ -z "$DATABASE_URL" ]; then echo "DATABASE_URL_UNPOOLED missing from Vercel production env" >&2; exit 1; fi
+          echo "::add-mask::$DATABASE_URL"
+          DATABASE_URL="$DATABASE_URL" pnpm exec prisma migrate deploy
 
-  deploy:
-    needs: [build, migrate]
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: web
-          path: release-download
-
-      - name: Verify downloaded release before extraction and deployment
-        run: |
-          node scripts/release/verify-artifact.mjs --archive release-download/web-release.tar.gz
-          mkdir deploy
-          tar -xzf release-download/web-release.tar.gz -C deploy
-          node scripts/release/verify-artifact.mjs --directory deploy
-
-      - uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.APP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: deploy
+      # Vercel builds from source (root directory apps/web); .vercelignore keeps env files out.
+      - name: Deploy to production
+        run: pnpm dlx ${{ env.VERCEL_CLI }} deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}

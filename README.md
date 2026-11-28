@@ -122,11 +122,14 @@ tests use intercepted fixtures and do not publish schedules, save registrations,
 
 ## Deploying to Vercel
 
-The Vercel project (root directory `apps/web`) has Neon Postgres and a private Vercel Blob store
-connected, which set `DATABASE_URL` and `BLOB_READ_WRITE_TOKEN`. `AUTH_SECRET` is set by hand.
+Every push to `main` deploys to production (https://www.learntm.ge) through
+`.github/workflows/deploy-web.yml`: it runs the shared tests, applies Prisma migrations to Neon,
+then runs `vercel deploy --prod`. It needs the repository secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`
+and `VERCEL_PROJECT_ID`. Run it by hand from the Actions tab with "Run workflow".
 
-```bash
-npx vercel deploy --prod                                   # from the repo root
-npx vercel env pull apps/web/.env.production.local --environment production
-cd apps/web && npx dotenv -e .env.production.local -- prisma migrate deploy   # after schema changes
-```
+The Vercel project (root directory `apps/web`) has Neon Postgres and a private Vercel Blob store
+connected, which set `DATABASE_URL` and `BLOB_READ_WRITE_TOKEN`. `AUTH_SECRET` is set by hand, and
+`PRIVACY_STORAGE_BACKEND=vercel-blob` keeps the privacy erasure ledger in Blob (provisioned once
+with `pnpm exec tsx scripts/privacy-provision-blob.ts`).
+
+Manual deploy from a laptop, if ever needed: `npx vercel deploy --prod` from the repo root.
