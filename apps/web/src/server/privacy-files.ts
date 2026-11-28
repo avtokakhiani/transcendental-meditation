@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { PRIVACY_BACKUP_DAYS, PRIVACY_LOG_DAYS, type PrivateRecordScope } from '@/lib/privacy-retention';
 import { resolvePrivacyStorageDirectory } from './privacy-storage-path';
+import { blobAppendErasure, blobPrunePrivacyFiles, blobReadErasureLedger, privacyBlobEnabled } from './privacy-blob';
 
 export function privacyStorageDirectory() {
   return resolvePrivacyStorageDirectory({
@@ -13,6 +14,7 @@ export function privacyStorageDirectory() {
 
 export interface ErasureEntry { scope: PrivateRecordScope; targetId: string; deletedAt: string; externalEmailIds?: string[] }
 export async function appendErasure(entry: ErasureEntry) {
+  if (privacyBlobEnabled()) return blobAppendErasure(entry);
   const directory = privacyStorageDirectory();
   const ledger = path.join(directory, 'erasures');
   await mkdir(ledger, { recursive: true, mode: 0o700 });
@@ -57,6 +59,7 @@ export async function appendErasure(entry: ErasureEntry) {
 }
 
 export async function readErasureLedger(): Promise<ErasureEntry[]> {
+  if (privacyBlobEnabled()) return blobReadErasureLedger();
   try {
     const ledger = path.join(privacyStorageDirectory(), 'erasures');
     if (process.env.NODE_ENV === 'production') {
@@ -78,6 +81,7 @@ export async function readErasureLedger(): Promise<ErasureEntry[]> {
 }
 
 export async function prunePrivacyFiles(now = new Date()) {
+  if (privacyBlobEnabled()) return blobPrunePrivacyFiles(now);
   const directory = privacyStorageDirectory();
   await mkdir(directory, { recursive: true, mode: 0o700 });
   for (const [subdirectory, pattern, days] of [

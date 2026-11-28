@@ -2,6 +2,7 @@ import { prisma } from '@/server/db';
 import { enforcePrivacyRetention, reapplyErasureLedger } from '@/server/services/privacy';
 import { prunePrivacyFiles } from '@/server/privacy-files';
 import { privacyOperationalLog } from '@/server/privacy-log';
+import { privacyBlobEnabled } from '@/server/privacy-blob';
 
 let running = false;
 export async function runPrivacyMaintenance() {
@@ -27,7 +28,9 @@ export async function startPrivacyMaintenance() {
   const state = globalThis as unknown as { privacyMaintenanceTimer?: NodeJS.Timeout };
   if (state.privacyMaintenanceTimer) clearInterval(state.privacyMaintenanceTimer);
   await runPrivacyMaintenance();
-  const task = setInterval(() => { void runPrivacyMaintenance().catch(() => console.error('Privacy maintenance failed; launch must remain blocked until resolved.')); }, 60000);
+  // Blob reads/writes are billed per operation; hourly is ample for a 12-month retention clock.
+  const interval = privacyBlobEnabled() ? 3600000 : 60000;
+  const task = setInterval(() => { void runPrivacyMaintenance().catch(() => console.error('Privacy maintenance failed; launch must remain blocked until resolved.')); }, interval);
   task.unref();
   state.privacyMaintenanceTimer = task;
 }
