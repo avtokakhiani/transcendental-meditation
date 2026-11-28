@@ -1,0 +1,12 @@
+# Never upload runtime secrets, private records or recovery evidence to Vercel builds.
+# The Next build refuses to run if a runtime .env file is present (apps/web/build-inputs.mjs).
+.env
+.env.*
+**/.env
+**/.env.*
+**/private/
+output/
+**/*.bak
+**/*.bak.enc
+**/*.log
+**/*.jsonl

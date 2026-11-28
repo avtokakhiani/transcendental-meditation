@@ -1,0 +1,6 @@
+/** Explicit local rollback switch; the default public source is validated revisions. */
+export function usesUnifiedArticles() {
+  const value = process.env.ARTICLE_PUBLIC_DELIVERY;
+  if (value && !['unified', 'legacy'].includes(value)) throw new Error('Invalid ARTICLE_PUBLIC_DELIVERY');
+  return value !== 'legacy';
+}

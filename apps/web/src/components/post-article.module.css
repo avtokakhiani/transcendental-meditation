@@ -1,0 +1,5 @@
+.header {
+  max-width: var(--article-reading-width);
+  margin-inline: auto;
+  padding: var(--article-content-padding) var(--article-reading-gutter) 0;
+}

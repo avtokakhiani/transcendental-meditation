@@ -1,0 +1,17 @@
+.figure .chart {
+  width: 92%;
+  max-width: 552px;
+}
+
+@media (min-width: 64rem) {
+  .copy {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .figure {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}

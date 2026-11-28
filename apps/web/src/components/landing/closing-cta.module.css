@@ -1,0 +1,26 @@
+.singleButton {
+  /* Balance the group while preserving the removed mobile button and gap's height. */
+  padding-block: calc((3.5rem + 0.75rem) / 2);
+}
+
+@media (min-width: 40rem) {
+  .singleButton {
+    padding-block: 0;
+  }
+}
+
+.withoutSymbol {
+  /* Redistribute the former 4rem symbol + 1.25rem heading gap evenly. */
+  padding-block: 2.625rem;
+}
+
+.withoutSymbol > h2 {
+  margin-top: 0;
+}
+
+.benefitsBackground {
+  background-image: url('/images/tm-transitional-warm-yellow-blue.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

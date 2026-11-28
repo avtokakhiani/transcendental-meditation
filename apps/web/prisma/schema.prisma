@@ -1,7 +1,8 @@
 // PostgreSQL (Neon via the Vercel Marketplace) — see docker-compose.yml for the local equivalent.
 //
 // Statuses are VARCHAR mirroring @tm/shared rather than native enums, so adding a status never
-// needs a migration.
+// needs a migration. CHECK constraints and the revision-immutability trigger live in the init
+// migration, since Prisma cannot express them here.
 
 generator client {
   provider = "prisma-client-js"
@@ -10,6 +11,94 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+/// All instants are UTC; editors enter dates in Asia/Tbilisi. Drafts are private.
+model IntroductoryMeeting {
+  id                   String   @id @default(uuid()) @db.Uuid
+  startsAt             DateTime
+  format               String   @db.VarChar(20)
+  location             String?  @db.VarChar(500)
+  joiningInstructions  String?  @db.VarChar(2000)
+  status               String   @default("draft") @db.VarChar(20)
+  capacity             Int?
+  registrationClosesAt DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  registrations        MeetingRegistration[]
+
+  @@index([status, startsAt])
+  @@map("introductory_meetings")
+}
+
+/// Never included in public meeting responses. Notification timestamps form a retryable outbox.
+model MeetingRegistration {
+  id                     String   @id @default(uuid()) @db.Uuid
+  meetingId              String   @db.Uuid
+  firstName              String   @db.VarChar(100)
+  lastName               String   @db.VarChar(100)
+  email                  String   @db.VarChar(254)
+  phone                  String   @db.VarChar(40)
+  createdAt              DateTime @default(now())
+  adminNotifiedAt        DateTime?
+  participantNotifiedAt  DateTime?
+  adminEmailId           String?  @db.VarChar(100)
+  participantEmailId     String?  @db.VarChar(100)
+  retentionExpiresAt     DateTime @default(dbgenerated("dateadd(month,(12),sysutcdatetime())"))
+  processingRestrictedAt DateTime?
+  holdUntil              DateTime?
+  holdReason             String?  @db.VarChar(40)
+  meeting                IntroductoryMeeting @relation(fields: [meetingId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([meetingId, email])
+  @@index([retentionExpiresAt])
+  @@map("meeting_registrations")
+}
+
+/// Corporate correspondence is stored privately; email notifications contain no enquiry content.
+model CorporateInquiry {
+  id                     String   @id @default(uuid()) @db.Uuid
+  deduplicationKey       String   @unique @db.VarChar(64)
+  name                   String   @db.VarChar(150)
+  organization           String   @db.VarChar(200)
+  email                  String   @db.VarChar(254)
+  phone                  String   @db.VarChar(40)
+  contactMethod          String   @db.VarChar(40)
+  message                String   @db.Text
+  createdAt              DateTime @default(now())
+  lastBusinessContactAt  DateTime
+  retentionExpiresAt     DateTime
+  processingRestrictedAt DateTime?
+  holdUntil              DateTime?
+  holdReason             String?  @db.VarChar(40)
+  adminNotifiedAt        DateTime?
+  adminEmailId           String?  @db.VarChar(100)
+  @@index([retentionExpiresAt])
+  @@map("corporate_inquiries")
+}
+
+/// No enquiry text, names, addresses, or IPs. Purged after 90 days.
+model PrivacyAudit {
+  id        String   @id @default(uuid()) @db.Uuid
+  actorId   String?  @db.Uuid
+  scope     String   @db.VarChar(30)
+  targetId  String?  @db.Uuid
+  action    String   @db.VarChar(40)
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+  @@map("privacy_audit")
+}
+
+/// Minimal deletion ledger for restoring backups without resurrecting erased records.
+model PrivacyErasure {
+  id              String   @id @default(uuid()) @db.Uuid
+  scope           String   @db.VarChar(30)
+  targetId        String   @db.Uuid
+  externalEmailIds String?  @db.VarChar(500)
+  externalDoneAt  DateTime?
+  createdAt       DateTime @default(now())
+  @@index([createdAt])
+  @@map("privacy_erasures")
 }
 
 /// Staff who manage content. Readers never sign in.
@@ -49,10 +138,91 @@ model Post {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  /// Additive foundation only: legacy columns above remain authoritative until public cutover.
+  kind                String  @default("article") @db.VarChar(20)
+  version             Int     @default(0)
+  draftRevisionId     String? @db.Uuid
+  draftRevisionPostId String? @db.Uuid
+  publishedRevisionId String? @db.Uuid
+  publishedRevisionPostId String? @db.Uuid
+
   author User? @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  revisions PostRevision[] @relation("PostRevisions")
+  draftRevision PostRevision? @relation("DraftRevision", fields: [draftRevisionPostId, draftRevisionId], references: [postId, id], onDelete: NoAction, onUpdate: NoAction)
+  publishedRevision PostRevision? @relation("PublishedRevision", fields: [publishedRevisionPostId, publishedRevisionId], references: [postId, id], onDelete: NoAction, onUpdate: NoAction)
+  slugAliases PostSlugAlias[]
 
   @@index([status, publishedAt])
+  @@index([kind, status, publishedAt])
   @@map("posts")
+}
+
+/// Append-only editorial snapshots. Legacy HTML/Markdown are retained byte-for-byte.
+/// SQL Server JSON is validated text, never a Prisma Json field.
+model PostRevision {
+  id                 String   @id @default(uuid()) @db.Uuid
+  postId             String   @db.Uuid
+  number             Int
+  sourceHash         String   @db.VarChar(64)
+  sourceUpdatedAt    DateTime
+  title              String   @db.VarChar(300)
+  displayHeading     String?  @db.VarChar(300)
+  cardTitle          String?  @db.VarChar(300)
+  excerpt            String?  @db.VarChar(500)
+  cardExcerpt        String?  @db.VarChar(500)
+  editorialByline    String?  @db.VarChar(300)
+  category           String?  @db.VarChar(150)
+  coverImageUrl      String?  @db.VarChar(2048)
+  coverImageAlt      String?  @db.VarChar(1000)
+  seoTitle           String?  @db.VarChar(300)
+  seoDescription     String?  @db.VarChar(2000)
+  socialImageUrl     String?  @db.VarChar(2048)
+  layoutKey          String   @default("standard-v1") @db.VarChar(80)
+  /// Legacy representation remains separate from a future structured document.
+  content            String   @db.Text
+  contentFormat      String   @db.VarChar(10)
+  document           String?  @db.Text
+  documentVersion    Int?
+  /// Approved presentation details, not arbitrary CSS or executable code.
+  presentation       String?  @db.Text
+  plainText          String?  @db.Text
+  readingMinutes     Int?
+  createdById        String?  @db.Uuid
+  createdAt          DateTime @default(now())
+
+  post Post @relation("PostRevisions", fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  draftFor Post[] @relation("DraftRevision")
+  publishedFor Post[] @relation("PublishedRevision")
+  mediaReferences PostRevisionMedia[]
+
+  @@unique([postId, number])
+  @@unique([postId, sourceHash])
+  /// Composite key enforces that revision pointers belong to the same post.
+  @@unique([postId, id])
+  @@map("post_revisions")
+}
+
+/// Future redirect source. Current public routes do not consume aliases yet.
+model PostSlugAlias {
+  slug      String @id @db.VarChar(120)
+  postId    String @db.Uuid
+  createdAt DateTime @default(now())
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([postId])
+  @@map("post_slug_aliases")
+}
+
+/// A media object may be referenced by many revisions; deleting referenced media is restricted.
+model PostRevisionMedia {
+  revisionId String @db.Uuid
+  mediaId    String @db.Uuid
+  revision PostRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  media Media @relation(fields: [mediaId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([revisionId, mediaId])
+  @@index([mediaId])
+  @@map("post_revision_media")
 }
 
 model Book {
@@ -68,6 +238,7 @@ model Book {
   updatedAt     DateTime  @updatedAt
 
   pages BookPage[]
+  featuredIn HomepageSettings[]
 
   @@index([status, publishedAt])
   @@map("books")
@@ -83,6 +254,7 @@ model BookPage {
   /// Same formats and renderer as posts.
   content       String   @db.Text
   contentFormat String   @default("markdown") @db.VarChar(10)
+  status        String   @default("published") @db.VarChar(20)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -90,6 +262,15 @@ model BookPage {
 
   @@unique([bookId, number])
   @@map("book_pages")
+}
+
+/// Singleton homepage preferences; featured content never follows publication order.
+model HomepageSettings {
+  id             Int     @id @default(1)
+  featuredBookId String? @db.Uuid
+  featuredBook   Book?   @relation(fields: [featuredBookId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@map("homepage_settings")
 }
 
 /// Images uploaded by editors, served publicly through /api/media/[id].
@@ -102,6 +283,7 @@ model Media {
   originalName String   @db.VarChar(260)
   uploadedById String?  @db.Uuid
   createdAt    DateTime @default(now())
+  revisionReferences PostRevisionMedia[]
 
   @@index([createdAt])
   @@map("media")

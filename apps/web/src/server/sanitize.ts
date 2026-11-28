@@ -1,4 +1,5 @@
 import sanitize from 'sanitize-html';
+import { isExternalLink } from '@/lib/links';
 
 const COLOR = [/^#[0-9a-f]{3,8}$/i, /^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*(0|1|0?\.\d+)\s*)?\)$/i, /^var\(--tt-[a-z0-9-]+\)$/i];
 const TEXT_ALIGN = [/^(left|right|center|justify)$/];
@@ -52,7 +53,7 @@ const OPTIONS: sanitize.IOptions = {
   transformTags: {
     a: (tagName, attribs) => {
       const href = attribs.href ?? '';
-      const next: Record<string, string> = /^https?:\/\//i.test(href)
+      const next: Record<string, string> = isExternalLink(href)
         ? { href, target: '_blank', rel: 'noopener noreferrer' }
         : { href };
       return { tagName, attribs: next };

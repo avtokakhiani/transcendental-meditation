@@ -1,0 +1,19 @@
+.chapter {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Preserve native editing and accessibility controls even inside rich content. */
+.chapter :is(input, textarea, select, [role='textbox'], [contenteditable]:not([contenteditable='false'])),
+.chapter :is([role='textbox'], [contenteditable]:not([contenteditable='false'])) * {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+@media print {
+  .chapter {
+    display: none !important;
+  }
+}

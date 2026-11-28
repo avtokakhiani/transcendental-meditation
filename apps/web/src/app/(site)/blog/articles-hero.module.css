@@ -1,0 +1,38 @@
+.hero {
+  /* Page marker scopes the shared header's overlay appearance to /blog. */
+}
+
+.hero.hero::before {
+  background-color: rgb(0 0 0 / 0.28);
+}
+
+.hero h1 {
+  color: #fff;
+}
+
+.photograph.photograph {
+  object-position: 35% center;
+}
+
+:global(body):has(.hero) > :global(header) {
+  position: fixed;
+  width: 100%;
+  background-color: var(--articles-header-background, transparent);
+  backdrop-filter: none;
+  transition: background-color 225ms ease;
+}
+
+:global(body):has(.hero) > :global(header) > :global(div:first-child) > :global(a),
+:global(body):has(.hero) > :global(header) > :global(div:first-child) > :global(nav) > :global(a),
+:global(body):has(.hero) > :global(header) > :global(div:first-child) > :global(nav) > :global(div) > :global(button),
+:global(body):has(.hero) > :global(header) > :global(div:first-child) > :global(div) > :global(a[href^='tel:']),
+:global(body):has(.hero) > :global(header) > :global(div:first-child) > :global(div) > :global(button) {
+  color: var(--articles-header-ink, #fff);
+  transition: color 225ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(body):has(.hero) > :global(header) {
+    transition: none;
+  }
+}

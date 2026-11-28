@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { externalLinkProps } from '@/lib/links';
 
 /**
  * Raw HTML in the source is escaped (react-markdown's default), so editor content can never
@@ -13,9 +14,8 @@ export function Markdown({ source, className = '' }: { source: string; className
         components={{
           img: ({ src, alt }) => <img src={typeof src === 'string' ? src : undefined} alt={alt ?? ''} loading="lazy" />,
           a: ({ href, children }) => {
-            const external = href !== undefined && /^https?:\/\//.test(href);
             return (
-              <a href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+              <a href={href} {...externalLinkProps(href)}>
                 {children}
               </a>
             );

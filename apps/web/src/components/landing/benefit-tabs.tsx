@@ -1,60 +1,94 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
 import { useId, useState } from 'react';
+import type { Route } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Artwork, type ArtworkVariant } from '@/components/site/artwork';
 
-const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: ArtworkVariant }> = [
+const TABS: ReadonlyArray<{ label: string; text: string; cta: string; art: ArtworkVariant; href?: Route; image?: string; imageAlt?: string; imageWidth?: number; imageHeight?: number }> = [
   {
-    label: 'სტრესისგან შვება',
-    text: 'TM-ის პრაქტიკა ამცირებს კორტიზოლს — ჰორმონს, რომელიც სტრესთან ასოცირდება.',
-    cta: 'გაიგე მეტი სტრესზე',
+    label: 'ნაკლები სტრესი',
+    text: 'TM-ის რეგულარული პრაქტიკა ხელს უწყობს სტრესის შემცირებას, ღრმა დასვენებასა და ყოველდღიურ ცხოვრებაში შინაგანი სიმშვიდის შენარჩუნებას.',
+    cta: 'გაიგე მეტი',
     art: 'mountains',
+    href: '/blog/meditatsia-stresis-shesamtsireblad' as Route,
+    image: '/images/peace-hero-sunlit-man.jpeg',
+    imageAlt: 'მზის თბილი შუქით განათებული კაცი ბუნების ფონზე',
+    imageWidth: 1733,
+    imageHeight: 1155,
   },
   {
-    label: 'ჯანსაღი გული',
-    text: 'რეგულარული ღრმა დასვენება ეხმარება არტერიულ წნევას და გულ-სისხლძარღვთა სისტემას.',
-    cta: 'გაიგე მეტი გულზე',
+    label: 'გულის ჯანმრთელობა',
+    text: 'კვლევების თანახმად, ტრანსცენდენტული მედიტაციის პრაქტიკა ხელს უწყობს არტერიული წნევის შემცირებას და გულ-სისხლძარღვთა ჯანმრთელობის გაუმჯობესებას.',
+    cta: 'გაიგე მეტი',
     art: 'heart',
+    href: '/blog/gulis-janmrteloba-da-meditatsia' as Route,
+    image: '/images/heart-article-hero-beach.jpeg',
+    imageAlt: 'ქალი ზღვის სანაპიროზე მზის ჩასვლისას გაწელვის ვარჯიშს ასრულებს',
+    imageWidth: 1733,
+    imageHeight: 1155,
   },
   {
     label: 'უკეთესი ძილი',
-    text: 'დღის განმავლობაში დაგროვილი დაძაბულობა ქრება — დაძინება ადვილდება, ძილი ღრმავდება.',
-    cta: 'გაიგე მეტი ძილზე',
+    text: 'TM-ის რეგულარული პრაქტიკა ხელს უწყობს სტრესის შემცირებას, ძილის ხარისხის გაუმჯობესებასა და სრულფასოვან დასვენებას.',
+    cta: 'გაიგე მეტი',
     art: 'moon',
+    href: '/blog/meditatsia-uketesi-dzilistvis' as Route,
+    image: '/images/peace-hero-man-mountain.jpeg',
+    imageAlt: 'კაცი მთის ფერდობზე ზის და მზის ჩასვლისას მთის პეიზაჟს გადაჰყურებს',
+    imageWidth: 1733,
+    imageHeight: 1155,
   },
   {
-    label: 'ჰარმონიული ურთიერთობები',
-    text: 'როცა შინაგანად მშვიდი ხარ, უფრო ყურადღებით უსმენ და ნაკლებად რეაგირებ იმპულსურად.',
-    cta: 'გაიგე მეტი ურთიერთობებზე',
+    label: 'უკეთესი ურთიერთობები',
+    text: 'სტრესის შემცირება და შინაგანი სიმშვიდის განვითარება ხელს უწყობს უკეთეს კომუნიკაციას, ურთიერთგაგებასა და ჰარმონიულ ურთიერთობებს.',
+    cta: 'გაიგე მეტი',
     art: 'circles',
+    href: '/relationships',
+    image: '/images/relationships-hero.jpeg',
   },
   {
-    label: 'ნათელი გონება',
-    text: 'ფოკუსი, მეხსიერება და შემოქმედებითობა იზრდება, როცა გონებას ყოველდღე ეძლევა დასვენება.',
-    cta: 'გაიგე მეტი სიცხადეზე',
+    label: 'გონებრივი სიცხადე',
+    text: 'ტრანსცენდენტული მედიტაციის პრაქტიკა ხელს უწყობს ყურადღების, გონებრივი სიცხადისა და შემოქმედებითი უნარების განვითარებას.',
+    cta: 'გაიგე მეტი',
     art: 'horizon',
+    href: '/brain-function',
+    image: '/images/brain-function-hero-mountains.jpeg',
+    imageAlt: 'ქალი მთის მწვერვალზე ზის და მზით განათებულ პეიზაჟს გადაჰყურებს.',
+    imageWidth: 5472,
+    imageHeight: 3648,
   },
 ];
 
 export function BenefitTabs() {
   const [active, setActive] = useState(0);
   const baseId = useId();
-  const tab = TABS[active]!;
+
+  function selectTab(index: number) {
+    setActive(index);
+    document.getElementById(`${baseId}-tab-${index}`)?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+  }
 
   return (
-    <section id="why" className="scroll-mt-20 bg-cream-200 py-20 lg:py-28">
+    <section id="why" className="scroll-mt-20 bg-cream-200 py-10 sm:py-12 lg:py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-10">
         <div
           role="tablist"
           aria-label="რატომ TM"
-          className="-mx-4 flex gap-8 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:justify-between sm:px-0"
+          className="flex justify-between gap-6 overflow-x-auto px-1 pt-1 pb-1 [scrollbar-width:thin] [scrollbar-color:var(--color-plum-300)_transparent] lg:gap-8"
           onKeyDown={(event) => {
-            if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
-            const next = (active + (event.key === 'ArrowRight' ? 1 : -1) + TABS.length) % TABS.length;
-            setActive(next);
-            document.getElementById(`${baseId}-tab-${next}`)?.focus();
+            let next: number;
+            switch (event.key) {
+              case 'ArrowRight': next = (active + 1) % TABS.length; break;
+              case 'ArrowLeft': next = (active - 1 + TABS.length) % TABS.length; break;
+              case 'Home': next = 0; break;
+              case 'End': next = TABS.length - 1; break;
+              default: return;
+            }
+            event.preventDefault();
+            selectTab(next);
+            document.getElementById(`${baseId}-tab-${next}`)?.focus({ preventScroll: true });
           }}
         >
           {TABS.map((item, index) => (
@@ -64,11 +98,11 @@ export function BenefitTabs() {
               role="tab"
               type="button"
               aria-selected={index === active}
-              aria-controls={`${baseId}-panel`}
+              aria-controls={`${baseId}-panel-${index}`}
               tabIndex={index === active ? 0 : -1}
-              onClick={() => setActive(index)}
-              className={`shrink-0 border-b pb-3 text-lg whitespace-nowrap transition ${
-                index === active ? 'border-plum-700 text-plum-800' : 'border-transparent text-plum-400 hover:text-plum-700'
+              onClick={() => selectTab(index)}
+              className={`shrink-0 border-b px-1 pb-3 text-sm leading-relaxed whitespace-nowrap focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-plum-700 lg:text-base ${
+                index === active ? 'border-plum-700 text-plum-800' : 'border-transparent text-plum-500 hover:text-plum-800'
               }`}
             >
               {item.label}
@@ -76,34 +110,57 @@ export function BenefitTabs() {
           ))}
         </div>
 
-        <div
-          id={`${baseId}-panel`}
-          role="tabpanel"
-          aria-labelledby={`${baseId}-tab-${active}`}
-          className="mt-12 grid items-center gap-10 md:grid-cols-[1fr_1fr_auto] md:gap-12"
-        >
-          <div key={tab.label} className="animate-[fade-in_500ms_ease-out]">
-            <p className="text-[1.9rem] leading-snug font-light text-plum-800">{tab.text}</p>
-            <Link
-              href="/blog"
-              className="mt-10 inline-flex rounded-full bg-mist-300 px-10 py-4 text-[15px] text-plum-800 transition hover:bg-mist-400"
+        {/* Overlapping panels reserve the tallest panel's space without animating layout. */}
+        <div className="mt-6 grid grid-rows-[auto_auto] gap-y-8 sm:mt-7 md:grid-rows-1 md:gap-y-0 lg:mt-8">
+          {TABS.map((tab, index) => (
+            <div
+              key={tab.label}
+              id={`${baseId}-panel-${index}`}
+              role="tabpanel"
+              aria-labelledby={`${baseId}-tab-${index}`}
+              aria-hidden={index !== active}
+              inert={index !== active}
+              tabIndex={index === active ? 0 : -1}
+              className={`col-start-1 row-[1/span_2] grid min-w-0 grid-rows-subgrid items-center gap-8 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-plum-700 md:row-[1/span_1] md:grid-cols-2 md:grid-rows-1 md:gap-10 lg:gap-16 ${index === active ? 'visible' : 'invisible'}`}
             >
-              {tab.cta}
-            </Link>
-          </div>
+              <div className="grid min-w-0 content-center gap-6 lg:gap-8">
+                <p className="max-w-[28rem] text-xl leading-[1.5] font-light text-plum-800 sm:text-[22px] lg:text-2xl lg:leading-[1.5]">{tab.text}</p>
+                {tab.href ? (
+                  <Link
+                    href={tab.href}
+                    className="inline-flex min-h-14 w-full max-w-[14.25rem] items-center justify-center rounded-full bg-mist-300 px-6 py-4 text-sm leading-6 whitespace-nowrap text-plum-800"
+                  >
+                    {tab.cta}
+                  </Link>
+                ) : (
+                  <button
+                  type="button"
+                  disabled
+                  className="inline-flex min-h-14 w-full max-w-[14.25rem] items-center justify-center rounded-full bg-mist-300 px-6 py-4 text-sm leading-6 whitespace-nowrap text-plum-800"
+                >
+                  {tab.cta}
+                  </button>
+                )}
+              </div>
 
-          <div className="aspect-square overflow-hidden rounded-3xl">
-            <Artwork key={tab.art} variant={tab.art} label={tab.label} className="size-full animate-[fade-in_500ms_ease-out]" />
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setActive((active + 1) % TABS.length)}
-            aria-label="შემდეგი"
-            className="hidden size-12 place-items-center rounded-full border border-dotted border-plum-500 text-plum-700 transition hover:bg-cream-100 md:grid"
-          >
-            <ArrowRight aria-hidden="true" className="size-4" />
-          </button>
+              <div className="aspect-[100/89] w-full min-w-0 overflow-hidden rounded-2xl [&>img]:size-full [&>img]:object-cover [&>img]:object-center">
+                {tab.image ? (
+                  <Image
+                    src={tab.image}
+                    alt={tab.imageAlt ?? 'მომღიმარი ქალი გაშლილი ხელებით ღია ცის ქვეშ.'}
+                    width={tab.imageWidth ?? 1734}
+                    height={tab.imageHeight ?? 1154}
+                    quality={90}
+                    sizes="(min-width: 768px) 45vw, 100vw"
+                    className="size-full object-cover"
+                    style={{ objectPosition: '58% center' }}
+                  />
+                ) : (
+                  <Artwork variant={tab.art} label={tab.label} className="size-full" />
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

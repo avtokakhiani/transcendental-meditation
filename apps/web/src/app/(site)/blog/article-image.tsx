@@ -1,0 +1,17 @@
+import Image from 'next/image';
+import { ImageIcon } from 'lucide-react';
+import type { Article } from '@/lib/articles/presentation';
+import styles from './latest-articles.module.css';
+
+export function ArticleImage({ image }: { image: Article['image'] }) {
+  if (image) {
+    return <Image src={image.src} alt={image.alt} fill sizes="(max-width: 600px) 28vw, (max-width: 1023px) 200px, 240px" className={styles.image} />;
+  }
+
+  return (
+    <span className={styles.placeholder} role="img" aria-label="სტატიის ფოტოს ადგილი">
+      <ImageIcon aria-hidden="true" size={28} strokeWidth={1} />
+      <span>ფოტო დაემატება</span>
+    </span>
+  );
+}

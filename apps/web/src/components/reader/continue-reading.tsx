@@ -5,13 +5,13 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { loadLastPage } from './reading-progress';
 
-export function ContinueReading({ slug, pageCount }: { slug: string; pageCount: number }) {
+export function ContinueReading({ slug, pageNumbers }: { slug: string; pageNumbers: number[] }) {
   const [lastPage, setLastPage] = useState<number | null>(null);
 
   useEffect(() => {
     const saved = loadLastPage(slug);
-    setLastPage(saved !== null && saved > 1 && saved <= pageCount ? saved : null);
-  }, [slug, pageCount]);
+    setLastPage(saved !== null && saved !== pageNumbers[0] && pageNumbers.includes(saved) ? saved : null);
+  }, [slug, pageNumbers]);
 
   return (
     <div className="mt-10 flex flex-col gap-3 sm:flex-row">
@@ -25,7 +25,7 @@ export function ContinueReading({ slug, pageCount }: { slug: string; pageCount: 
         </Link>
       ) : null}
       <Link
-        href={`/books/${slug}/1`}
+        href={`/books/${slug}/${pageNumbers[0]}`}
         className={
           lastPage === null
             ? 'inline-flex items-center justify-center gap-2 rounded-full bg-saffron-400 px-8 py-4 text-[15px] font-medium text-plum-900 transition hover:bg-saffron-500'

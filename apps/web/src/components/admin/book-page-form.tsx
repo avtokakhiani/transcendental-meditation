@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import { saveBookPageAction } from '@/app/admin/(panel)/books/actions';
 import { FormMessages, type FormState, SubmitButton } from './form-feedback';
 import { RichTextEditor } from './rich-text-editor';
+import { StatusSelect } from './status-select';
 import { cardClass, inputClass, labelClass, secondaryButton } from './ui';
 
 const INITIAL: FormState = { error: null };
@@ -14,7 +15,7 @@ export function BookPageForm({
   saved,
 }: {
   bookId: string;
-  page?: { id: string; title: string | null; content: string; contentFormat: string };
+  page?: { id: string; title: string | null; content: string; contentFormat: string; status: string };
   saved?: boolean;
 }) {
   const [state, action] = useActionState(saveBookPageAction, INITIAL);
@@ -31,6 +32,9 @@ export function BookPageForm({
         </label>
       </div>
       <RichTextEditor name="content" defaultValue={page?.content} defaultFormat={page?.contentFormat ?? 'html'} minHeight="30rem" />
+      <div className={cardClass}>
+        <StatusSelect defaultValue={page?.status ?? 'draft'} />
+      </div>
       <div className="flex flex-wrap gap-3">
         <SubmitButton>შენახვა</SubmitButton>
         {page === undefined ? (

@@ -3,6 +3,7 @@
 import { bookInputSchema, bookPageInputSchema } from '@tm/shared';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { z } from 'zod';
 import type { FormState } from '@/components/admin/form-feedback';
 import { requireUser } from '@/server/auth';
 import { prisma } from '@/server/db';
@@ -13,12 +14,24 @@ import {
   isBookSlugTaken,
   moveBookPage,
   saveBook,
+  setFeaturedBook,
   updateBookPage,
 } from '@/server/services/books';
 
 function read(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === 'string' ? value : '';
+}
+
+export async function saveFeaturedBookAction(_previous: FormState, formData: FormData): Promise<FormState> {
+  await requireUser();
+  if (!formData.has('featuredBookId')) return { error: 'აირჩიე გამოქვეყნებული წიგნი ან ვარიანტი „წიგნის გარეშე“.' };
+  const value = read(formData, 'featuredBookId');
+  if (value !== '' && !z.string().uuid().safeParse(value).success) return { error: 'აირჩიე გამოქვეყნებული წიგნი.' };
+  if (!(await setFeaturedBook(prisma, value || null))) return { error: 'ეს წიგნი აღარ არის გამოქვეყნებული. აირჩიე სხვა წიგნი.' };
+  revalidatePath('/');
+  revalidatePath('/admin/books');
+  redirect('/admin/books?featuredSaved=1');
 }
 
 export async function saveBookAction(_previous: FormState, formData: FormData): Promise<FormState> {
@@ -61,6 +74,7 @@ export async function saveBookPageAction(_previous: FormState, formData: FormDat
     title: read(formData, 'title'),
     content: read(formData, 'content'),
     contentFormat: read(formData, 'contentFormat') || 'markdown',
+    status: read(formData, 'status') || 'published',
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? 'მონაცემები არასწორია' };
 

@@ -99,3 +99,9 @@ export async function requireUser() {
   if (user === null) redirect('/admin/login');
   return user;
 }
+
+export async function requirePrivacyAdministrator() {
+  const user = await requireUser();
+  if (user.role !== 'admin') redirect('/admin');
+  return user;
+}

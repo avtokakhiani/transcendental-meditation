@@ -1,0 +1,17 @@
+.text.text {
+  background-image: linear-gradient(135deg, #f7d27e 0%, #f0b14c 48%, #eb9b59 100%);
+}
+
+.portrait {
+  aspect-ratio: 4 / 3;
+}
+
+.image {
+  object-position: right center;
+}
+
+@media (min-width: 64rem) {
+  .portrait {
+    aspect-ratio: auto;
+  }
+}

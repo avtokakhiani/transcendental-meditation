@@ -1,10 +1,11 @@
 'use client';
 
-import { ArrowLeft, MoveHorizontal, PanelLeftClose, PanelLeftOpen, Type, X } from 'lucide-react';
+import { ArrowLeft, PanelLeftClose, PanelLeftOpen, Type, X } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import type { TocEntry } from '@/server/services/books';
 import { saveLastPage } from './reading-progress';
+import { useBookContentProtection } from './use-book-content-protection';
 import {
   DEFAULT_PREFS,
   MAX_SIZE,
@@ -34,6 +35,7 @@ interface ReaderShellProps {
   bookTitle: string;
   initialPage: number;
   pageCount: number;
+  pageNumbers: number[];
   toc: TocEntry[];
   /** Server-rendered page sheets, each a section with data-reader-page and id="page-N". */
   children: React.ReactNode;
@@ -46,12 +48,10 @@ function pageElement(number: number): HTMLElement | null {
 function TocList({
   toc,
   currentPage,
-  pageCount,
   onSelect,
 }: {
   toc: TocEntry[];
   currentPage: number;
-  pageCount: number;
   onSelect: (page: number) => void;
 }) {
   if (toc.length === 0) {
@@ -61,7 +61,7 @@ function TocList({
   return (
     <ol className="space-y-0.5">
       {toc.map((entry, index) => {
-        const nextStart = toc[index + 1]?.number ?? pageCount + 1;
+        const nextStart = toc[index + 1]?.number ?? Infinity;
         const current = currentPage >= entry.number && currentPage < nextStart;
         return (
           <li key={entry.number}>
@@ -83,7 +83,7 @@ function TocList({
   );
 }
 
-export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, children }: ReaderShellProps) {
+export function ReaderShell({ slug, bookTitle, initialPage, pageCount, pageNumbers, toc, children }: ReaderShellProps) {
   const [prefs, setPrefs] = useState<ReaderPrefs>(DEFAULT_PREFS);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -91,6 +91,10 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
   const [progress, setProgress] = useState(0);
   const prefsLoaded = useRef(false);
   const userScrolled = useRef(false);
+  const settingsButton = useRef<HTMLButtonElement>(null);
+  const settingsPanel = useRef<HTMLDivElement>(null);
+  const bookContent = useRef<HTMLDivElement>(null);
+  useBookContentProtection(bookContent);
 
   const chapterTitle = toc.filter((entry) => entry.number <= currentPage).at(-1)?.title ?? null;
 
@@ -102,6 +106,36 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
   useEffect(() => {
     if (prefsLoaded.current) savePrefs(prefs);
   }, [prefs]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
+
+    const closeSettings = () => {
+      // Return focus before unmounting a focused control. An outside pointer's
+      // default action can still move focus to whichever control was clicked.
+      if (settingsPanel.current?.contains(document.activeElement)) {
+        settingsButton.current?.focus({ preventScroll: true });
+      }
+      setSettingsOpen(false);
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!(event.target instanceof Node)) return;
+      if (settingsPanel.current?.contains(event.target) || settingsButton.current?.contains(event.target)) return;
+      closeSettings();
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeSettings();
+      }
+    };
+    document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [settingsOpen]);
 
   // Open at the page in the URL. Re-applied once web fonts load, since they change page heights,
   // unless the reader has already started scrolling.
@@ -124,7 +158,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
     const update = () => {
       frame = 0;
       const line = window.innerHeight * CURRENT_PAGE_LINE;
-      let visible = 1;
+      let visible = pageNumbers[0] ?? initialPage;
       for (const element of document.querySelectorAll<HTMLElement>('[data-reader-page]')) {
         if (element.getBoundingClientRect().top <= line) visible = Number(element.dataset.readerPage);
         else break;
@@ -144,7 +178,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onScroll);
     };
-  }, []);
+  }, [pageNumbers, initialPage]);
 
   // Keep the URL and the remembered position on the page being read, without adding history entries.
   useEffect(() => {
@@ -162,18 +196,18 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        setSettingsOpen(false);
         setDrawerOpen(false);
         return;
       }
       const target = event.target as HTMLElement;
       if (event.altKey || event.ctrlKey || event.metaKey || target.closest('input, textarea, select')) return;
-      if (event.key === 'ArrowRight' && currentPage < pageCount) goTo(currentPage + 1);
-      if (event.key === 'ArrowLeft' && currentPage > 1) goTo(currentPage - 1);
+      const index = pageNumbers.indexOf(currentPage);
+      const next = pageNumbers[index + (event.key === 'ArrowRight' ? 1 : -1)];
+      if ((event.key === 'ArrowRight' || event.key === 'ArrowLeft') && next !== undefined) goTo(next);
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [currentPage, pageCount]);
+  }, [currentPage, pageNumbers]);
 
   function toggleToc() {
     if (window.matchMedia('(min-width: 1024px)').matches) setPrefs({ ...prefs, tocOpen: !prefs.tocOpen });
@@ -214,12 +248,14 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
             {chapterTitle !== null ? <p className="truncate text-xs text-[var(--reader-muted)]">{chapterTitle}</p> : null}
           </div>
           <span className="hidden shrink-0 px-2 text-sm text-[var(--reader-muted)] tabular-nums sm:inline" aria-live="polite">
-            {currentPage} / {pageCount}
+            {pageNumbers.indexOf(currentPage) + 1} / {pageCount}
           </span>
           <button
             type="button"
             aria-label="კითხვის პარამეტრები"
             aria-expanded={settingsOpen}
+            aria-controls="reader-settings"
+            ref={settingsButton}
             onClick={() => setSettingsOpen((open) => !open)}
             className={iconButton}
           >
@@ -231,7 +267,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
         </div>
 
         {settingsOpen ? (
-          <div className="absolute right-3 top-full mt-2 w-72 rounded-2xl border border-[var(--reader-line)] bg-[var(--reader-bg)] p-5 shadow-2xl sm:right-4">
+          <div id="reader-settings" ref={settingsPanel} className="absolute right-3 top-full mt-2 w-72 rounded-2xl border border-[var(--reader-line)] bg-[var(--reader-bg)] p-5 shadow-2xl sm:right-4">
             <p className="text-xs text-[var(--reader-muted)]">შრიფტის ზომა</p>
             <div className="mt-3 flex items-center justify-between gap-3">
               <button
@@ -258,7 +294,15 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
             <div className="hidden sm:block">
               <p className="mt-5 text-xs text-[var(--reader-muted)]">გვერდის სიგანე</p>
               <div className="mt-3 flex items-center gap-3">
-                <MoveHorizontal aria-hidden="true" className="size-4 shrink-0 text-[var(--reader-muted)]" strokeWidth={1.5} />
+                <button
+                  type="button"
+                  disabled={prefs.width <= MIN_WIDTH}
+                  onClick={() => setPrefs((current) => ({ ...current, width: Math.max(MIN_WIDTH, current.width - 1) }))}
+                  aria-label="გვერდის სიგანის შემცირება"
+                  className="grid size-8 shrink-0 place-items-center rounded-full border border-[var(--reader-line)] text-lg disabled:opacity-40"
+                >
+                  −
+                </button>
                 <input
                   type="range"
                   min={MIN_WIDTH}
@@ -268,8 +312,17 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
                   onChange={(event) => setPrefs({ ...prefs, width: Number(event.target.value) })}
                   aria-label="გვერდის სიგანე"
                   aria-valuetext={prefs.width === MAX_WIDTH ? 'სრული სიგანე' : `${prefs.width + 1} / ${MAX_WIDTH + 1}`}
-                  className="h-1.5 flex-1 cursor-pointer accent-saffron-500"
+                  className="h-1.5 min-w-0 w-0 flex-1 cursor-pointer accent-saffron-500"
                 />
+                <button
+                  type="button"
+                  disabled={prefs.width >= MAX_WIDTH}
+                  onClick={() => setPrefs((current) => ({ ...current, width: Math.min(MAX_WIDTH, current.width + 1) }))}
+                  aria-label="გვერდის სიგანის გაზრდა"
+                  className="grid size-8 shrink-0 place-items-center rounded-full border border-[var(--reader-line)] text-lg disabled:opacity-40"
+                >
+                  +
+                </button>
                 <span className="w-12 text-center text-sm tabular-nums">{prefs.width === MAX_WIDTH ? 'სრული' : prefs.width + 1}</span>
               </div>
             </div>
@@ -299,11 +352,11 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
           className="reader-toc sticky top-[66px] hidden h-[calc(100dvh-66px)] w-72 shrink-0 overflow-y-auto border-r border-[var(--reader-line)] bg-[var(--reader-bg)] px-3 py-6 lg:block"
         >
           <p className="px-4 pb-3 text-[11px] uppercase tracking-[0.22em] text-[var(--reader-muted)]">სარჩევი</p>
-          <TocList toc={toc} currentPage={currentPage} pageCount={pageCount} onSelect={goTo} />
+          <TocList toc={toc} currentPage={currentPage} onSelect={goTo} />
         </aside>
 
         <main className="min-w-0 flex-1 px-3 py-6 sm:px-6 sm:py-10">
-          <div className="reader-column space-y-6 sm:space-y-8">{children}</div>
+          <div ref={bookContent} className="reader-column space-y-6 sm:space-y-8">{children}</div>
           <div className="reader-column mt-12 pb-16 text-center">
             <p className="font-serif text-lg text-[var(--reader-muted)]">დასასრული ✦</p>
             <Link
@@ -327,7 +380,7 @@ export function ReaderShell({ slug, bookTitle, initialPage, pageCount, toc, chil
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-3">
-              <TocList toc={toc} currentPage={currentPage} pageCount={pageCount} onSelect={goTo} />
+              <TocList toc={toc} currentPage={currentPage} onSelect={goTo} />
             </div>
           </aside>
         </div>

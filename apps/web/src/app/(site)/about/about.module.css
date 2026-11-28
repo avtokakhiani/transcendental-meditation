@@ -1,0 +1,232 @@
+.hero {
+  --hero-shade: 0.4;
+}
+
+/* Keep the seated figure in view across desktop and mobile crops. */
+.photograph.photograph {
+  object-position: 46% 55%;
+}
+
+.introductionCopy {
+  max-width: 48rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.teachersGrid {
+  display: grid;
+  max-width: 56rem;
+  margin: 4.75rem auto 0;
+  gap: 3rem;
+}
+
+.teacher {
+  min-width: 0;
+  text-align: center;
+  color: var(--color-plum-700);
+}
+
+.teacherPortrait {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 15rem);
+  aspect-ratio: 4 / 5;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background-color: var(--color-cream-100);
+}
+
+.teacherLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-plum-500);
+  font-size: 0.875rem;
+}
+
+.teacherLogoMark {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.teacherPhoto {
+  object-fit: cover;
+}
+
+.teacherDetails {
+  display: grid;
+  gap: 0.875rem;
+  margin-top: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.teacherName {
+  color: var(--color-plum-800);
+  font-size: 1.375rem;
+  font-weight: 500;
+}
+
+.teacherContact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.teacherCertification {
+  color: var(--color-plum-500);
+  font-size: 0.9375rem;
+  font-weight: 400;
+}
+
+.teacherContact + .teacherContact {
+  margin-top: -0.375rem;
+}
+
+.contactIcon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: var(--color-plum-500);
+}
+
+.teacherPhone {
+  justify-self: center;
+  text-underline-offset: 0.25rem;
+}
+
+.teacherPhone:hover {
+  text-decoration: underline;
+}
+
+.teacherPhone:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+@media (min-width: 40rem) {
+  .teachersGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(4rem, 10vw, 8rem);
+  }
+}
+
+/* Override the shared introduction's vertical padding without changing its typography. */
+.sectionSpacing.sectionSpacing {
+  padding-block: 3rem;
+}
+
+.location {
+  padding-inline: 1.25rem;
+  background-color: var(--color-cream-100);
+  color: var(--color-plum-800);
+}
+
+.locationLayout {
+  display: grid;
+  align-items: center;
+  max-width: 67rem;
+  margin-inline: auto;
+  gap: 2.5rem;
+}
+
+.locationCopy {
+  min-width: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+.locationAddress {
+  margin-top: 1.75rem;
+  font-style: normal;
+}
+
+.locationAddress p + p {
+  margin-top: 0.5rem;
+}
+
+.locationCity {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.locationDetail {
+  font-size: 0.9375rem;
+  color: var(--color-plum-500);
+}
+
+.locationPhone {
+  display: inline-block;
+  margin-top: 1.25rem;
+}
+
+.locationLink {
+  display: inline-block;
+  margin-top: 1.5rem;
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+.locationPhone:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3rem;
+}
+
+.locationCopy a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.locationMapFrame {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-cream-300);
+  border-radius: 0.75rem;
+}
+
+.locationMap {
+  display: block;
+  width: 100%;
+  height: 22.5rem;
+  border: 0;
+}
+
+@media (min-width: 40rem) {
+  .sectionSpacing.sectionSpacing {
+    padding-block: 4rem;
+  }
+
+  .location {
+    padding-inline: 1.5rem;
+  }
+
+  .locationCopy {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .sectionSpacing.sectionSpacing {
+    padding-block: 5.5rem;
+  }
+
+  .location {
+    padding-inline: 2.5rem;
+  }
+
+  .locationLayout {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 4rem;
+  }
+
+  .locationMap {
+    height: 26.25rem;
+  }
+}

@@ -35,11 +35,15 @@ export function RichTextEditor({
   defaultValue = '',
   defaultFormat = 'markdown',
   minHeight = '28rem',
+  onChange,
+  submitContent = true,
 }: {
   name: string;
   defaultValue?: string;
   defaultFormat?: ContentFormat | string;
   minHeight?: string;
+  onChange?: (value: { content: string; format: 'html' | 'markdown' }) => void;
+  submitContent?: boolean;
 }) {
   // Submitted untouched until the first edit, so opening and saving never rewrites old content.
   const [value, setValue] = useState({ content: defaultValue, format: defaultFormat === 'html' ? 'html' : 'markdown' });
@@ -155,13 +159,17 @@ export function RichTextEditor({
         return true;
       },
     },
-    onUpdate: ({ editor: current }) => setValue({ content: current.getHTML(), format: 'html' }),
+    onUpdate: ({ editor: current }) => {
+      const next = { content: current.getHTML(), format: 'html' as const };
+      setValue(next);
+      onChange?.(next);
+    },
   });
 
   return (
     <div className="rounded-2xl border border-cream-300 bg-white">
-      <input type="hidden" name={name} value={value.content} />
-      <input type="hidden" name={`${name}Format`} value={value.format} />
+      {submitContent ? <><input type="hidden" name={name} value={value.content} />
+      <input type="hidden" name={`${name}Format`} value={value.format} /></> : null}
 
       <div className="sticky top-0 z-20 rounded-t-2xl border-b border-cream-300 bg-cream-50/95 px-2 py-1.5 backdrop-blur">
         {editor === null ? <div className="h-8" /> : <EditorToolbar editor={editor} uploading={uploading} onPickImage={pickImage} />}

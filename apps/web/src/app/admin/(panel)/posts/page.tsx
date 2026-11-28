@@ -12,16 +12,16 @@ export default async function AdminPostsPage() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-normal text-plum-900">პოსტები</h1>
+        <h1 className="text-2xl font-normal text-plum-900">სტატიები</h1>
         <Link href="/admin/posts/new" className={primaryButton}>
           <Plus aria-hidden="true" className="size-4" />
-          ახალი პოსტი
+          ახალი სტატია
         </Link>
       </div>
 
       <div className="mt-8 overflow-hidden rounded-3xl border border-cream-300 bg-cream-50">
         {posts.length === 0 ? (
-          <p className="p-10 text-center text-plum-500">პოსტები ჯერ არ არის.</p>
+          <p className="p-10 text-center text-plum-500">სტატიები ჯერ არ არის.</p>
         ) : (
           <ul className="divide-y divide-cream-300">
             {posts.map((post) => (
@@ -30,6 +30,7 @@ export default async function AdminPostsPage() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] text-plum-900">{post.title}</p>
                     <p className="truncate text-xs text-plum-400">/blog/{post.slug}</p>
+                    {post.hasDraftChanges ? <p className="mt-1 text-xs text-plum-500">არის გამოუქვეყნებელი ცვლილებები</p> : null}
                   </div>
                   <StatusBadge status={post.status} />
                   <span className="w-36 text-xs text-plum-400 sm:text-right">განახლდა {formatDateKa(post.updatedAt)}</span>

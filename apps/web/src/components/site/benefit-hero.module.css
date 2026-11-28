@@ -1,0 +1,57 @@
+.hero.hero {
+  padding-block: 3.5rem;
+}
+
+.hero.hero::before {
+  background: rgb(25 23 25 / var(--hero-shade));
+  opacity: 1;
+}
+
+.hero h1 {
+  color: #fff;
+}
+
+.stress {
+  --hero-shade: 0.3;
+}
+
+.benefits {
+  --hero-shade: 0.32;
+}
+
+.health {
+  --hero-shade: 0.36;
+}
+
+.brain {
+  --hero-shade: 0.35;
+}
+
+.relationships {
+  --hero-shade: 0.4;
+}
+
+.peace {
+  --hero-shade: 0.28;
+}
+
+.books {
+  --hero-shade: 0.35;
+}
+
+.introduction.introduction {
+  --hero-shade: 0.35;
+  padding-block: 0;
+}
+
+.introduction h1 {
+  transform: none;
+}
+
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(a),
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(nav) > :global(a),
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(nav) > :global(div) > :global(button),
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(div) > :global(a[href^='tel:']),
+:global(body):has(.hero) > :global(header[data-transparent='true']:not([data-menu-open='true'])) > :global(div:first-child) > :global(div) > :global(button) {
+  color: #fff;
+}

@@ -2,12 +2,17 @@ import { formatDateKa } from '@tm/shared';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { StatusBadge } from '@/components/admin/status-badge';
+import { FeaturedBookForm } from '@/components/admin/featured-book-form';
 import { primaryButton } from '@/components/admin/ui';
 import { prisma } from '@/server/db';
 import { listAllBooks } from '@/server/services/books';
 
-export default async function AdminBooksPage() {
-  const books = await listAllBooks(prisma);
+export default async function AdminBooksPage({ searchParams }: { searchParams: Promise<{ featuredSaved?: string }> }) {
+  const [books, settings, params] = await Promise.all([
+    listAllBooks(prisma),
+    prisma.homepageSettings.findUnique({ where: { id: 1 }, select: { featuredBookId: true } }),
+    searchParams,
+  ]);
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -18,6 +23,8 @@ export default async function AdminBooksPage() {
           ახალი წიგნი
         </Link>
       </div>
+
+      <FeaturedBookForm key={settings?.featuredBookId ?? 'none'} books={books} selectedId={settings?.featuredBookId ?? null} saved={params.featuredSaved === '1'} />
 
       <div className="mt-8 overflow-hidden rounded-3xl border border-cream-300 bg-cream-50">
         {books.length === 0 ? (

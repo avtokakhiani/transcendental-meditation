@@ -1,0 +1,43 @@
+.copy {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.heading {
+  font-size: var(--article-heading-size);
+  font-weight: 400;
+  line-height: var(--article-heading-line-height);
+  text-wrap: balance;
+}
+
+.description {
+  margin-top: var(--article-paragraph-gap);
+  color: var(--color-plum-700);
+  font-size: var(--research-copy-font-size);
+  line-height: var(--research-copy-line-height);
+  overflow-wrap: break-word;
+}
+
+.description p + p {
+  margin-top: var(--research-copy-paragraph-gap);
+}
+
+.scrollHint {
+  display: none;
+}
+
+.chartViewport {
+  min-width: 0;
+  width: 100%;
+}
+
+.chartViewport .chart {
+  width: 100%;
+  max-width: 600px;
+}
+
+.chartViewport:focus-visible {
+  outline: 2px solid var(--color-plum-500);
+  outline-offset: 4px;
+}

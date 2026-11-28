@@ -17,16 +17,18 @@ export function BookCover({
   author,
   coverImageUrl,
   className = '',
+  featured = false,
 }: {
   title: string;
   author: string | null;
   coverImageUrl: string | null;
   className?: string;
+  featured?: boolean;
 }) {
-  const base = `relative aspect-[2/3] overflow-hidden rounded-r-xl rounded-l-sm shadow-[0_18px_40px_-18px_rgba(42,27,48,0.55)] ${className}`;
+  const base = `relative ${featured && coverImageUrl !== null ? '' : 'aspect-[2/3]'} overflow-hidden rounded-r-xl rounded-l-sm ${featured ? 'shadow-[0_12px_28px_-12px_rgba(42,27,48,0.3)]' : 'shadow-[0_18px_40px_-18px_rgba(42,27,48,0.55)]'} ${className}`;
 
   if (coverImageUrl !== null) {
-    return <img src={coverImageUrl} alt={title} className={`${base} object-cover`} />;
+    return <img src={coverImageUrl} alt={title} loading={featured ? 'lazy' : undefined} className={`${base} ${featured ? 'h-auto w-full object-contain' : 'object-cover'}`} />;
   }
 
   const [bg, accent, ink] = PALETTES[hash(title) % PALETTES.length]!;

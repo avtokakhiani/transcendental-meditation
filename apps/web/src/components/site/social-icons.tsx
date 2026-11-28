@@ -7,20 +7,11 @@ export function FacebookIcon() {
   );
 }
 
-export function InstagramIcon() {
+export function WhatsAppIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.6">
-      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
-export function YoutubeIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4" fill="currentColor">
-      <path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.3 5 12 5 12 5s-6.3 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8c1.5.4 7.8.4 7.8.4s6.3 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15V9l5.2 3L10 15Z" />
+      <path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.5L3 20.5l1.4-4.8a8.5 8.5 0 1 1 16.1-4.1Z" strokeLinejoin="round" />
+      <path d="M8.2 7.4c.3-.2.7-.1.9.2l1.1 2c.2.3.1.6-.1.8l-.7.7c.7 1.4 1.8 2.5 3.2 3.2l.7-.8c.2-.2.6-.3.9-.1l1.9 1c.3.2.4.5.3.8-.3 1-1.1 1.6-2.1 1.4-4-.8-7.1-3.9-7.8-7.8-.2-.7.5-1.3 1.7-1.4Z" fill="currentColor" stroke="none" />
     </svg>
   );
 }

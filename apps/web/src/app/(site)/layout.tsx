@@ -1,5 +1,7 @@
 import { SiteFooter } from '@/components/site/site-footer';
 import { SiteHeader } from '@/components/site/site-header';
+import { MeetingPanel } from '@/components/meetings/meeting-panel';
+import { PrivacyModal, TermsModal } from '@/components/privacy/privacy-modal';
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +15,9 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       <SiteHeader />
       <main id="main">{children}</main>
       <SiteFooter />
+      <MeetingPanel />
+      <PrivacyModal />
+      <TermsModal />
     </>
   );
 }

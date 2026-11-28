@@ -1,0 +1,29 @@
+.traitChart.traitChart {
+  width: 68%;
+  max-width: 408px;
+}
+
+.cortisolChart.cortisolChart {
+  width: 72%;
+  max-width: 432px;
+}
+
+.ptsdChart.ptsdChart {
+  width: 76%;
+  max-width: 456px;
+}
+
+@media (min-width: 64rem) {
+  /* Center each complete artwork, accounting for its SVG's uneven blank margins. */
+  .traitFigure {
+    transform: translateY(4.0511%);
+  }
+
+  .cortisolFigure {
+    transform: translateY(3.03%);
+  }
+
+  .ptsdFigure {
+    transform: translateY(-0.3145%);
+  }
+}

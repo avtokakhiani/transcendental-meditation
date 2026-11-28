@@ -1,0 +1,31 @@
+.hero.hero::before {
+  background: linear-gradient(
+    to bottom,
+    rgb(25 17 24 / 0.35),
+    rgb(25 17 24 / 0.4) 55%,
+    rgb(25 17 24 / 0.2)
+  );
+}
+
+.photograph.photograph {
+  object-position: 70% center;
+}
+
+.insomniaFigure.insomniaFigure {
+  position: relative;
+  justify-self: center;
+  max-width: 380px;
+  aspect-ratio: 1000 / 1440;
+  overflow: hidden;
+}
+
+.insomniaChart.insomniaChart {
+  /* Frame only the SVG's blank margins. All plotted content, title and reference
+     fit within x=615..1615, y=75..1515 of the unchanged 2339×1539 image. */
+  position: absolute;
+  top: -5.208333%;
+  left: -61.5%;
+  width: 233.9%;
+  max-width: none;
+  margin: 0;
+}

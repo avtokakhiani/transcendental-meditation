@@ -1,0 +1,157 @@
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import benefitHero from '@/components/site/benefit-hero.module.css';
+import Link from 'next/link';
+import { ClosingCta } from '@/components/landing/closing-cta';
+import introduction from '../blog/[slug]/what-is-tm-intro.module.css';
+import hero from '../stress-and-anxiety/stress-and-anxiety.module.css';
+import styles from './benefits.module.css';
+
+const HEADING = 'რა სარგებელი მოაქვს ტრანსცენდენტულ მედიტაციას?';
+
+export const metadata: Metadata = {
+  title: 'ყველა სარგებელი',
+};
+
+export default function BenefitsPage() {
+  return (
+    <article>
+      <section aria-labelledby="benefits-heading" className={`${hero.hero} ${benefitHero.hero} ${benefitHero.benefits}`}>
+        <Image
+          src="/images/benefits-hero-desert.jpeg"
+          alt="უდაბნოს პეიზაჟი იოშუას ხეებით და თბილი მზის შუქით."
+          fill
+          preload
+          quality={90}
+          sizes="100vw"
+          className={`${hero.photograph} ${styles.photograph}`}
+        />
+        <h1 id="benefits-heading" className={hero.heading}>{HEADING}</h1>
+      </section>
+      <section aria-label="შესავალი" className={introduction.continuation}>
+        <div className={introduction.continuationCopy}>
+          <p>ტრანსცენდენტული მედიტაციის პრაქტიკა გონებასა და სხეულს ღრმა დასვენების საშუალებას აძლევს, რაც ხელს უწყობს ნერვულ სისტემაში ღრმად ფესვგადგმული სტრესის აღმოფხვრასა და ტვინის ფუნქციონირების გაუმჯობესებას.</p>
+          <p>პრაქტიკის დაწყებიდან სულ რამდენიმე წუთში ადამიანები, როგორც წესი, თავს უფრო დასვენებულად და მხნედ გრძნობენ, უფრო ნათლად აზროვნებენ და ყოველდღიური საქმიანობისთვის მეტი ენერგია აქვთ.</p>
+        </div>
+      </section>
+      <section aria-labelledby="benefits-research-heading" className={hero.research}>
+        <div className={hero.researchContent}>
+          <h2 id="benefits-research-heading" className={hero.researchHeading}>ტრანსცენდენტული მედიტაციის ეფექტიანობა მეცნიერულად დადასტურებულია</h2>
+          <div className={hero.researchDescription}>
+            <p>1970 წლიდან დღემდე ტრანსცენდენტული მედიტაციის ტექნიკის შესახებ გამოქვეყნებულია 650-ზე მეტი ორიგინალური, რეცენზირებული სამეცნიერო კვლევა. კვლევების ასეთი მოცულობა გამორჩეულია მედიტაციის ცალკეული ტექნიკების შესწავლის სფეროში.</p>
+            <p>ეს კვლევები აჩვენებს, რომ ტრანსცენდენტულ მედიტაციას მნიშვნელოვანი სარგებლის მოტანა შეუძლია ფსიქიკური და ფიზიკური ჯანმრთელობისთვის, ასევე ემოციური კეთილდღეობისთვის. მათ შორისაა:</p>
+          </div>
+          <ul className={hero.researchList}>
+            <li>ტვინის ფუნქციონირების გაუმჯობესება</li>
+            <li>ენერგიის მატება</li>
+            <li>შემოქმედებითი შესაძლებლობების გაძლიერება</li>
+            <li>ცნობიერების გაფართოება</li>
+            <li>გულ-სისხლძარღვთა ჯანმრთელობის გაუმჯობესება</li>
+            <li>ძილის ხარისხის გაუმჯობესება</li>
+          </ul>
+        </div>
+      </section>
+      <section aria-labelledby="benefits-stress-heading" className={styles.stressFeature}>
+        <div className={styles.featureIntro}>
+          <p>ასობით სამეცნიერო კვლევა ადასტურებს ტრანსცენდენტული მედიტაციის მრავალმხრივ სარგებელს</p>
+        </div>
+        <div className={styles.featureLayout}>
+          <div className={styles.featurePhoto}>
+            <Image
+              src="/images/stress-anxiety-hero-seaside.jpeg"
+              alt="ქალი გაშლილი ხელებით ზღვის პირას, თბილ მზის შუქში."
+              fill
+              quality={90}
+              sizes="(min-width: 1024px) 57vw, 100vw"
+              className={styles.featureImage}
+            />
+          </div>
+          <div className={styles.featurePanel}>
+            <div className={styles.featureCopy}>
+              <h2 id="benefits-stress-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია სტრესისა და შფოთვის შესამცირებლად</h2>
+              <p className={styles.featureDescription}>კვლევებმა აჩვენა, რომ ტრანსცენდენტული მედიტაცია სტრესის აღმოფხვრისა და მისგან გამოწვეული პრობლემების შემცირების ერთ-ერთი ყველაზე ეფექტური საშუალებაა. ეს პრობლემები მოიცავს შფოთვას, დეპრესიას, პოსტტრავმულ სტრესულ აშლილობას (PTSD), ძილის ხარისხის გაუარესებას, უძილობას და სხვა.</p>
+              <Link href="/stress-and-anxiety" className={styles.featureButton}>გაიგე მეტი</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section aria-labelledby="benefits-clearer-mind-heading" className={`${styles.featureLayout} ${styles.clearerMind}`}>
+        <div className={`${styles.featurePhoto} ${styles.clearerMindPhoto}`}>
+          <Image
+            src="/images/brain-function-hero-mountains.jpeg"
+            alt="ქალი მთის მწვერვალზე ზის და მზით განათებულ პეიზაჟს გადაჰყურებს."
+            fill
+            quality={90}
+            sizes="(min-width: 1024px) 57vw, 100vw"
+            className={`${styles.featureImage} ${styles.clearerMindImage}`}
+          />
+        </div>
+        <div className={`${styles.featurePanel} ${styles.clearerMindPanel}`}>
+          <div className={styles.featureCopy}>
+            <h2 id="benefits-clearer-mind-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია გონებრივი სიცხადისთვის</h2>
+            <p className={styles.featureDescription}>ტრანსცენდენტული მედიტაციის რეგულარული პრაქტიკის შედეგად ცნობიერება ფართოვდება, რაც ამდიდრებს ყოველდღიურ ცხოვრებას, ხელს უწყობს უფრო ნათელ აზროვნებას, შემოქმედებითი და ინტელექტუალური შესაძლებლობების განვითარებასა და პრობლემების უფრო ეფექტურად გადაჭრას.</p>
+            <Link href="/brain-function" className={`${styles.featureButton} ${styles.clearerMindButton}`}>გაიგე მეტი</Link>
+          </div>
+        </div>
+      </section>
+      <section aria-labelledby="benefits-health-heading" className={`${styles.featureLayout} ${styles.betterHealth}`}>
+        <div className={styles.featurePhoto}>
+          <Image
+            src="/images/health-hero-hands-flower.jpeg"
+            alt="ხელისგულებში მოთავსებული პატარა ყვითელი ყვავილი."
+            fill
+            quality={90}
+            sizes="(min-width: 1024px) 57vw, 100vw"
+            className={`${styles.featureImage} ${styles.healthImage}`}
+          />
+        </div>
+        <div className={styles.featurePanel}>
+          <div className={styles.featureCopy}>
+            <h2 id="benefits-health-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია ჯანმრთელობის გასაუმჯობესებლად</h2>
+            <p className={styles.featureDescription}>სტრესის შემცირება დადებითად მოქმედებს მთელი ორგანიზმის ფუნქციონირებაზე. კვლევები ადასტურებს, რომ ტრანსცენდენტული მედიტაციის ტექნიკა აუმჯობესებს გულ-სისხლძარღვთა სისტემის ფუნქციონირებას, ამცირებს მაღალ არტერიულ წნევასა და სამედიცინო მომსახურების საჭიროებას და აძლიერებს იმუნურ სისტემას.</p>
+            <Link href="/health" className={`${styles.featureButton} ${styles.healthButton}`}>გაიგე მეტი</Link>
+          </div>
+        </div>
+      </section>
+      <section aria-labelledby="benefits-relationships-heading" className={`${styles.featureLayout} ${styles.clearerMind} ${styles.relationshipsFeature}`}>
+        <div className={`${styles.featurePhoto} ${styles.clearerMindPhoto}`}>
+          <Image
+            src="/images/relationships-hero.jpeg"
+            alt="მომღიმარი ქალი გაშლილი ხელებით ღია ცის ქვეშ."
+            fill
+            quality={90}
+            sizes="(min-width: 1024px) 57vw, 100vw"
+            className={`${styles.featureImage} ${styles.relationshipsImage}`}
+          />
+        </div>
+        <div className={`${styles.featurePanel} ${styles.clearerMindPanel}`}>
+          <div className={styles.featureCopy}>
+            <h2 id="benefits-relationships-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია ურთიერთობების გასაუმჯობესებლად</h2>
+            <p className={styles.featureDescription}>როდესაც უფრო მშვიდად და გაწონასწორებულად ვგრძნობთ თავს, ნაკლებად იმპულსურად ვრეაგირებთ და მეტ შემწყნარებლობასა და გულისხმიერებას ვიჩენთ. სტუდენტებს, დასაქმებულებს, სამხედრო მოსამსახურეებს, ვეტერანებსა და პატიმრებს შორის ჩატარებული კვლევები აჩვენებს, რომ ტრანსცენდენტული მედიტაციის პრაქტიკა ხელს უწყობს ურთიერთობების გაუმჯობესებას.</p>
+            <Link href="/relationships" className={`${styles.featureButton} ${styles.clearerMindButton}`}>გაიგე მეტი</Link>
+          </div>
+        </div>
+      </section>
+      <section aria-labelledby="benefits-peace-heading" className={`${styles.featureLayout} ${styles.peaceFeature}`}>
+        <div className={styles.featurePhoto}>
+          <Image
+            src="/images/peace-hero-sunset-man.jpeg"
+            alt="მომღიმარი ხანდაზმული კაცი მზის ჩასვლისას."
+            fill
+            quality={90}
+            sizes="(min-width: 1024px) 57vw, 100vw"
+            className={`${styles.featureImage} ${styles.peaceImage}`}
+          />
+        </div>
+        <div className={styles.featurePanel}>
+          <div className={styles.featureCopy}>
+            <h2 id="benefits-peace-heading" className={styles.featureHeading}>ტრანსცენდენტული მედიტაცია საზოგადოებრივი და მსოფლიო მშვიდობისთვის</h2>
+            <p className={styles.featureDescription}>ადამიანების შინაგან სიმშვიდეს შეუძლია აამაღლოს საზოგადოებისა და მთელი მსოფლიოს კოლექტიური ცნობიერება. კვლევები აჩვენებს, რომ ტრანსცენდენტული მედიტაციისა და მოწინავე TM-Sidhi პროგრამის დიდ ჯგუფებში ერთობლივი პრაქტიკა დაკავშირებულია საზოგადოებაში დადებით ცვლილებებთან და ომის გავლენის შემცირებასთან.</p>
+            <Link href="/peace" className={`${styles.featureButton} ${styles.peaceButton}`}>გაიგე მეტი</Link>
+          </div>
+        </div>
+      </section>
+      <ClosingCta showLearnMore={false} />
+    </article>
+  );
+}

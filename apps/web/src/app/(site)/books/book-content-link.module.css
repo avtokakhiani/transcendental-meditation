@@ -1,0 +1,32 @@
+.link:focus-visible {
+  outline: 2px solid var(--color-plum-700);
+  outline-offset: 5px;
+}
+
+.cover {
+  display: block;
+  transition: transform 180ms ease;
+}
+
+.cover:hover {
+  transform: translateY(-3px);
+}
+
+.title {
+  transition: color 180ms ease;
+}
+
+.title:hover {
+  color: var(--color-plum-500);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover,
+  .title {
+    transition: none;
+  }
+
+  .cover:hover {
+    transform: none;
+  }
+}
