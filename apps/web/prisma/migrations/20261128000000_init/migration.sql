@@ -30,7 +30,7 @@ CREATE TABLE "meeting_registrations" (
     "participantNotifiedAt" TIMESTAMP(3),
     "adminEmailId" VARCHAR(100),
     "participantEmailId" VARCHAR(100),
-    "retentionExpiresAt" TIMESTAMP(3) NOT NULL DEFAULT dateadd(month,(12),sysutcdatetime()),
+    "retentionExpiresAt" TIMESTAMP(3) NOT NULL DEFAULT ((now() AT TIME ZONE 'UTC') + '12 mons'::interval),
     "processingRestrictedAt" TIMESTAMP(3),
     "holdUntil" TIMESTAMP(3),
     "holdReason" VARCHAR(40),
