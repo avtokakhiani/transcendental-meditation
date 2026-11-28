@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { env } from '@/env';
 
 // Next.js dev server reloads modules on every edit; without the global cache each reload would
-// open a new connection pool and exhaust Azure SQL Basic's connection limit.
+// open a new connection pool and exhaust the database's connection limit.
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 export const prisma =

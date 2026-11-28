@@ -54,7 +54,7 @@ function decodeSession(token: string): SessionPayload | null {
 /**
  * Secure only when the request really arrived over HTTPS. Keying this off NODE_ENV broke login on
  * the local production container (plain http://localhost), where Safari drops Secure cookies.
- * Azure App Service terminates TLS and forwards the original scheme in x-forwarded-proto.
+ * Vercel terminates TLS and forwards the original scheme in x-forwarded-proto.
  */
 async function isHttpsRequest(): Promise<boolean> {
   const proto = (await headers()).get('x-forwarded-proto')?.split(',')[0]?.trim();

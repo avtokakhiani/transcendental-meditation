@@ -9,11 +9,6 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
 
   AUTH_SECRET: z.string().min(32, 'AUTH_SECRET must be at least 32 characters'),
-
-  AZURE_STORAGE_ACCOUNT: z.string().min(1),
-  AZURE_STORAGE_CONTAINER: z.string().min(1).default('media'),
-  /** Omitted in Azure, where managed identity is used instead. Required against local Azurite. */
-  AZURE_STORAGE_CONNECTION_STRING: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

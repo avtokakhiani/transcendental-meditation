@@ -4,7 +4,7 @@ import { downloadBlob } from '@/server/storage';
 
 /**
  * Public image endpoint. Blobs are immutable (a new upload gets a new id), so responses can be
- * cached for a year by browsers and any CDN placed in front of App Service.
+ * cached for a year by browsers and the Vercel CDN.
  */
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

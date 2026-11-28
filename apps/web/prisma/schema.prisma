@@ -1,28 +1,26 @@
-// Azure SQL Database (SQL Server) — see docker-compose.yml for the local equivalent.
+// PostgreSQL (Neon via the Vercel Marketplace) — see docker-compose.yml for the local equivalent.
 //
-// Two provider constraints shape this file:
-//   1. No native enums, so statuses are NVARCHAR mirroring @tm/shared.
-//   2. SQL Server rejects multiple cascade paths to the same table, so child rows cascade from
-//      exactly one parent and every other relation uses NoAction.
+// Statuses are VARCHAR mirroring @tm/shared rather than native enums, so adding a status never
+// needs a migration.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 /// Staff who manage content. Readers never sign in.
 model User {
-  id           String    @id @default(uuid()) @db.UniqueIdentifier
-  username     String    @unique @db.NVarChar(80)
-  email        String    @unique @db.NVarChar(320)
-  passwordHash String    @db.NVarChar(255)
-  firstName    String    @db.NVarChar(100)
-  lastName     String    @db.NVarChar(100)
-  role         String    @default("editor") @db.NVarChar(20)
+  id           String    @id @default(uuid()) @db.Uuid
+  username     String    @unique @db.VarChar(80)
+  email        String    @unique @db.VarChar(320)
+  passwordHash String    @db.VarChar(255)
+  firstName    String    @db.VarChar(100)
+  lastName     String    @db.VarChar(100)
+  role         String    @default("editor") @db.VarChar(20)
   isActive     Boolean   @default(true)
   lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())
@@ -34,20 +32,20 @@ model User {
 }
 
 model Post {
-  id            String    @id @default(uuid()) @db.UniqueIdentifier
+  id            String    @id @default(uuid()) @db.Uuid
   /// Latin-only so shared links stay readable; see slugify in @tm/shared.
-  slug          String    @unique @db.NVarChar(120)
-  title         String    @db.NVarChar(300)
+  slug          String    @unique @db.VarChar(120)
+  title         String    @db.VarChar(300)
   /// Shown on cards and in meta tags. Derived from content when empty.
-  excerpt       String?   @db.NVarChar(500)
-  coverImageUrl String?   @db.NVarChar(2048)
+  excerpt       String?   @db.VarChar(500)
+  coverImageUrl String?   @db.VarChar(2048)
   /// Markdown (legacy) or editor HTML, per contentFormat. HTML is sanitized on save and on render.
-  content       String    @db.NVarChar(Max)
-  contentFormat String    @default("markdown") @db.NVarChar(10)
-  status        String    @default("draft") @db.NVarChar(20)
+  content       String    @db.Text
+  contentFormat String    @default("markdown") @db.VarChar(10)
+  status        String    @default("draft") @db.VarChar(20)
   /// Set on first publish and kept on unpublish/republish so the post keeps its place in the feed.
   publishedAt   DateTime?
-  authorId      String?   @db.UniqueIdentifier
+  authorId      String?   @db.Uuid
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -58,13 +56,13 @@ model Post {
 }
 
 model Book {
-  id            String    @id @default(uuid()) @db.UniqueIdentifier
-  slug          String    @unique @db.NVarChar(120)
-  title         String    @db.NVarChar(300)
-  author        String?   @db.NVarChar(200)
-  description   String?   @db.NVarChar(4000)
-  coverImageUrl String?   @db.NVarChar(2048)
-  status        String    @default("draft") @db.NVarChar(20)
+  id            String    @id @default(uuid()) @db.Uuid
+  slug          String    @unique @db.VarChar(120)
+  title         String    @db.VarChar(300)
+  author        String?   @db.VarChar(200)
+  description   String?   @db.VarChar(4000)
+  coverImageUrl String?   @db.VarChar(2048)
+  status        String    @default("draft") @db.VarChar(20)
   publishedAt   DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -77,14 +75,14 @@ model Book {
 
 /// One screen of reading. Numbers are contiguous from 1 and form the reader URL (/books/x/3).
 model BookPage {
-  id        String   @id @default(uuid()) @db.UniqueIdentifier
-  bookId    String   @db.UniqueIdentifier
+  id        String   @id @default(uuid()) @db.Uuid
+  bookId    String   @db.Uuid
   number    Int
   /// Optional chapter heading; titled pages make up the book's table of contents.
-  title     String?  @db.NVarChar(300)
+  title     String?  @db.VarChar(300)
   /// Same formats and renderer as posts.
-  content       String   @db.NVarChar(Max)
-  contentFormat String   @default("markdown") @db.NVarChar(10)
+  content       String   @db.Text
+  contentFormat String   @default("markdown") @db.VarChar(10)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -96,13 +94,13 @@ model BookPage {
 
 /// Images uploaded by editors, served publicly through /api/media/[id].
 model Media {
-  id           String   @id @default(uuid()) @db.UniqueIdentifier
+  id           String   @id @default(uuid()) @db.Uuid
   /// Blob name within the media container; never a full URL so the storage account can move.
-  blobName     String   @unique @db.NVarChar(400)
-  contentType  String   @db.NVarChar(100)
+  blobName     String   @unique @db.VarChar(400)
+  contentType  String   @db.VarChar(100)
   byteSize     Int
-  originalName String   @db.NVarChar(260)
-  uploadedById String?  @db.UniqueIdentifier
+  originalName String   @db.VarChar(260)
+  uploadedById String?  @db.Uuid
   createdAt    DateTime @default(now())
 
   @@index([createdAt])

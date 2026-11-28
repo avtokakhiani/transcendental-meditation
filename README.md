@@ -2,8 +2,8 @@
 
 Georgian-language site: landing page, blog, and books read online page by page, with an admin panel for editors.
 
-Same architecture as `realtor-crm`: pnpm monorepo, Next.js 16 (App Router) + Tailwind v4, Prisma on SQL Server
-(Azure SQL in production, Docker locally), Azure Blob Storage for uploaded images (Azurite locally).
+pnpm monorepo, Next.js 16 (App Router) + Tailwind v4, Prisma on PostgreSQL (Neon in production, Docker
+locally), Vercel Blob for uploaded images. Hosted on Vercel.
 
 ```
 apps/web                Next.js app
@@ -18,12 +18,12 @@ packages/shared         slugify (Georgian → Latin), date/excerpt helpers, zod 
 
 ## Local development
 
-Requires Node 22+, pnpm 10, Docker Desktop (with Rosetta enabled on Apple Silicon).
+Requires Node 22+, pnpm 10, Docker Desktop.
 
 ```bash
 pnpm install
 cp .env.example apps/web/.env     # then set AUTH_SECRET: openssl rand -base64 32
-pnpm db:up                        # SQL Server on :1434, Azurite on :10010
+pnpm db:up                        # Postgres on :5433
 pnpm --filter @tm/web prisma:deploy
 pnpm db:seed                      # admin user + sample posts and a book
 pnpm dev                          # http://localhost:31997
@@ -40,13 +40,13 @@ Schema changes: edit `apps/web/prisma/schema.prisma`, then `pnpm db:migrate` (cr
 - A book is a list of numbered pages; pages with a title form the table of contents. The reader remembers
   font size, theme (light / sepia / dark) and the last page read, in the visitor's browser.
 
-## Deploying to Azure
+## Deploying to Vercel
 
-`.github/workflows/deploy-web.yml` builds a standalone bundle, runs `prisma migrate deploy`, and deploys to App Service.
+The Vercel project (root directory `apps/web`) has Neon Postgres and a private Vercel Blob store
+connected, which set `DATABASE_URL` and `BLOB_READ_WRITE_TOKEN`. `AUTH_SECRET` is set by hand.
 
-1. Create an Azure SQL Database, a Storage Account, and a Linux Node 22 App Service (startup command: `node apps/web/server.js`).
-2. App Service settings: `DATABASE_URL`, `AUTH_SECRET`, `AZURE_STORAGE_ACCOUNT`, `AZURE_STORAGE_CONTAINER=media`,
-   `AZURE_STORAGE_CONNECTION_STRING`.
-3. GitHub `production` environment secrets: `DATABASE_URL`, `AZURE_WEBAPP_PUBLISH_PROFILE`. Set `APP_NAME` in the workflow.
-4. Seed the first admin once against production: `DATABASE_URL=... SEED_ADMIN_PASSWORD=... pnpm db:seed`
-   (this also inserts the sample content — delete it in the admin panel afterwards).
+```bash
+npx vercel deploy --prod                                   # from the repo root
+npx vercel env pull apps/web/.env.production.local --environment production
+cd apps/web && npx dotenv -e .env.production.local -- prisma migrate deploy   # after schema changes
+```

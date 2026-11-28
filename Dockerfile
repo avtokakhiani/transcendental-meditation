@@ -1,5 +1,5 @@
-# Local container image for the web app. Production on Azure uses the standalone bundle
-# built by .github/workflows/deploy-web.yml; this mirrors that bundle so both run the same server.js.
+# Local container image for the web app (docker-compose). Production runs on Vercel, which builds
+# from source; this image uses the standalone bundle so it runs a plain server.js.
 
 FROM node:22-bookworm-slim AS base
 # Prisma's query engine links against OpenSSL.
@@ -21,9 +21,8 @@ COPY . .
 RUN pnpm --filter @tm/web exec prisma generate
 # Build-time placeholders only; real values come from docker-compose at runtime.
 RUN cd apps/web \
-  && DATABASE_URL="sqlserver://placeholder;database=build;user=build;password=build" \
+  && DATABASE_URL="postgresql://build:build@placeholder:5432/build" \
      AUTH_SECRET="build-time-placeholder-value-at-least-32-chars" \
-     AZURE_STORAGE_ACCOUNT="placeholder" \
      pnpm exec next build
 # Next externalizes @prisma/client under .next/node_modules; keep the generated .prisma beside it.
 RUN set -e; \
